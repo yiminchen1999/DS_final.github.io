@@ -1,1 +1,2 @@
-# DS_final.github.io
+# Final Project : Central Park Squirrel Data Analysis
+
