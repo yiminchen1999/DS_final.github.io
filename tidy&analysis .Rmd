@@ -26,6 +26,7 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 library(ggthemes)
+library(report)
 library(ggmap)
 library(sf)
 library(shiny)
@@ -86,5 +87,14 @@ nyc_squirrelmap <- leaflet(data=census) %>%
 nyc_squirrelmap
 #这个要在shiny的格式里看，我以防万一还是用了markdown
 
+omitted<-na.omit(census)
+omitted%>%
+  filter(omitted$age!="?")
+plot(factor(location) ~ factor(age), data = omitted)
+plot(factor(location) ~ factor(shift), data = omitted)
+plot(factor(location) ~ factor(activity), data = omitted)
+plot(factor(location) ~ factor(reaction), data = omitted)
+plot(factor(long) ~ factor(activity), data = omitted)
 ```
 
+c('unique_squirrel_id', 'primary_fur_color', 'highlight_fur_color','combination_of_primary_and_highlight_color'))
