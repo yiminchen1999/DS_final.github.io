@@ -1,7 +1,10 @@
 ---
 title: "P8105 Project Proposal"
 date: "November 11, 2022"
-output: github_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
