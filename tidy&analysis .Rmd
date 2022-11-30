@@ -58,6 +58,7 @@ census =
          long = as.numeric(x),
          lat = as.numeric(y),
          shift = as.character(shift),
+         primary_fur_color=as.character(primary_fur_color),
          activity = case_when( running == "TRUE" ~ "running",
                                chasing == "TRUE" ~ "chasing",
                                climbing == "TRUE" ~ "climbing",
@@ -69,6 +70,16 @@ census =
          sounds = case_when( kuks == "TRUE" ~ "kuks",
                                quaas == "TRUE" ~ "quaas",
                                moans == "TRUE" ~ "moans"))%>%
+          fur_color =case_when(primary_fur_color == "Grey" ~ '1'
+          ,primary_fur_color == "Cinnamon" ~ '2',
+          primary_fur_color == "Black" ~ '3',
+          TRUE ~ '0'
+          )
+  
+        #fur_color = case_when( primary_fur_color$grey == "grey" ~ "1",
+                               #primary_fur_color$cinnamon == "cinnamon" ~ "2",
+                               #primary_fur_color$black == "black" ~ "3")
+  
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 #na.omit()
 skimr::skim(census)
