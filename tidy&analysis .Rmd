@@ -101,6 +101,7 @@ census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版�
           TRUE ~ "0"
          ))%>%
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
+#write.csv(census1,"~/Desktop/squirrel_tidy.csv", row.names = TRUE)
 ```
 
 ```{r}
@@ -155,6 +156,7 @@ census = #这是未数据处理过后的，即原始版
           TRUE ~ "0"
          ))%>%
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
+#write.csv(census,"~/Desktop/squirrel_original.csv", row.names = TRUE)
 #na.omit()
 skimr::skim(census)
 glimpse(census)
@@ -202,13 +204,13 @@ par(mfrow=c(1,3))
 plot.default(census$long,census$lat, main="Raw data", cex.axis=.95)
 plot(d, axes=TRUE, main="Original lat-lon", cex.axis=.95)
 
-
+#sf <- st_as_sf(d, coords = c('census$long', 'census$lat'))
+#ggplot(sf) + 
+  #geom_sf( )+
+  #geom_point(aes(census$long, census$lat),color="steelblue") +
+  #theme_map()
 ```
-sf <- st_as_sf(d, coords = c('census$long', 'census$lat'))
-ggplot(sf) + 
-  geom_sf( )+
-  geom_point(aes(census$long, census$lat),color="steelblue") +
-  theme_map()
+
 ```{r}
 
 ```
