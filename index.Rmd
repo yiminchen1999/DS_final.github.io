@@ -1,5 +1,5 @@
 ---
-title: "My awesome website"
+title: "Location Predictions of Squirrels Based on Several Characteristics"
 output: 
   html_document:
     toc: true
@@ -7,6 +7,24 @@ output:
     theme: cerulean
 ---
 
-# This is Jeff's awesome website
+![](Squirrel_PICs/squirrel_on_human.JPG){width=80%}
 
-![](https://media.giphy.com/media/drXGoW1iudhKw/giphy.gif)
+### Motivation
+
+Squirrels are everywhere, but is there a trend of where they prefer to stay with respect to their color, age, activities and all other features? Doing an analysis using squirrel census data may answer the question. Based on the results of the investigation we can compile relevant charts and make reasonable exploits, prevention or prediction based on information about squirrel habitat and activity patterns in Central Park.
+
+### Screencast
+
+### Parts
+
+### Collaborators
+
+**Yimin Chen**	  (yc4195)
+
+**Feng Yan**	    (fy2297)
+
+**Jiong Ma**	    (jm5509)
+
+**Wenjing Yang**	(wy2369)
+
+**Yang Yi**	      (yy3307)
