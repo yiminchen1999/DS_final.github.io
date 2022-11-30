@@ -27,7 +27,6 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 library(ggthemes)
-library(ggmap)
 library(sf)
 library(shiny)
 knitr::opts_chunk$set(
