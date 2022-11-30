@@ -2,6 +2,7 @@
 title: "tidy and analysis"
 date: '`r format(Sys.time(), "%Y-%m-%d")`'
 output: github_document
+always_allow_html: true
 ---
 
 - analyses: 
