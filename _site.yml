@@ -1,11 +1,24 @@
-name: "Yay internet!"
+name: "Squirrel Website"
 output_dir: "."
 navbar:
   title: "Home"
+  
   right:
     - text: "Proposal"
       href: P8105_final_proposal.html
+      
+    - text: "Exploratory Analyses"
+      href: P8105_final_proposal.html
+    
+    - text: "Shinyapp"
+      href: P8105_final_proposal.html
+      
     - icon: fa-github fa-lg
       href: https://github.com/yiminchen1999/DS_final.github.io
+
 output:
-  html_document
+  html_document:
+    theme: cerulean
+    toc : true
+    toc_float: true
+    code_folding: hide
