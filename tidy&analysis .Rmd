@@ -49,7 +49,7 @@ scale_fill_discrete = scale_fill_viridis_d
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
-```{r}
+```{r,include=FALSE}
 census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版在下面
   read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")%>% 
   janitor::clean_names() %>%
@@ -125,36 +125,6 @@ census = #这是未数据处理过后的，即原始版
          sounds = case_when( kuks == "TRUE" ~ "kuks",
                                quaas == "TRUE" ~ "quaas",
                                moans == "TRUE" ~ "moans"))%>%
-         mutate(primary_fur_color = case_when(primary_fur_color == "Gray" ~ "1"
-          ,primary_fur_color == "Cinnamon" ~ "2",
-          primary_fur_color == "Black" ~ "3",
-          TRUE ~ "0"
-         ))%>%
-  mutate(shift = case_when(shift == "AM" ~ "1"
-          ,shift == "PM" ~ "2",
-          TRUE ~ "0"
-         ))%>%
-  mutate(age = case_when(age == "Adult" ~ "1"
-          ,age == "Juvenile" ~ "2",
-          TRUE ~ "0"
-         ))%>%
-   mutate(activity = case_when(activity == "running" ~ "1"
-          ,activity == "eating" ~ "2",
-          activity == "foraging" ~ "3",
-          activity == "climbing" ~ "4",
-          activity == "chasing" ~ "5",
-          TRUE ~ "0"
-         ))%>%
-  mutate(reaction = case_when(reaction == "indifferent" ~ "1"
-          ,reaction == "runs_from" ~ "2",
-          reaction == "approaches" ~ "3",
-          TRUE ~ "0"
-         ))%>%
-  mutate(sounds = case_when(sounds == "kuks"~ "1",
-                               sounds =="quaas" ~ "2",
-                               sounds == "moans" ~ "3",
-          TRUE ~ "0"
-         ))%>%
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 #write.csv(census,"~/Desktop/squirrel_original.csv", row.names = TRUE)
 #na.omit()
