@@ -370,13 +370,17 @@ div.tocify {
 Characteristics</p>
 <p>Abstract:</p>
 <p>Introduction: (insight, motivation, inspirations, initial questions)
-Motivation and initial question: Squirrels are found everywhere, and
-it’s observed that some places have more squirrels than others, but is
-there any trend of where they stay with respect to their colors, ages,
-activities or all other features? Doing an analysis using squirrel
-census data may answer the question. Main final goal: The main final
-goals of the project are to make maps according to the census and build
-functions to predict locations of particular squirrels if their
+General introduction of the raw dataset: Some data of squirrels in New
+York central park were collected starting from October 6th 2018 to 20th
+over a 14-day period. Some of their characteristics like ages and fur
+colors and some of the activities like sounds and locations were
+recorded. Motivation and initial question: Squirrels are found
+everywhere, and it’s observed that some places have more squirrels than
+others, but is there any trend of where they stay with respect to their
+colors, ages, activities or all other features? Doing an analysis using
+squirrel census data may answer the question. Main final goal: The main
+final goals of the project are to make maps according to the census and
+build functions to predict locations of particular squirrels if their
 characteristics are provided so that people can use the website to look
 for the kinds of squirrels they like. Inspirations:<br />
 The maps-making process shown in class caught our eyes since it is a
@@ -403,12 +407,19 @@ cleaning: For data tidy and cleaning, the categorical variables were
 transformed to numeric ones for analysis and model building. We didn’t
 discard the missing values directly but code them as 0 since there are a
 lot of them, and omitting them might lose the validity of the
-prediction. The dates were also cleaned. Model building process: Since
-the outputs are both longitudinal and latitudinal, we expected to make
-two functions, with longitudinal and latitudinal being the outputs
+prediction. The dates were also cleaned. For other comparison plots,
+same data cleaning step was followed. Model building process: Since the
+outputs are both longitudinal and latitudinal, we expected to make two
+functions, with longitudinal and latitudinal being the outputs
 separately against predictors, and combine the two outputs in the
 end.</p>
-<p>Results: Data summaries:</p>
+<p>Results: Data summaries: First graph we drew was ‘Number of
+Observations’ v.s. ‘Day’, and morning and afternoon data were separated
+and found out that squirrels tend to be more active in the afternoon or
+at night time. However, the limitation of the data is that we were not
+able to get the exact time period of their activities but only either
+morning or evening, we can assume they are present prior to sunset since
+they should be busy collecting the food when there is sunlight.</p>
 <pre><code>Some interesting plots:
 
 Main model:
