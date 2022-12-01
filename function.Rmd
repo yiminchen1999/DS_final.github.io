@@ -1,0 +1,6 @@
+---
+title: "function"
+output: github_document
+---
+
+This will be model building procedure...
