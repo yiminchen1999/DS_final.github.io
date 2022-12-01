@@ -1,14 +1,24 @@
 ---
 title: "Shiny Dashboard"
-output: 
-  flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
 runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(rsconnect)
+library(leaflet)
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(ggthemes)
+library(report)
+library(sf)
+library(shiny)
+rsconnect::setAccountInfo(name='yc4195',
+			  token='8BA8E933BDA1F3D62E5CC0D4FF8DE48A',
+			  secret='gV0f8MtNgALDCHt51mHU7EvGuGOLl69ES/xz6ckE')
 ```
 
 Column {.sidebar}
