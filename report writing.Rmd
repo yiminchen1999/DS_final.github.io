@@ -1,6 +1,10 @@
 ---
 title: "report writing"
-output: github_document
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
 date: "2022-12-01"
 ---
 
