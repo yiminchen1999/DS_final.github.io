@@ -10,9 +10,8 @@
 
 
 
-<meta name="date" content="2022-11-30" />
 
-<title>model selcection</title>
+<title>Frequency</title>
 
 <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -367,326 +366,81 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">model selcection</h1>
-<h4 class="date">2022-11-30</h4>
+<h1 class="title toc-ignore">Frequency</h1>
 
 </div>
 
 
-<pre class="r"><code>census =
-  read_csv(&quot;2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv&quot;)%&gt;% 
-  janitor::clean_names() %&gt;%
-  #filter(!is.na(primary_fur_color))%&gt;%
-  mutate(date=as.character(date),
-         long = as.numeric(x),
-         lat = as.numeric(y),
-         shift = as.character(shift),
-         activity = case_when( running == &quot;TRUE&quot; ~ &quot;running&quot;,
-                               chasing == &quot;TRUE&quot; ~ &quot;chasing&quot;,
-                               climbing == &quot;TRUE&quot; ~ &quot;climbing&quot;,
-                               eating == &quot;TRUE&quot; ~ &quot;eating&quot;,
-                               foraging == &quot;TRUE&quot; ~ &quot;foraging&quot;),
-         reaction = case_when( approaches == &quot;TRUE&quot; ~ &quot;approaches&quot;,
-                               indifferent == &quot;TRUE&quot; ~ &quot;indifferent&quot;,
-                               runs_from == &quot;TRUE&quot; ~ &quot;runs_from&quot;),
-         sounds = case_when( kuks == &quot;TRUE&quot; ~ &quot;kuks&quot;,
-                               quaas == &quot;TRUE&quot; ~ &quot;quaas&quot;,
-                               moans == &quot;TRUE&quot; ~ &quot;moans&quot;))%&gt;%
-  select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)</code></pre>
-<div id="data-analysis" class="section level1">
-<h1>Data analysis</h1>
-<div id="central-park-squirrel-data-collection-distribution"
+<div id="central-park-squirrels-distribution-by-days-ampm"
 class="section level3">
-<h3>Central Park Squirrel Data Collection Distribution</h3>
-<p>For our final project we were interested in looking at the NYC
-Squirrel Census collected by volunteers in October 2018. While the
-dataset is entitled “NYC Squirrel Census”, the data was geographically
-restricted to Central Park.</p>
-<pre class="r"><code>dates &lt;-census %&gt;%
-  mutate(Month= substr(date, 1,2), Day=substr(date, 3,4), Year=substr(date,5,9))
+<h3>Central Park Squirrels Distribution by Days (AM/PM)</h3>
+<p>In this part, we were interested in looking at the Central Park
+Squirrel Census collected in October 2018. We make this graph to
+analysis the frequency of Squirrel recorded for each of the observation
+(AM or PM).</p>
+<pre class="r"><code>dates = 
+  census %&gt;%
+  mutate(Month = substr(date, 1,2), Day = substr(date, 3,4), Year = substr(date,5,9))
 
-  dates %&gt;% 
+dates %&gt;% 
   group_by(Day, shift) %&gt;%
   count() %&gt;%
   ggplot() +
-  geom_col(aes(x=Day, y=n, fill=shift)) +
+  geom_col(aes(x = Day, y = n, fill = shift)) +
   scale_fill_brewer(palette = &quot;Paired&quot;) +
-  labs(x = &quot;Day&quot;, y =&quot;Number of Observations&quot;, fill=&#39;Shift&#39;) +
-  ggtitle(&#39;Central Park Squirrel Data Collection Distribution (Oct. 2018)&#39;) +
-  theme(plot.title = element_text(hjust = 0.5)) </code></pre>
+  labs(x = &quot;Day&quot;, y = &quot;Number of Observations&quot;, fill = &#39;Shift&#39;) +
+  ggtitle(&#39;Central Park Squirrels Distribution by Days (AM/PM)&#39;) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(fill=&#39;Time of day&#39;) </code></pre>
 <p><img src="model_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
-<pre class="r"><code>skimr::skim(census)</code></pre>
-<table>
-<caption>Data summary</caption>
-<tbody>
-<tr class="odd">
-<td align="left">Name</td>
-<td align="left">census</td>
-</tr>
-<tr class="even">
-<td align="left">Number of rows</td>
-<td align="left">3023</td>
-</tr>
-<tr class="odd">
-<td align="left">Number of columns</td>
-<td align="left">16</td>
-</tr>
-<tr class="even">
-<td align="left">_______________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Column type frequency:</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">character</td>
-<td align="left">13</td>
-</tr>
-<tr class="odd">
-<td align="left">numeric</td>
-<td align="left">3</td>
-</tr>
-<tr class="even">
-<td align="left">________________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Group variables</td>
-<td align="left">None</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: character</strong></p>
-<table>
-<colgroup>
-<col width="42%" />
-<col width="9%" />
-<col width="13%" />
-<col width="3%" />
-<col width="3%" />
-<col width="5%" />
-<col width="8%" />
-<col width="10%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">min</th>
-<th align="right">max</th>
-<th align="right">empty</th>
-<th align="right">n_unique</th>
-<th align="right">whitespace</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">unique_squirrel_id</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">13</td>
-<td align="right">14</td>
-<td align="right">0</td>
-<td align="right">3018</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">hectare</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">3</td>
-<td align="right">3</td>
-<td align="right">0</td>
-<td align="right">339</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">shift</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">2</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">date</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">8</td>
-<td align="right">8</td>
-<td align="right">0</td>
-<td align="right">11</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">age</td>
-<td align="right">121</td>
-<td align="right">0.96</td>
-<td align="right">1</td>
-<td align="right">8</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">primary_fur_color</td>
-<td align="right">55</td>
-<td align="right">0.98</td>
-<td align="right">4</td>
-<td align="right">8</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">highlight_fur_color</td>
-<td align="right">1086</td>
-<td align="right">0.64</td>
-<td align="right">4</td>
-<td align="right">22</td>
-<td align="right">0</td>
-<td align="right">10</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">combination_of_primary_and_highlight_color</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">1</td>
-<td align="right">27</td>
-<td align="right">0</td>
-<td align="right">22</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">location</td>
-<td align="right">64</td>
-<td align="right">0.98</td>
-<td align="right">12</td>
-<td align="right">12</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">lat_long</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">38</td>
-<td align="right">45</td>
-<td align="right">0</td>
-<td align="right">3023</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">activity</td>
-<td align="right">200</td>
-<td align="right">0.93</td>
-<td align="right">6</td>
-<td align="right">8</td>
-<td align="right">0</td>
-<td align="right">5</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">reaction</td>
-<td align="right">780</td>
-<td align="right">0.74</td>
-<td align="right">9</td>
-<td align="right">11</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">sounds</td>
-<td align="right">2884</td>
-<td align="right">0.05</td>
-<td align="right">4</td>
-<td align="right">5</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: numeric</strong></p>
-<table style="width:100%;">
-<colgroup>
-<col width="23%" />
-<col width="9%" />
-<col width="13%" />
-<col width="6%" />
-<col width="4%" />
-<col width="6%" />
-<col width="6%" />
-<col width="6%" />
-<col width="6%" />
-<col width="6%" />
-<col width="5%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">mean</th>
-<th align="right">sd</th>
-<th align="right">p0</th>
-<th align="right">p25</th>
-<th align="right">p50</th>
-<th align="right">p75</th>
-<th align="right">p100</th>
-<th align="left">hist</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">hectare_squirrel_number</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4.12</td>
-<td align="right">3.10</td>
-<td align="right">1.00</td>
-<td align="right">2.00</td>
-<td align="right">3.00</td>
-<td align="right">6.00</td>
-<td align="right">23.00</td>
-<td align="left">▇▂▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">long</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">-73.97</td>
-<td align="right">0.01</td>
-<td align="right">-73.98</td>
-<td align="right">-73.97</td>
-<td align="right">-73.97</td>
-<td align="right">-73.96</td>
-<td align="right">-73.95</td>
-<td align="left">▅▇▅▆▂</td>
-</tr>
-<tr class="odd">
-<td align="left">lat</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">40.78</td>
-<td align="right">0.01</td>
-<td align="right">40.76</td>
-<td align="right">40.77</td>
-<td align="right">40.78</td>
-<td align="right">40.79</td>
-<td align="right">40.80</td>
-<td align="left">▇▇▃▅▆</td>
-</tr>
-</tbody>
-</table>
 </div>
+<div id="central-park-squirrels-distribution-by-primary-fur-colors"
+class="section level3">
+<h3>Central Park Squirrels Distribution by Primary Fur Colors</h3>
+<p>In this part, we were interested in the frequency of Squirrel
+recorded for each of the observation</p>
+<pre class="r"><code>dates %&gt;%
+  group_by(Day, primary_fur_color) %&gt;% 
+  count() %&gt;%
+  ggplot() +
+  geom_col(aes(x = Day, y = n, fill = primary_fur_color)) +
+  scale_fill_brewer(palette = &quot;Paired&quot;) +
+  ggtitle(&#39;Central Park Squirrels Distribution by Primary Fur Color&#39;) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs( x=&#39;Day&#39;, y= &#39;Number of Observations&#39;) +
+  labs(fill=&#39;Primary Fur Color&#39;) +
+  scale_fill_manual(values = c(&quot;#000000&quot;, &quot;#D2691E&quot;, &quot;#D3D3D3&quot;, &quot;white&quot;))</code></pre>
+<p><img src="model_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+</div>
+<div id="central-park-squirrels-distribution-by-age-group"
+class="section level3">
+<h3>Central Park Squirrels Distribution by Age Group</h3>
+<pre class="r"><code>plot_1 = 
+dates %&gt;%
+  filter(age !=&#39;?&#39;) %&gt;%
+  mutate(n=1) %&gt;%
+  group_by(age) %&gt;%
+  ggplot() +
+  geom_col(aes(x = age, y = n, fill = shift), position=&quot;fill&quot;) +
+  ggtitle(&#39;Demographics of Central Park Squirrels&#39;) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs( x=&#39;Age Group&#39;, y= &#39;Proportion&#39;) +
+  labs(fill=&#39;Time of day&#39;) +
+  scale_fill_manual(values = c(&quot;#000000&quot;, &quot;#D2691E&quot;, &quot;#D3D3D3&quot;, &quot;white&quot;))</code></pre>
+<pre class="r"><code>plot_2 = 
+dates %&gt;%
+  filter(age !=&#39;?&#39;) %&gt;%
+  mutate(n=1) %&gt;%
+  group_by(age) %&gt;%
+  ggplot() +
+  geom_col(aes(y=n,x=age, fill=primary_fur_color), position=&quot;fill&quot;) +
+  ggtitle(&#39;Demographics of Central Park Squirrels&#39;) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs( x=&#39;Age Group&#39;, y= &#39;Proportion&#39;) +
+  labs(fill=&#39;Primary Fur Color&#39;) +
+  scale_fill_manual(values = c(&quot;#000000&quot;, &quot;#D2691E&quot;, &quot;#D3D3D3&quot;, &quot;white&quot;))</code></pre>
+<pre class="r"><code>plot_1 + plot_2</code></pre>
+<p><img src="model_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
 </div>
 
 

@@ -1,7 +1,6 @@
 ---
-title: "model selcection"
+title: "Frequency"
 output: github_document
-date: "2022-11-30"
 ---
 
 ```{r setup, include=FALSE}
@@ -12,6 +11,8 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 library(shiny)
+library(patchwork)
+
 knitr::opts_chunk$set(
 	echo = TRUE,
 	warning = FALSE,
@@ -26,14 +27,11 @@ options(
   ggplot2.continuous.fill = "viridis"
 )
 
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
-
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
 
-```{r}
+```{r, include=FALSE}
 census =
   read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")%>% 
   janitor::clean_names() %>%
@@ -56,29 +54,78 @@ census =
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 ```
 
-# Data analysis
+### Central Park Squirrels Distribution by Days (AM/PM)
 
-### Central Park Squirrel Data Collection Distribution
-
-For our final project we were interested in looking at the NYC Squirrel Census collected by volunteers in October 2018. While the dataset is entitled “NYC Squirrel Census”, the data was geographically restricted to Central Park.
+In this part, we were interested in looking at the Central Park Squirrel Census collected in October 2018. We make this graph to analysis the frequency of Squirrel recorded for each of the observation (AM or PM).
 
 ```{r}
-dates <-census %>%
-  mutate(Month= substr(date, 1,2), Day=substr(date, 3,4), Year=substr(date,5,9))
+dates = 
+  census %>%
+  mutate(Month = substr(date, 1,2), Day = substr(date, 3,4), Year = substr(date,5,9))
 
-  dates %>% 
+dates %>% 
   group_by(Day, shift) %>%
   count() %>%
   ggplot() +
-  geom_col(aes(x=Day, y=n, fill=shift)) +
+  geom_col(aes(x = Day, y = n, fill = shift)) +
   scale_fill_brewer(palette = "Paired") +
-  labs(x = "Day", y ="Number of Observations", fill='Shift') +
-  ggtitle('Central Park Squirrel Data Collection Distribution (Oct. 2018)') +
-  theme(plot.title = element_text(hjust = 0.5)) 
+  labs(x = "Day", y = "Number of Observations", fill = 'Shift') +
+  ggtitle('Central Park Squirrels Distribution by Days (AM/PM)') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(fill='Time of day') 
+```
+
+### Central Park Squirrels Distribution by Primary Fur Colors
+
+In this part, we were interested in the frequency of Squirrel recorded for each of the observation
+
+```{r}
+dates %>%
+  group_by(Day, primary_fur_color) %>% 
+  count() %>%
+  ggplot() +
+  geom_col(aes(x = Day, y = n, fill = primary_fur_color)) +
+  scale_fill_brewer(palette = "Paired") +
+  ggtitle('Central Park Squirrels Distribution by Primary Fur Color') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs( x='Day', y= 'Number of Observations') +
+  labs(fill='Primary Fur Color') +
+  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
+```
+
+### Central Park Squirrels Distribution by Age Group
+
+```{r}
+plot_1 = 
+dates %>%
+  filter(age !='?') %>%
+  mutate(n=1) %>%
+  group_by(age) %>%
+  ggplot() +
+  geom_col(aes(x = age, y = n, fill = shift), position="fill") +
+  ggtitle('Demographics of Central Park Squirrels') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs( x='Age Group', y= 'Proportion') +
+  labs(fill='Time of day') +
+  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
 ```
 
 ```{r}
-skimr::skim(census)
+plot_2 = 
+dates %>%
+  filter(age !='?') %>%
+  mutate(n=1) %>%
+  group_by(age) %>%
+  ggplot() +
+  geom_col(aes(y=n,x=age, fill=primary_fur_color), position="fill") +
+  ggtitle('Demographics of Central Park Squirrels') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs( x='Age Group', y= 'Proportion') +
+  labs(fill='Primary Fur Color') +
+  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
 ```
 
+```{r}
+plot_1 + plot_2
+```
 
