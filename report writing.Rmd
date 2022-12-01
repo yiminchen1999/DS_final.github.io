@@ -34,7 +34,7 @@ Method:
  
 Results: 
     Data summaries:
-         First graph we drew was 'Number of Observations' v.s. 'Day', and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight.
+         First graph we drew was 'Number of Observations' v.s. 'Day', and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight...
     
     Some interesting plots:
     
