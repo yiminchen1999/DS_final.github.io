@@ -2,7 +2,12 @@
 title: "shinny base"
 author: "yimin chen"
 date: "2022-11-29"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: cosmo
 ---
 
 - analyses: 
