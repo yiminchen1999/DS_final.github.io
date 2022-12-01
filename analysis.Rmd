@@ -69,7 +69,7 @@ scale_fill_discrete = scale_fill_viridis_d
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
-```{r}
+```{r,include=FALSE}
 census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版在下面
   read_csv("~/Desktop/2018_Central_Park_Squirrel_Census_-_Squirrel_Data copy.csv")%>% 
   janitor::clean_names() %>%
@@ -124,7 +124,7 @@ census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版�
 #write.csv(census1,"~/Desktop/squirrel_tidy.csv", row.names = TRUE)
 ```
 
-```{r}
+```{r,include=FALSE}
 census = #这是未数据处理过后的，即原始版
   read_csv("~/Desktop/2018_Central_Park_Squirrel_Census_-_Squirrel_Data copy.csv")%>% 
   janitor::clean_names() %>%
@@ -148,6 +148,9 @@ census = #这是未数据处理过后的，即原始版
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 #write.csv(census,"~/Desktop/squirrel_original.csv", row.names = TRUE)
 #na.omit()
+```
+
+```{r}
 skimr::skim(census)
 glimpse(census)
 view(census)
