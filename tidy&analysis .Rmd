@@ -26,6 +26,7 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 library(ggthemes)
+library(lubridate)
 library(report)
 library(sf)
 library(shiny)
@@ -47,6 +48,13 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
+# define function class_date: puts the date in format
+class_date <- function(x){
+  day <- substr(x, 3, 4)
+  month <- substr(x, 1, 2)
+  year <- substr(x, 5, 8)
+  return <- paste(month, day, year, sep="/")
+}
 ```
 
 ```{r,include=FALSE}
@@ -58,6 +66,7 @@ census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版�
          long = as.numeric(x),
          lat = as.numeric(y),
          shift = as.character(shift),
+         date = as.character(date),
          primary_fur_color=as.character(primary_fur_color),
          activity = case_when( running == "TRUE" ~ "running",
                                chasing == "TRUE" ~ "chasing",
@@ -100,9 +109,17 @@ census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版�
                                sounds == "moans" ~ "3",
           TRUE ~ "0"
          ))%>%
+  mutate(location = case_when(location == "Ground Plane"~ "1",
+                               location =="Above Ground" ~ "2",
+          TRUE ~ "0"
+         ))%>%
+  mutate(date = class_date(date))%>%
+  mutate(date=as.Date(date, "%m/%d/%Y"))%>%
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
+
 #write.csv(census1,"~/Desktop/squirrel_tidy.csv", row.names = TRUE)
 ```
+
 
 ```{r}
 census = #这是未数据处理过后的，即原始版
