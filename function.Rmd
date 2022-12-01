@@ -2,5 +2,61 @@
 title: "function"
 output: github_document
 ---
+```{r}
+library(faraway)
+library(tidyverse)
+library(dplyr)
+library(broom)
 
+install.packages("olsrr")
+library(olsrr)
+
+library(MASS)
+library(caret)
+```
 This will be model building procedure...
+```{r}
+sq_df = read_csv('squirrel_tidy.csv') %>% 
+  janitor::clean_names()
+```
+
+```{r}
+# longitudinal data function
+long_lat_model =
+  lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(long_lat_model)
+print(long_lat_model)
+
+long_model =
+  lm(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
+summary(long_model)
+print(long_model)
+
+long_model1 = 
+  lm(cbind(long, lat) ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
+summary(long_model1)
+print(long_model1)
+
+```
+
+
+# longitudinal model selection
+model_criterion = lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion)
+
+model_stepwise <- lm(long ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_both_p(model_stepwise)
+
+
+
+```{r}
+# latitudinal data function
+lat_model =
+  lm(lat ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(lat_model)
+```
+
+```{r}
+# latitudinal model selection
+```
+
