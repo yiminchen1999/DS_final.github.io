@@ -166,9 +166,25 @@ nyc_squirrels1=
 nyc_squirrels1
 nyc_squirrelmap <- leaflet(data=census1) %>%
   addTiles() %>%  
-  addMarkers(lng=~long, lat=~lat, popup= ~hectare)
+  addMarkers(lng=~long, lat=~lat, popup= ~hectare,clusterOptions = markerClusterOptions())
 nyc_squirrelmap
 #这个要在shiny的格式里看，我以防万一还是用了markdown
+```
+
+
+```{r}
+# primary fur color map
+
+pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Grey", "NA"))
+
+#Locations based on fur color
+census %>%
+  filter(!is.na(primary_fur_color)) %>%
+  leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~long,
+                   lat = ~lat, radius = 3, color = ~pal_coats(primary_fur_color), stroke = FALSE, fillOpacity = 0.5) %>%
+  addLegend(position ="topright",pal = pal_coats, values = ~primary_fur_color)
 ```
 
 ```{r}
@@ -181,7 +197,6 @@ plot(factor(location) ~ factor(activity), data = omitted)
 plot(factor(location) ~ factor(reaction), data = omitted)
 plot(factor(long) ~ factor(activity), data = omitted)
 ```
-
 
 ```{r}
 library(revgeo)
@@ -204,6 +219,4 @@ plot(d, axes=TRUE, main="Original lat-lon", cex.axis=.95)
   #theme_map()
 ```
 
-```{r}
 
-```
