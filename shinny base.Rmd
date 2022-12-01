@@ -3,7 +3,6 @@ title: "shinny base"
 author: "yimin chen"
 date: "2022-11-29"
 output: html_document
-runtime: shiny
 ---
 
 - analyses: 
@@ -71,7 +70,7 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 ```{r,include=FALSE}
 census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版在下面
-  read_csv("~/Desktop/2018_Central_Park_Squirrel_Census_-_Squirrel_Data copy.csv")%>% 
+  read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")%>% 
   janitor::clean_names() %>%
   #filter(!is.na(primary_fur_color))%>%
   mutate(date=as.character(date),
