@@ -12,7 +12,7 @@ date: "2022-12-01"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Title: Location Predictions of Squirrels Based on Several Characteristics
+Title: Location Predictions of Squirrels Based on Several Characteristics...
 
 Abstract:
 
