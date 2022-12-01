@@ -5,7 +5,7 @@ output:
     code_folding: hide
     toc: true
     toc_float: true
-    theme: cerulean
+    theme: cosmo
 ---
 
 ![](Squirrel_PICs/squirrel_on_human.JPG){width=80%}

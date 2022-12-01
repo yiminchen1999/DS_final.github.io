@@ -21,7 +21,7 @@ navbar:
 
 output:
   html_document:
-    theme: cerulean
+    theme: cosmo
     toc : true
     toc_float: true
     code_folding: hide
