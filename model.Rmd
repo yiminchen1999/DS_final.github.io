@@ -56,6 +56,11 @@ census =
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 ```
 
+# Data analysis
+
+### Central Park Squirrel Data Collection Distribution
+
+For our final project we were interested in looking at the NYC Squirrel Census collected by volunteers in October 2018. While the dataset is entitled “NYC Squirrel Census”, the data was geographically restricted to Central Park.
 
 ```{r}
 dates <-census %>%
@@ -71,7 +76,6 @@ dates <-census %>%
   ggtitle('Central Park Squirrel Data Collection Distribution (Oct. 2018)') +
   theme(plot.title = element_text(hjust = 0.5)) 
 ```
-
 
 ```{r}
 skimr::skim(census)
