@@ -636,6 +636,70 @@ summary(long_model1)</code></pre>
 ## primary_fur_color        -5.158e-04  -1.226e-03
 ## reaction                  5.102e-04   7.759e-04
 ## sounds                    2.141e-03   2.953e-03</code></pre>
+<pre class="r"><code>set.seed(1)
+# Use 10-fold validation 
+train = trainControl(method = &quot;cv&quot;, number = 10)
+
+y1 &lt;- data.frame(cbind(sq_df$long, sq_df$lat))
+
+model_caret1 = train(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
+trControl = train,
+method = &#39;lm&#39;,
+na.action = na.pass)# fitting a regression line
+model_caret1$finalModel</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ ., data = dat)
+## 
+## Coefficients:
+##             (Intercept)  hectare_squirrel_number        primary_fur_color  
+##              -7.397e+01               -3.282e-04               -5.158e-04  
+##                reaction                   sounds  
+##               5.102e-04                2.141e-03</code></pre>
+<pre class="r"><code>model_caret1</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 3023 samples
+##    4 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 2721, 2721, 2721, 2720, 2720, 2720, ... 
+## Resampling results:
+## 
+##   RMSE         Rsquared    MAE        
+##   0.007628988  0.03056643  0.006449628
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
+<pre class="r"><code>model_caret2 = train(lat ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
+trControl = train,
+method = &#39;lm&#39;,
+na.action = na.pass)# fitting a regression line
+model_caret2$finalModel</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ ., data = dat)
+## 
+## Coefficients:
+##             (Intercept)  hectare_squirrel_number        primary_fur_color  
+##              40.7829452               -0.0003998               -0.0012261  
+##                reaction                   sounds  
+##               0.0007759                0.0029532</code></pre>
+<pre class="r"><code>model_caret2</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 3023 samples
+##    4 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 2720, 2720, 2720, 2721, 2722, 2720, ... 
+## Resampling results:
+## 
+##   RMSE        Rsquared    MAE        
+##   0.01014815  0.02968373  0.008923583
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 <div id="longitudinal-model-selection" class="section level1">
 <h1>longitudinal model selection</h1>
 <p>model_criterion = lm(cbind(long, lat) ~ shift +
