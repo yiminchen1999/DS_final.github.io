@@ -1,6 +1,7 @@
 ---
 title: "Frequency"
-html_document:
+output:
+  html_document:
     theme: cosmo
     toc : true
     toc_float: true
