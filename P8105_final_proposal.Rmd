@@ -3,6 +3,7 @@ title: "P8105 Project Proposal"
 date: "November 11, 2022"
 output: 
   html_document:
+    code_folding: hide
     toc: true
     toc_float: true
 ---

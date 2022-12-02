@@ -4,17 +4,25 @@ navbar:
   title: "Home"
   
   right:
+    - text: "Squirrel Map"
+      href: map.html  
+
     - text: "Proposal"
       href: P8105_final_proposal.html
       
     - text: "Exploratory Analyses"
-      href: P8105_final_proposal.html
+      menu:
+      - text: "PIC*"
+        href: undecided.html
     
     - text: "Shinny Map"
       href: shinny-base.html
     
     - text: "Shinyapp"
-      href: P8105_final_proposal.html
+      href: undecided.html
+      
+    - text: "Report"
+      href: report-writing.html
       
     - icon: fa-github fa-lg
       href: https://github.com/yiminchen1999/DS_final.github.io
