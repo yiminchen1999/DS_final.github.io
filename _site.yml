@@ -12,8 +12,8 @@ navbar:
       
     - text: "Exploratory Analyses"
       menu:
-      - text: "PIC*"
-        href: undecided.html
+      - text: "Frequency"
+        href: model.html
     
     - text: "Shinny Map"
       href: shinny-base.html
