@@ -14,9 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Title: Location Predictions of Squirrels Based on Several Characteristics...
 
-Abstract:
+# Abstract:
 
-Introduction: (insight, motivation, inspirations, initial questions)
+## Introduction: (insight, motivation, inspirations, initial questions)
    General introduction of the raw dataset:
       Some data of squirrels in New York central park were collected starting from October 6th 2018 to 20th over a 14-day period. Some of their characteristics like ages and fur colors and some of the activities like sounds and locations were recorded. 
    Motivation and initial question: 

@@ -14,7 +14,7 @@
 
 <title>report writing</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -185,8 +185,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -194,16 +194,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -336,31 +329,16 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="map.html">Squirrel Map</a>
-</li>
-<li>
   <a href="P8105_final_proposal.html">Proposal</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Exploratory Analyses
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="undecided.html">PIC*</a>
-    </li>
-  </ul>
+<li>
+  <a href="P8105_final_proposal.html">Exploratory Analyses</a>
 </li>
 <li>
   <a href="shinny-base.html">Shinny Map</a>
 </li>
 <li>
-  <a href="undecided.html">Shinyapp</a>
-</li>
-<li>
-  <a href="report-writing.html">Report</a>
+  <a href="P8105_final_proposal.html">Shinyapp</a>
 </li>
 <li>
   <a href="https://github.com/yiminchen1999/DS_final.github.io">
@@ -393,12 +371,16 @@ div.tocify {
 
 <p>Title: Location Predictions of Squirrels Based on Several
 Characteristics…</p>
-<p>Abstract:</p>
-<p>Introduction: (insight, motivation, inspirations, initial questions)
-General introduction of the raw dataset: Some data of squirrels in New
-York central park were collected starting from October 6th 2018 to 20th
-over a 14-day period. Some of their characteristics like ages and fur
-colors and some of the activities like sounds and locations were
+<div id="abstract" class="section level1">
+<h1>Abstract:</h1>
+<div id="introduction-insight-motivation-inspirations-initial-questions"
+class="section level2">
+<h2>Introduction: (insight, motivation, inspirations, initial
+questions)</h2>
+<p>General introduction of the raw dataset: Some data of squirrels in
+New York central park were collected starting from October 6th 2018 to
+20th over a 14-day period. Some of their characteristics like ages and
+fur colors and some of the activities like sounds and locations were
 recorded. Motivation and initial question: Squirrels are found
 everywhere, and it’s observed that some places have more squirrels than
 others, but is there any trend of where they stay with respect to their
@@ -452,6 +434,8 @@ Main model:
 Comparions:</code></pre>
 <p>Discussion: Findings:</p>
 <p>Conclusion:</p>
+</div>
+</div>
 
 
 
