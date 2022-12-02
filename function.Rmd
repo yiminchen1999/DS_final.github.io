@@ -7,10 +7,8 @@ library(faraway)
 library(tidyverse)
 library(dplyr)
 library(broom)
-
-install.packages("olsrr")
+library(glmnet)
 library(olsrr)
-
 library(MASS)
 library(caret)
 ```
@@ -26,20 +24,34 @@ long_lat_model =
   lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 summary(long_lat_model)
 print(long_lat_model)
-
 long_model =
   lm(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
 summary(long_model)
 print(long_model)
-
 long_model1 = 
   lm(cbind(long, lat) ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
 summary(long_model1)
 print(long_model1)
-
 ```
 
-
+```{r}
+set.seed(1)
+# Use 10-fold validation 
+train = trainControl(method = "cv", number = 10)
+y1 <- data.frame(cbind(sq_df$long, sq_df$lat))
+model_caret1 = train(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
+trControl = train,
+method = 'lm',
+na.action = na.pass)# fitting a regression line
+model_caret1$finalModel
+model_caret1
+model_caret2 = train(lat ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
+trControl = train,
+method = 'lm',
+na.action = na.pass)# fitting a regression line
+model_caret2$finalModel
+model_caret2
+```
 # longitudinal model selection
 model_criterion = lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 ols_step_best_subset(model_criterion)
@@ -59,4 +71,3 @@ summary(lat_model)
 ```{r}
 # latitudinal model selection
 ```
-

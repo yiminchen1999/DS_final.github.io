@@ -398,7 +398,7 @@ dates %&gt;%
 class="section level3">
 <h3>Central Park Squirrels Distribution by Primary Fur Colors</h3>
 <p>In this part, we were interested in the frequency of Squirrel
-recorded for each of the observation</p>
+recorded for each of the observation by primary fur color.</p>
 <pre class="r"><code>dates %&gt;%
   group_by(Day, primary_fur_color) %&gt;% 
   count() %&gt;%
@@ -415,32 +415,36 @@ recorded for each of the observation</p>
 <div id="central-park-squirrels-distribution-by-age-group"
 class="section level3">
 <h3>Central Park Squirrels Distribution by Age Group</h3>
-<pre class="r"><code>plot_1 = 
-dates %&gt;%
+<pre class="r"><code>dates %&gt;% 
+  filter(age !=&#39;?&#39;) %&gt;%
+  group_by(age) %&gt;%
+  count()%&gt;%
+  ggplot(aes(x=&quot;&quot;, y = n, fill = age)) +
+  geom_bar(stat=&quot;identity&quot;, width=1, color=&quot;white&quot;) +
+  coord_polar(&quot;y&quot;, start=0) + 
+  theme_void() + 
+  ggtitle(&#39;Squirrels Distribution by Age Group&#39;) +
+  geom_text(aes(y = n, label = age), color = &quot;black&quot;, size=4) +
+  scale_fill_brewer(palette=&quot;Blues&quot;)</code></pre>
+<p><img src="model_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
+<pre class="r"><code>dates %&gt;%
   filter(age !=&#39;?&#39;) %&gt;%
   mutate(n=1) %&gt;%
-  group_by(age) %&gt;%
-  ggplot() +
-  geom_col(aes(x = age, y = n, fill = shift), position=&quot;fill&quot;) +
-  ggtitle(&#39;Demographics of Central Park Squirrels&#39;) +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  labs( x=&#39;Age Group&#39;, y= &#39;Proportion&#39;) +
-  labs(fill=&#39;Time of day&#39;) +
-  scale_fill_manual(values = c(&quot;#000000&quot;, &quot;#D2691E&quot;, &quot;#D3D3D3&quot;, &quot;white&quot;))</code></pre>
-<pre class="r"><code>plot_2 = 
-dates %&gt;%
-  filter(age !=&#39;?&#39;) %&gt;%
-  mutate(n=1) %&gt;%
-  group_by(age) %&gt;%
-  ggplot() +
-  geom_col(aes(y=n,x=age, fill=primary_fur_color), position=&quot;fill&quot;) +
-  ggtitle(&#39;Demographics of Central Park Squirrels&#39;) +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  labs( x=&#39;Age Group&#39;, y= &#39;Proportion&#39;) +
+  group_by(age,primary_fur_color) %&gt;% 
+  count() %&gt;% 
+  ggplot(aes(x=&quot;&quot;, y = n, fill = primary_fur_color)) +
+  geom_bar(stat=&quot;identity&quot;, width=1, color=&quot;white&quot;) +
+  facet_grid(~age) + 
+  coord_polar(&quot;y&quot;, start=0) +
+  theme_void() + 
+  theme(legend.position=&quot;none&quot;) +
+  labs( x =&#39;Age Group&#39;, y= &#39;Proportion&#39;) +
   labs(fill=&#39;Primary Fur Color&#39;) +
   scale_fill_manual(values = c(&quot;#000000&quot;, &quot;#D2691E&quot;, &quot;#D3D3D3&quot;, &quot;white&quot;))</code></pre>
-<pre class="r"><code>plot_1 + plot_2</code></pre>
-<p><img src="model_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p><img src="model_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
+<p>pie(x = dates1<span class="math inline">\(n, labels =
+dates1\)</span>primary_fur_color, main = “Squirrels Distribution by Fur
+color”) +</p>
 </div>
 
 

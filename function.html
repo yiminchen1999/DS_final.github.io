@@ -13,10 +13,10 @@
 
 <title>function</title>
 
-<script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,9 +193,16 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
+  content: "&#xe258;";
   border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -328,13 +335,31 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="map.html">Squirrel Map</a>
+</li>
+<li>
   <a href="P8105_final_proposal.html">Proposal</a>
 </li>
-<li>
-  <a href="P8105_final_proposal.html">Exploratory Analyses</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Exploratory Analyses
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="undecided.html">PIC*</a>
+    </li>
+  </ul>
 </li>
 <li>
-  <a href="P8105_final_proposal.html">Shinyapp</a>
+  <a href="shinny-base.html">Shinny Map</a>
+</li>
+<li>
+  <a href="undecided.html">Shinyapp</a>
+</li>
+<li>
+  <a href="report-writing.html">Report</a>
 </li>
 <li>
   <a href="https://github.com/yiminchen1999/DS_final.github.io">
@@ -364,7 +389,354 @@ div.tocify {
 </div>
 
 
+<pre class="r"><code>library(faraway)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.0      ✔ stringr 1.4.1 
+## ✔ readr   2.1.2      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(dplyr)
+library(broom)
+library(glmnet)</code></pre>
+<pre><code>## Loading required package: Matrix
+## 
+## Attaching package: &#39;Matrix&#39;
+## 
+## The following objects are masked from &#39;package:tidyr&#39;:
+## 
+##     expand, pack, unpack
+## 
+## Loaded glmnet 4.1-6</code></pre>
+<pre class="r"><code>library(olsrr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;olsrr&#39;
+## 
+## The following object is masked from &#39;package:faraway&#39;:
+## 
+##     hsb
+## 
+## The following object is masked from &#39;package:datasets&#39;:
+## 
+##     rivers</code></pre>
+<pre class="r"><code>library(MASS)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;MASS&#39;
+## 
+## The following object is masked from &#39;package:olsrr&#39;:
+## 
+##     cement
+## 
+## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     select</code></pre>
+<pre class="r"><code>library(caret)</code></pre>
+<pre><code>## Loading required package: lattice
+## 
+## Attaching package: &#39;lattice&#39;
+## 
+## The following object is masked from &#39;package:faraway&#39;:
+## 
+##     melanoma
+## 
+## 
+## Attaching package: &#39;caret&#39;
+## 
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     lift</code></pre>
 <p>This will be model building procedure…</p>
+<pre class="r"><code>sq_df = read_csv(&#39;squirrel_tidy.csv&#39;) %&gt;% 
+  janitor::clean_names()</code></pre>
+<pre><code>## New names:
+## Rows: 3023 Columns: 17
+## ── Column specification
+## ──────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
+## (5): unique_squirrel_id, hectare, highlight_fur_color, combination_of_... dbl
+## (11): ...1, shift, hectare_squirrel_number, age, primary_fur_color, loc... date
+## (1): date
+## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## • `` -&gt; `...1`</code></pre>
+<pre class="r"><code># longitudinal data function
+long_lat_model =
+  lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(long_lat_model)</code></pre>
+<pre><code>## Response long :
+## 
+## Call:
+## lm(formula = long ~ shift + hectare_squirrel_number + primary_fur_color + 
+##     location + activity + reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.016343 -0.006142 -0.001073  0.006641  0.017460 
+## 
+## Coefficients:
+##                           Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept)             -7.397e+01  7.790e-04 -94955.938  &lt; 2e-16 ***
+## shift                    6.282e-04  2.809e-04      2.237  0.02537 *  
+## hectare_squirrel_number -3.311e-04  4.484e-05     -7.382 2.00e-13 ***
+## primary_fur_color       -4.954e-04  2.772e-04     -1.787  0.07403 .  
+## location                 1.446e-05  2.983e-04      0.048  0.96134    
+## activity                -2.364e-04  1.045e-04     -2.262  0.02378 *  
+## reaction                 4.958e-04  1.677e-04      2.957  0.00313 ** 
+## sounds                   2.191e-03  4.853e-04      4.515 6.57e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007615 on 3015 degrees of freedom
+## Multiple R-squared:  0.03097,    Adjusted R-squared:  0.02872 
+## F-statistic: 13.77 on 7 and 3015 DF,  p-value: &lt; 2.2e-16
+## 
+## 
+## Response lat :
+## 
+## Call:
+## lm(formula = lat ~ shift + hectare_squirrel_number + primary_fur_color + 
+##     location + activity + reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.020328 -0.008796 -0.002466  0.010155  0.022855 
+## 
+## Coefficients:
+##                           Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)             40.7828307  0.0010370 39329.074  &lt; 2e-16 ***
+## shift                    0.0006601  0.0003739     1.765 0.077586 .  
+## hectare_squirrel_number -0.0004053  0.0000597    -6.789 1.36e-11 ***
+## primary_fur_color       -0.0012067  0.0003690    -3.270 0.001087 ** 
+## location                -0.0002694  0.0003971    -0.678 0.497595    
+## activity                -0.0002252  0.0001391    -1.618 0.105660    
+## reaction                 0.0007483  0.0002232     3.352 0.000811 ***
+## sounds                   0.0030483  0.0006460     4.719 2.48e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01014 on 3015 degrees of freedom
+## Multiple R-squared:  0.03093,    Adjusted R-squared:  0.02868 
+## F-statistic: 13.75 on 7 and 3015 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>print(long_lat_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = cbind(long, lat) ~ shift + hectare_squirrel_number + 
+##     primary_fur_color + location + activity + reaction + sounds, 
+##     data = sq_df)
+## 
+## Coefficients:
+##                          long        lat       
+## (Intercept)              -7.397e+01   4.078e+01
+## shift                     6.282e-04   6.601e-04
+## hectare_squirrel_number  -3.311e-04  -4.053e-04
+## primary_fur_color        -4.954e-04  -1.207e-03
+## location                  1.446e-05  -2.694e-04
+## activity                 -2.364e-04  -2.252e-04
+## reaction                  4.958e-04   7.483e-04
+## sounds                    2.191e-03   3.048e-03</code></pre>
+<pre class="r"><code>long_model =
+  lm(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
+summary(long_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = long ~ hectare_squirrel_number + primary_fur_color + 
+##     reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.015786 -0.006129 -0.001063  0.006684  0.017604 
+## 
+## Coefficients:
+##                           Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept)             -7.397e+01  4.258e-04 -1.737e+05  &lt; 2e-16 ***
+## hectare_squirrel_number -3.282e-04  4.482e-05 -7.322e+00 3.13e-13 ***
+## primary_fur_color       -5.158e-04  2.775e-04 -1.859e+00  0.06312 .  
+## reaction                 5.102e-04  1.667e-04  3.061e+00  0.00223 ** 
+## sounds                   2.141e-03  4.836e-04  4.427e+00 9.90e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007625 on 3018 degrees of freedom
+## Multiple R-squared:  0.02745,    Adjusted R-squared:  0.02616 
+## F-statistic: 21.29 on 4 and 3018 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>print(long_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = long ~ hectare_squirrel_number + primary_fur_color + 
+##     reaction + sounds, data = sq_df)
+## 
+## Coefficients:
+##             (Intercept)  hectare_squirrel_number        primary_fur_color  
+##              -7.397e+01               -3.282e-04               -5.158e-04  
+##                reaction                   sounds  
+##               5.102e-04                2.141e-03</code></pre>
+<pre class="r"><code>long_model1 = 
+  lm(cbind(long, lat) ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
+summary(long_model1)</code></pre>
+<pre><code>## Response long :
+## 
+## Call:
+## lm(formula = long ~ hectare_squirrel_number + primary_fur_color + 
+##     reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.015786 -0.006129 -0.001063  0.006684  0.017604 
+## 
+## Coefficients:
+##                           Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept)             -7.397e+01  4.258e-04 -1.737e+05  &lt; 2e-16 ***
+## hectare_squirrel_number -3.282e-04  4.482e-05 -7.322e+00 3.13e-13 ***
+## primary_fur_color       -5.158e-04  2.775e-04 -1.859e+00  0.06312 .  
+## reaction                 5.102e-04  1.667e-04  3.061e+00  0.00223 ** 
+## sounds                   2.141e-03  4.836e-04  4.427e+00 9.90e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007625 on 3018 degrees of freedom
+## Multiple R-squared:  0.02745,    Adjusted R-squared:  0.02616 
+## F-statistic: 21.29 on 4 and 3018 DF,  p-value: &lt; 2.2e-16
+## 
+## 
+## Response lat :
+## 
+## Call:
+## lm(formula = lat ~ hectare_squirrel_number + primary_fur_color + 
+##     reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.020514 -0.008856 -0.002532  0.010212  0.022890 
+## 
+## Coefficients:
+##                           Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)              4.078e+01  5.664e-04 71998.578  &lt; 2e-16 ***
+## hectare_squirrel_number -3.998e-04  5.963e-05    -6.704 2.41e-11 ***
+## primary_fur_color       -1.226e-03  3.692e-04    -3.321 0.000907 ***
+## reaction                 7.759e-04  2.218e-04     3.499 0.000475 ***
+## sounds                   2.953e-03  6.434e-04     4.590 4.61e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01014 on 3018 degrees of freedom
+## Multiple R-squared:  0.02852,    Adjusted R-squared:  0.02723 
+## F-statistic: 22.15 on 4 and 3018 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>print(long_model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = cbind(long, lat) ~ hectare_squirrel_number + primary_fur_color + 
+##     reaction + sounds, data = sq_df)
+## 
+## Coefficients:
+##                          long        lat       
+## (Intercept)              -7.397e+01   4.078e+01
+## hectare_squirrel_number  -3.282e-04  -3.998e-04
+## primary_fur_color        -5.158e-04  -1.226e-03
+## reaction                  5.102e-04   7.759e-04
+## sounds                    2.141e-03   2.953e-03</code></pre>
+<pre class="r"><code>set.seed(1)
+# Use 10-fold validation 
+train = trainControl(method = &quot;cv&quot;, number = 10)
+y1 &lt;- data.frame(cbind(sq_df$long, sq_df$lat))
+model_caret1 = train(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
+trControl = train,
+method = &#39;lm&#39;,
+na.action = na.pass)# fitting a regression line
+model_caret1$finalModel</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ ., data = dat)
+## 
+## Coefficients:
+##             (Intercept)  hectare_squirrel_number        primary_fur_color  
+##              -7.397e+01               -3.282e-04               -5.158e-04  
+##                reaction                   sounds  
+##               5.102e-04                2.141e-03</code></pre>
+<pre class="r"><code>model_caret1</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 3023 samples
+##    4 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 2721, 2721, 2721, 2720, 2720, 2720, ... 
+## Resampling results:
+## 
+##   RMSE         Rsquared    MAE        
+##   0.007628988  0.03056643  0.006449628
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
+<pre class="r"><code>model_caret2 = train(lat ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
+trControl = train,
+method = &#39;lm&#39;,
+na.action = na.pass)# fitting a regression line
+model_caret2$finalModel</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ ., data = dat)
+## 
+## Coefficients:
+##             (Intercept)  hectare_squirrel_number        primary_fur_color  
+##              40.7829452               -0.0003998               -0.0012261  
+##                reaction                   sounds  
+##               0.0007759                0.0029532</code></pre>
+<pre class="r"><code>model_caret2</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 3023 samples
+##    4 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 2720, 2720, 2720, 2721, 2722, 2720, ... 
+## Resampling results:
+## 
+##   RMSE        Rsquared    MAE        
+##   0.01014815  0.02968373  0.008923583
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
+<div id="longitudinal-model-selection" class="section level1">
+<h1>longitudinal model selection</h1>
+<p>model_criterion = lm(cbind(long, lat) ~ shift +
+hectare_squirrel_number + primary_fur_color + location + activity +
+reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion)</p>
+<p>model_stepwise &lt;- lm(long ~ hectare_squirrel_number +
+primary_fur_color + location + activity + reaction + sounds, data =
+sq_df) ols_step_both_p(model_stepwise)</p>
+<pre class="r"><code># latitudinal data function
+lat_model =
+  lm(lat ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(lat_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ hectare_squirrel_number + primary_fur_color + 
+##     location + activity + reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019948 -0.008798 -0.002505  0.010204  0.022433 
+## 
+## Coefficients:
+##                           Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)              4.078e+01  8.031e-04 50780.935  &lt; 2e-16 ***
+## hectare_squirrel_number -4.034e-04  5.971e-05    -6.756 1.70e-11 ***
+## primary_fur_color       -1.215e-03  3.691e-04    -3.292  0.00101 ** 
+## location                -3.407e-04  3.952e-04    -0.862  0.38871    
+## activity                -2.335e-04  1.391e-04    -1.678  0.09343 .  
+## reaction                 7.289e-04  2.230e-04     3.268  0.00109 ** 
+## sounds                   3.049e-03  6.462e-04     4.718 2.49e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01014 on 3016 degrees of freedom
+## Multiple R-squared:  0.02993,    Adjusted R-squared:  0.028 
+## F-statistic: 15.51 on 6 and 3016 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code># latitudinal model selection</code></pre>
+</div>
 
 
 
