@@ -7,10 +7,8 @@ library(faraway)
 library(tidyverse)
 library(dplyr)
 library(broom)
-
-install.packages("olsrr")
+library(glmnet)
 library(olsrr)
-
 library(MASS)
 library(caret)
 ```
