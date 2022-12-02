@@ -639,9 +639,7 @@ summary(long_model1)</code></pre>
 <pre class="r"><code>set.seed(1)
 # Use 10-fold validation 
 train = trainControl(method = &quot;cv&quot;, number = 10)
-
 y1 &lt;- data.frame(cbind(sq_df$long, sq_df$lat))
-
 model_caret1 = train(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
 trControl = train,
 method = &#39;lm&#39;,
