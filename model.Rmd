@@ -1,6 +1,10 @@
 ---
 title: "Frequency"
-output: github_document
+html_document:
+    theme: cosmo
+    toc : true
+    toc_float: true
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -77,7 +81,7 @@ dates %>%
 
 ### Central Park Squirrels Distribution by Primary Fur Colors
 
-In this part, we were interested in the frequency of Squirrel recorded for each of the observation
+In this part, we were interested in the frequency of Squirrel recorded for each of the observation by primary fur color. 
 
 ```{r}
 dates %>%
@@ -96,36 +100,37 @@ dates %>%
 ### Central Park Squirrels Distribution by Age Group
 
 ```{r}
-plot_1 = 
-dates %>%
+dates %>% 
   filter(age !='?') %>%
-  mutate(n=1) %>%
   group_by(age) %>%
-  ggplot() +
-  geom_col(aes(x = age, y = n, fill = shift), position="fill") +
-  ggtitle('Demographics of Central Park Squirrels') +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  labs( x='Age Group', y= 'Proportion') +
-  labs(fill='Time of day') +
-  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
+  count()%>%
+  ggplot(aes(x="", y = n, fill = age)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) + 
+  theme_void() + 
+  ggtitle('Squirrels Distribution by Age Group') +
+  geom_text(aes(y = n, label = age), color = "black", size=4) +
+  scale_fill_brewer(palette="Blues")
 ```
 
+
+
 ```{r}
-plot_2 = 
 dates %>%
   filter(age !='?') %>%
   mutate(n=1) %>%
-  group_by(age) %>%
-  ggplot() +
-  geom_col(aes(y=n,x=age, fill=primary_fur_color), position="fill") +
-  ggtitle('Demographics of Central Park Squirrels') +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  labs( x='Age Group', y= 'Proportion') +
+  group_by(age,primary_fur_color) %>% 
+  count() %>% 
+  ggplot(aes(x="", y = n, fill = primary_fur_color)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  facet_grid(~age) + 
+  coord_polar("y", start=0) +
+  theme_void() + 
+  theme(legend.position="none") +
+  labs( x ='Age Group', y= 'Proportion') +
   labs(fill='Primary Fur Color') +
   scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
 ```
 
-```{r}
-plot_1 + plot_2
-```
+pie(x = dates1$n, labels = dates1$primary_fur_color, main = "Squirrels Distribution by Fur color") +
 
