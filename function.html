@@ -13,7 +13,7 @@
 
 <title>function</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -348,7 +341,7 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="undecided.html">PIC*</a>
+      <a href="model.html">Frequency</a>
     </li>
   </ul>
 </li>
@@ -392,28 +385,19 @@ div.tocify {
 <pre class="r"><code>library(faraway)
 library(tidyverse)</code></pre>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
 ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.0      ✔ stringr 1.4.1 
-## ✔ readr   2.1.2      ✔ forcats 0.5.2 
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(dplyr)
 library(broom)
-library(glmnet)</code></pre>
-<pre><code>## Loading required package: Matrix
-## 
-## Attaching package: &#39;Matrix&#39;
-## 
-## The following objects are masked from &#39;package:tidyr&#39;:
-## 
-##     expand, pack, unpack
-## 
-## Loaded glmnet 4.1-6</code></pre>
-<pre class="r"><code>library(olsrr)</code></pre>
+#library(glmnet)
+library(olsrr)</code></pre>
 <pre><code>## 
-## Attaching package: &#39;olsrr&#39;
+## 载入程辑包：&#39;olsrr&#39;
 ## 
 ## The following object is masked from &#39;package:faraway&#39;:
 ## 
@@ -424,7 +408,7 @@ library(glmnet)</code></pre>
 ##     rivers</code></pre>
 <pre class="r"><code>library(MASS)</code></pre>
 <pre><code>## 
-## Attaching package: &#39;MASS&#39;
+## 载入程辑包：&#39;MASS&#39;
 ## 
 ## The following object is masked from &#39;package:olsrr&#39;:
 ## 
@@ -434,16 +418,16 @@ library(glmnet)</code></pre>
 ## 
 ##     select</code></pre>
 <pre class="r"><code>library(caret)</code></pre>
-<pre><code>## Loading required package: lattice
+<pre><code>## 载入需要的程辑包：lattice
 ## 
-## Attaching package: &#39;lattice&#39;
+## 载入程辑包：&#39;lattice&#39;
 ## 
 ## The following object is masked from &#39;package:faraway&#39;:
 ## 
 ##     melanoma
 ## 
 ## 
-## Attaching package: &#39;caret&#39;
+## 载入程辑包：&#39;caret&#39;
 ## 
 ## The following object is masked from &#39;package:purrr&#39;:
 ## 
@@ -454,211 +438,412 @@ library(glmnet)</code></pre>
 <pre><code>## New names:
 ## Rows: 3023 Columns: 17
 ## ── Column specification
-## ──────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
-## (5): unique_squirrel_id, hectare, highlight_fur_color, combination_of_... dbl
-## (11): ...1, shift, hectare_squirrel_number, age, primary_fur_color, loc... date
-## (1): date
+## ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot; chr (5): unique_squirrel_id, hectare, highlight_fur_color,
+## combination_of_... dbl (11): ...1, shift, hectare_squirrel_number, age,
+## primary_fur_color, loc... date (1): date
 ## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
 ## Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ## • `` -&gt; `...1`</code></pre>
-<pre class="r"><code># longitudinal data function
-long_lat_model =
-  lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-summary(long_lat_model)</code></pre>
-<pre><code>## Response long :
-## 
-## Call:
-## lm(formula = long ~ shift + hectare_squirrel_number + primary_fur_color + 
-##     location + activity + reaction + sounds, data = sq_df)
-## 
-## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.016343 -0.006142 -0.001073  0.006641  0.017460 
-## 
-## Coefficients:
-##                           Estimate Std. Error    t value Pr(&gt;|t|)    
-## (Intercept)             -7.397e+01  7.790e-04 -94955.938  &lt; 2e-16 ***
-## shift                    6.282e-04  2.809e-04      2.237  0.02537 *  
-## hectare_squirrel_number -3.311e-04  4.484e-05     -7.382 2.00e-13 ***
-## primary_fur_color       -4.954e-04  2.772e-04     -1.787  0.07403 .  
-## location                 1.446e-05  2.983e-04      0.048  0.96134    
-## activity                -2.364e-04  1.045e-04     -2.262  0.02378 *  
-## reaction                 4.958e-04  1.677e-04      2.957  0.00313 ** 
-## sounds                   2.191e-03  4.853e-04      4.515 6.57e-06 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.007615 on 3015 degrees of freedom
-## Multiple R-squared:  0.03097,    Adjusted R-squared:  0.02872 
-## F-statistic: 13.77 on 7 and 3015 DF,  p-value: &lt; 2.2e-16
-## 
-## 
-## Response lat :
-## 
-## Call:
-## lm(formula = lat ~ shift + hectare_squirrel_number + primary_fur_color + 
-##     location + activity + reaction + sounds, data = sq_df)
-## 
-## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.020328 -0.008796 -0.002466  0.010155  0.022855 
-## 
-## Coefficients:
-##                           Estimate Std. Error   t value Pr(&gt;|t|)    
-## (Intercept)             40.7828307  0.0010370 39329.074  &lt; 2e-16 ***
-## shift                    0.0006601  0.0003739     1.765 0.077586 .  
-## hectare_squirrel_number -0.0004053  0.0000597    -6.789 1.36e-11 ***
-## primary_fur_color       -0.0012067  0.0003690    -3.270 0.001087 ** 
-## location                -0.0002694  0.0003971    -0.678 0.497595    
-## activity                -0.0002252  0.0001391    -1.618 0.105660    
-## reaction                 0.0007483  0.0002232     3.352 0.000811 ***
-## sounds                   0.0030483  0.0006460     4.719 2.48e-06 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.01014 on 3015 degrees of freedom
-## Multiple R-squared:  0.03093,    Adjusted R-squared:  0.02868 
-## F-statistic: 13.75 on 7 and 3015 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>print(long_lat_model)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = cbind(long, lat) ~ shift + hectare_squirrel_number + 
-##     primary_fur_color + location + activity + reaction + sounds, 
-##     data = sq_df)
-## 
-## Coefficients:
-##                          long        lat       
-## (Intercept)              -7.397e+01   4.078e+01
-## shift                     6.282e-04   6.601e-04
-## hectare_squirrel_number  -3.311e-04  -4.053e-04
-## primary_fur_color        -4.954e-04  -1.207e-03
-## location                  1.446e-05  -2.694e-04
-## activity                 -2.364e-04  -2.252e-04
-## reaction                  4.958e-04   7.483e-04
-## sounds                    2.191e-03   3.048e-03</code></pre>
-<pre class="r"><code>long_model =
-  lm(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
+<pre class="r"><code># longitudinal/latitudinal function
+# raw data input (no hectare information because the user would not know the info. about it)
+long_model =
+  lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 summary(long_model)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = long ~ hectare_squirrel_number + primary_fur_color + 
-##     reaction + sounds, data = sq_df)
+## lm(formula = long ~ shift + age + primary_fur_color + location + 
+##     activity + reaction + sounds, data = sq_df)
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.015786 -0.006129 -0.001063  0.006684  0.017604 
+## -0.015965 -0.005875 -0.001331  0.006604  0.019146 
 ## 
 ## Coefficients:
-##                           Estimate Std. Error    t value Pr(&gt;|t|)    
-## (Intercept)             -7.397e+01  4.258e-04 -1.737e+05  &lt; 2e-16 ***
-## hectare_squirrel_number -3.282e-04  4.482e-05 -7.322e+00 3.13e-13 ***
-## primary_fur_color       -5.158e-04  2.775e-04 -1.859e+00  0.06312 .  
-## reaction                 5.102e-04  1.667e-04  3.061e+00  0.00223 ** 
-## sounds                   2.141e-03  4.836e-04  4.427e+00 9.90e-06 ***
+##                     Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept)       -7.397e+01  8.390e-04 -88161.363  &lt; 2e-16 ***
+## shift              5.763e-04  2.831e-04      2.036  0.04187 *  
+## age               -9.137e-04  3.676e-04     -2.486  0.01299 *  
+## primary_fur_color -5.253e-04  2.797e-04     -1.878  0.06053 .  
+## location           1.836e-04  3.008e-04      0.610  0.54165    
+## activity          -2.371e-04  1.054e-04     -2.250  0.02454 *  
+## reaction           5.130e-04  1.691e-04      3.034  0.00243 ** 
+## sounds             2.081e-03  4.895e-04      4.251 2.19e-05 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.007625 on 3018 degrees of freedom
-## Multiple R-squared:  0.02745,    Adjusted R-squared:  0.02616 
-## F-statistic: 21.29 on 4 and 3018 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.007675 on 3015 degrees of freedom
+## Multiple R-squared:  0.01547,    Adjusted R-squared:  0.01319 
+## F-statistic: 6.768 on 7 and 3015 DF,  p-value: 5.462e-08</code></pre>
 <pre class="r"><code>print(long_model)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = long ~ hectare_squirrel_number + primary_fur_color + 
-##     reaction + sounds, data = sq_df)
+## lm(formula = long ~ shift + age + primary_fur_color + location + 
+##     activity + reaction + sounds, data = sq_df)
 ## 
 ## Coefficients:
-##             (Intercept)  hectare_squirrel_number        primary_fur_color  
-##              -7.397e+01               -3.282e-04               -5.158e-04  
-##                reaction                   sounds  
-##               5.102e-04                2.141e-03</code></pre>
-<pre class="r"><code>long_model1 = 
-  lm(cbind(long, lat) ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
+##       (Intercept)              shift                age  primary_fur_color  
+##        -7.397e+01          5.763e-04         -9.137e-04         -5.253e-04  
+##          location           activity           reaction             sounds  
+##         1.836e-04         -2.371e-04          5.130e-04          2.081e-03</code></pre>
+<pre class="r"><code>lat_model =
+  lm(lat ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(lat_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ shift + age + primary_fur_color + location + 
+##     activity + reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019660 -0.008937 -0.002902  0.010291  0.021841 
+## 
+## Coefficients:
+##                     Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)        4.078e+01  1.116e-03 36541.411  &lt; 2e-16 ***
+## shift              6.023e-04  3.766e-04     1.599 0.109878    
+## age               -7.666e-04  4.890e-04    -1.568 0.117052    
+## primary_fur_color -1.260e-03  3.721e-04    -3.385 0.000721 ***
+## location          -8.062e-05  4.001e-04    -0.201 0.840342    
+## activity          -2.279e-04  1.402e-04    -1.626 0.104045    
+## reaction           7.655e-04  2.249e-04     3.404 0.000673 ***
+## sounds             2.934e-03  6.512e-04     4.505 6.88e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01021 on 3015 degrees of freedom
+## Multiple R-squared:  0.01692,    Adjusted R-squared:  0.01464 
+## F-statistic: 7.413 on 7 and 3015 DF,  p-value: 7.361e-09</code></pre>
+<pre class="r"><code>print(lat_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ shift + age + primary_fur_color + location + 
+##     activity + reaction + sounds, data = sq_df)
+## 
+## Coefficients:
+##       (Intercept)              shift                age  primary_fur_color  
+##         4.078e+01          6.023e-04         -7.666e-04         -1.260e-03  
+##          location           activity           reaction             sounds  
+##        -8.062e-05         -2.279e-04          7.655e-04          2.934e-03</code></pre>
+<pre class="r"><code># model selection using p-value
+long_model1 = 
+  lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
 summary(long_model1)</code></pre>
-<pre><code>## Response long :
-## 
+<pre><code>## 
 ## Call:
-## lm(formula = long ~ hectare_squirrel_number + primary_fur_color + 
-##     reaction + sounds, data = sq_df)
+## lm(formula = long ~ shift + age + activity + reaction + sounds, 
+##     data = sq_df)
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.015786 -0.006129 -0.001063  0.006684  0.017604 
+## -0.015899 -0.005878 -0.001336  0.006651  0.018671 
 ## 
 ## Coefficients:
-##                           Estimate Std. Error    t value Pr(&gt;|t|)    
-## (Intercept)             -7.397e+01  4.258e-04 -1.737e+05  &lt; 2e-16 ***
-## hectare_squirrel_number -3.282e-04  4.482e-05 -7.322e+00 3.13e-13 ***
-## primary_fur_color       -5.158e-04  2.775e-04 -1.859e+00  0.06312 .  
-## reaction                 5.102e-04  1.667e-04  3.061e+00  0.00223 ** 
-## sounds                   2.141e-03  4.836e-04  4.427e+00 9.90e-06 ***
+##               Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept) -7.397e+01  6.978e-04 -1.060e+05  &lt; 2e-16 ***
+## shift        5.639e-04  2.817e-04  2.001e+00  0.04543 *  
+## age         -9.412e-04  3.663e-04 -2.569e+00  0.01024 *  
+## activity    -2.267e-04  1.031e-04 -2.200e+00  0.02787 *  
+## reaction     4.809e-04  1.681e-04  2.862e+00  0.00424 ** 
+## sounds       2.142e-03  4.873e-04  4.396e+00 1.14e-05 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.007625 on 3018 degrees of freedom
-## Multiple R-squared:  0.02745,    Adjusted R-squared:  0.02616 
-## F-statistic: 21.29 on 4 and 3018 DF,  p-value: &lt; 2.2e-16
-## 
-## 
-## Response lat :
-## 
-## Call:
-## lm(formula = lat ~ hectare_squirrel_number + primary_fur_color + 
-##     reaction + sounds, data = sq_df)
-## 
-## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.020514 -0.008856 -0.002532  0.010212  0.022890 
-## 
-## Coefficients:
-##                           Estimate Std. Error   t value Pr(&gt;|t|)    
-## (Intercept)              4.078e+01  5.664e-04 71998.578  &lt; 2e-16 ***
-## hectare_squirrel_number -3.998e-04  5.963e-05    -6.704 2.41e-11 ***
-## primary_fur_color       -1.226e-03  3.692e-04    -3.321 0.000907 ***
-## reaction                 7.759e-04  2.218e-04     3.499 0.000475 ***
-## sounds                   2.953e-03  6.434e-04     4.590 4.61e-06 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.01014 on 3018 degrees of freedom
-## Multiple R-squared:  0.02852,    Adjusted R-squared:  0.02723 
-## F-statistic: 22.15 on 4 and 3018 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.007678 on 3017 degrees of freedom
+## Multiple R-squared:  0.01419,    Adjusted R-squared:  0.01255 
+## F-statistic: 8.684 on 5 and 3017 DF,  p-value: 3.478e-08</code></pre>
 <pre class="r"><code>print(long_model1)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = cbind(long, lat) ~ hectare_squirrel_number + primary_fur_color + 
-##     reaction + sounds, data = sq_df)
+## lm(formula = long ~ shift + age + activity + reaction + sounds, 
+##     data = sq_df)
 ## 
 ## Coefficients:
-##                          long        lat       
-## (Intercept)              -7.397e+01   4.078e+01
-## hectare_squirrel_number  -3.282e-04  -3.998e-04
-## primary_fur_color        -5.158e-04  -1.226e-03
-## reaction                  5.102e-04   7.759e-04
-## sounds                    2.141e-03   2.953e-03</code></pre>
+## (Intercept)        shift          age     activity     reaction       sounds  
+##  -7.397e+01    5.639e-04   -9.412e-04   -2.267e-04    4.809e-04    2.142e-03</code></pre>
+<pre class="r"><code>lat_model1 =
+  lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+summary(lat_model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019726 -0.009004 -0.002850  0.010370  0.021857 
+## 
+## Coefficients:
+##                     Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)       40.7814005  0.0005212 78244.152  &lt; 2e-16 ***
+## primary_fur_color -0.0013140  0.0003716    -3.536 0.000412 ***
+## reaction           0.0007784  0.0002234     3.484 0.000501 ***
+## sounds             0.0029072  0.0006480     4.486 7.51e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01022 on 3019 degrees of freedom
+## Multiple R-squared:  0.01405,    Adjusted R-squared:  0.01307 
+## F-statistic: 14.34 on 3 and 3019 DF,  p-value: 2.813e-09</code></pre>
+<pre class="r"><code>print(lat_model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+## 
+## Coefficients:
+##       (Intercept)  primary_fur_color           reaction             sounds  
+##        40.7814005         -0.0013140          0.0007784          0.0029072</code></pre>
+<pre class="r"><code># model selection using automatic procedure (forward/backward)
+model_stepwise_long &lt;- lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_both_p(model_stepwise_long)</code></pre>
+<pre><code>## 
+##                                    Stepwise Selection Summary                                     
+## -------------------------------------------------------------------------------------------------
+##                               Added/                   Adj.                                          
+## Step        Variable         Removed     R-Square    R-Square     C(p)          AIC         RMSE     
+## -------------------------------------------------------------------------------------------------
+##    1         sounds          addition       0.006       0.006    25.1010    -20836.6444    0.0077    
+##    2        reaction         addition       0.009       0.008    18.6660    -20843.0326    0.0077    
+##    3           age           addition       0.011       0.010    13.3070    -20848.3696    0.0077    
+##    4        activity         addition       0.013       0.012     9.9410    -20851.7308    0.0077    
+##    5          shift          addition       0.014       0.013     7.9330    -20853.7419    0.0077    
+##    6    primary_fur_color    addition       0.015       0.013     6.3730    -20855.3088    0.0077    
+## -------------------------------------------------------------------------------------------------</code></pre>
+<pre class="r"><code>model_stepwise_lat &lt;- lm(lat ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_both_p(model_stepwise_lat)</code></pre>
+<pre><code>## 
+##                                    Stepwise Selection Summary                                     
+## -------------------------------------------------------------------------------------------------
+##                               Added/                   Adj.                                          
+## Step        Variable         Removed     R-Square    R-Square     C(p)          AIC         RMSE     
+## -------------------------------------------------------------------------------------------------
+##    1         sounds          addition       0.007       0.006    27.7780    -19108.7958    0.0103    
+##    2    primary_fur_color    addition       0.010       0.009    18.9560    -19117.5522    0.0102    
+##    3        reaction         addition       0.014       0.013     8.7970    -19127.6836    0.0102    
+##    4        activity         addition       0.015       0.014     7.3460    -19129.1353    0.0102    
+##    5          shift          addition       0.016       0.014     6.5490    -19129.9364    0.0102    
+## -------------------------------------------------------------------------------------------------</code></pre>
+<pre class="r"><code># model selection using criterion-based procedure
+model_criterion_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion_long)</code></pre>
+<pre><code>##                           Best Subsets Regression                           
+## ----------------------------------------------------------------------------
+## Model Index    Predictors
+## ----------------------------------------------------------------------------
+##      1         sounds                                                        
+##      2         reaction sounds                                               
+##      3         age reaction sounds                                           
+##      4         age activity reaction sounds                                  
+##      5         shift age activity reaction sounds                            
+##      6         shift age primary_fur_color activity reaction sounds          
+##      7         shift age primary_fur_color location activity reaction sounds 
+## ----------------------------------------------------------------------------
+## 
+##                                                        Subsets Regression Summary                                                       
+## ----------------------------------------------------------------------------------------------------------------------------------------
+##                        Adj.        Pred                                                                                                  
+## Model    R-Square    R-Square    R-Square     C(p)          AIC           SBIC            SBC         MSEP      FPE      HSP       APC  
+## ----------------------------------------------------------------------------------------------------------------------------------------
+##   1        0.0060      0.0056      0.0047    25.1007    -20836.6444    -29415.5745    -20818.6023    0.1794    1e-04    0.0000    0.9953 
+##   2        0.0087      0.0081      0.0068    18.6656    -20843.0326    -29421.9600    -20818.9766    0.1790    1e-04    0.0000    0.9932 
+##   3        0.0111      0.0101      0.0085    13.3068    -20848.3696    -29427.2860    -20818.2995    0.1786    1e-04    0.0000    0.9915 
+##   4        0.0129      0.0116      0.0096     9.9410    -20851.7308    -29430.6329    -20815.6467    0.1784    1e-04    0.0000    0.9904 
+##   5        0.0142      0.0126      0.0103     7.9325    -20853.7419    -29432.6281    -20811.6439    0.1782    1e-04    0.0000    0.9897 
+##   6        0.0153      0.0134      0.0108     6.3726    -20855.3088    -29434.1758    -20807.1967    0.1780    1e-04    0.0000    0.9892 
+##   7        0.0155      0.0132      0.0103     8.0000    -20853.6823    -29432.5423    -20799.5563    0.1781    1e-04    0.0000    0.9898 
+## ----------------------------------------------------------------------------------------------------------------------------------------
+## AIC: Akaike Information Criteria 
+##  SBIC: Sawa&#39;s Bayesian Information Criteria 
+##  SBC: Schwarz Bayesian Criteria 
+##  MSEP: Estimated error of prediction, assuming multivariate normality 
+##  FPE: Final Prediction Error 
+##  HSP: Hocking&#39;s Sp 
+##  APC: Amemiya Prediction Criteria</code></pre>
+<pre class="r"><code>model_criterion_lat &lt;- lm(lat ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion_lat)</code></pre>
+<pre><code>##                           Best Subsets Regression                           
+## ----------------------------------------------------------------------------
+## Model Index    Predictors
+## ----------------------------------------------------------------------------
+##      1         sounds                                                        
+##      2         primary_fur_color sounds                                      
+##      3         primary_fur_color reaction sounds                             
+##      4         primary_fur_color activity reaction sounds                    
+##      5         shift primary_fur_color activity reaction sounds              
+##      6         shift age primary_fur_color activity reaction sounds          
+##      7         shift age primary_fur_color location activity reaction sounds 
+## ----------------------------------------------------------------------------
+## 
+##                                                        Subsets Regression Summary                                                       
+## ----------------------------------------------------------------------------------------------------------------------------------------
+##                        Adj.        Pred                                                                                                  
+## Model    R-Square    R-Square    R-Square     C(p)          AIC           SBIC            SBC         MSEP      FPE      HSP       APC  
+## ----------------------------------------------------------------------------------------------------------------------------------------
+##   1        0.0066      0.0062      0.0053    27.7776    -19108.7958    -27687.7295    -19090.7538    0.3178    1e-04    0.0000    0.9948 
+##   2        0.0101      0.0094      0.0081    18.9558    -19117.5522    -27696.4802    -19093.4962    0.3168    1e-04    0.0000    0.9919 
+##   3        0.0141      0.0131      0.0114     8.7968    -19127.6836    -27706.5881    -19097.6136    0.3156    1e-04    0.0000    0.9886 
+##   4        0.0152      0.0139      0.0119     7.3462    -19129.1353    -27708.0289    -19093.0513    0.3154    1e-04    0.0000    0.9881 
+##   5        0.0161      0.0145      0.0122     6.5488    -19129.9364    -27708.8171    -19087.8384    0.3152    1e-04    0.0000    0.9878 
+##   6        0.0169      0.0149      0.0124     6.0406    -19130.4502    -27709.3157    -19082.3382    0.3150    1e-04    0.0000    0.9877 
+##   7        0.0169      0.0146      0.0118     8.0000    -19128.4909    -27707.3509    -19074.3649    0.3151    1e-04    0.0000    0.9883 
+## ----------------------------------------------------------------------------------------------------------------------------------------
+## AIC: Akaike Information Criteria 
+##  SBIC: Sawa&#39;s Bayesian Information Criteria 
+##  SBC: Schwarz Bayesian Criteria 
+##  MSEP: Estimated error of prediction, assuming multivariate normality 
+##  FPE: Final Prediction Error 
+##  HSP: Hocking&#39;s Sp 
+##  APC: Amemiya Prediction Criteria</code></pre>
+<pre class="r"><code># model selection using LASSO procedure</code></pre>
+<pre class="r"><code># model comparisons for long
+long_model2 = 
+  lm(long ~ sounds + reaction + age + activity + shift + primary_fur_color, data = sq_df)
+summary(long_model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = long ~ shift + age + activity + reaction + sounds, 
+##     data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.015899 -0.005878 -0.001336  0.006651  0.018671 
+## 
+## Coefficients:
+##               Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept) -7.397e+01  6.978e-04 -1.060e+05  &lt; 2e-16 ***
+## shift        5.639e-04  2.817e-04  2.001e+00  0.04543 *  
+## age         -9.412e-04  3.663e-04 -2.569e+00  0.01024 *  
+## activity    -2.267e-04  1.031e-04 -2.200e+00  0.02787 *  
+## reaction     4.809e-04  1.681e-04  2.862e+00  0.00424 ** 
+## sounds       2.142e-03  4.873e-04  4.396e+00 1.14e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007678 on 3017 degrees of freedom
+## Multiple R-squared:  0.01419,    Adjusted R-squared:  0.01255 
+## F-statistic: 8.684 on 5 and 3017 DF,  p-value: 3.478e-08</code></pre>
+<pre class="r"><code>summary(long_model2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = long ~ sounds + reaction + age + activity + shift + 
+##     primary_fur_color, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.016016 -0.005863 -0.001302  0.006615  0.019090 
+## 
+## Coefficients:
+##                     Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept)       -7.397e+01  7.571e-04 -97703.566  &lt; 2e-16 ***
+## sounds             2.109e-03  4.874e-04      4.326 1.56e-05 ***
+## reaction           5.043e-04  1.684e-04      2.994  0.00278 ** 
+## age               -8.995e-04  3.668e-04     -2.452  0.01426 *  
+## activity          -2.236e-04  1.030e-04     -2.170  0.03007 *  
+## shift              5.588e-04  2.816e-04      1.984  0.04731 *  
+## primary_fur_color -5.278e-04  2.797e-04     -1.887  0.05926 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007674 on 3016 degrees of freedom
+## Multiple R-squared:  0.01535,    Adjusted R-squared:  0.01339 
+## F-statistic: 7.836 on 6 and 3016 DF,  p-value: 2.164e-08</code></pre>
+<pre class="r"><code># model comparisons for lat
+lat_model2 = 
+  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
+lat_model3 = 
+  lm(lat ~ sounds + reaction + age + activity + shift + primary_fur_color, data = sq_df)
+summary(lat_model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019726 -0.009004 -0.002850  0.010370  0.021857 
+## 
+## Coefficients:
+##                     Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)       40.7814005  0.0005212 78244.152  &lt; 2e-16 ***
+## primary_fur_color -0.0013140  0.0003716    -3.536 0.000412 ***
+## reaction           0.0007784  0.0002234     3.484 0.000501 ***
+## sounds             0.0029072  0.0006480     4.486 7.51e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01022 on 3019 degrees of freedom
+## Multiple R-squared:  0.01405,    Adjusted R-squared:  0.01307 
+## F-statistic: 14.34 on 3 and 3019 DF,  p-value: 2.813e-09</code></pre>
+<pre class="r"><code>summary(lat_model2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ sounds + primary_fur_color + reaction + activity + 
+##     shift, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019713 -0.008909 -0.002889  0.010318  0.021904 
+## 
+## Coefficients:
+##                     Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)       40.7810047  0.0008763 46538.475  &lt; 2e-16 ***
+## sounds             0.0029603  0.0006480     4.568 5.11e-06 ***
+## primary_fur_color -0.0012940  0.0003714    -3.484 0.000501 ***
+## reaction           0.0007625  0.0002241     3.403 0.000674 ***
+## activity          -0.0002411  0.0001370    -1.760 0.078586 .  
+## shift              0.0006264  0.0003746     1.672 0.094556 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01021 on 3017 degrees of freedom
+## Multiple R-squared:  0.01609,    Adjusted R-squared:  0.01446 
+## F-statistic: 9.866 on 5 and 3017 DF,  p-value: 2.266e-09</code></pre>
+<pre class="r"><code>summary(lat_model3)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ sounds + reaction + age + activity + shift + 
+##     primary_fur_color, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019694 -0.008938 -0.002912  0.010297  0.021788 
+## 
+## Coefficients:
+##                     Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)       40.7817911  0.0010070 40498.748  &lt; 2e-16 ***
+## sounds             0.0029217  0.0006483     4.507 6.83e-06 ***
+## reaction           0.0007693  0.0002240     3.434 0.000604 ***
+## age               -0.0007729  0.0004879    -1.584 0.113299    
+## activity          -0.0002339  0.0001370    -1.706 0.088025 .  
+## shift              0.0006100  0.0003746     1.628 0.103575    
+## primary_fur_color -0.0012585  0.0003720    -3.383 0.000727 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01021 on 3016 degrees of freedom
+## Multiple R-squared:  0.01691,    Adjusted R-squared:  0.01495 
+## F-statistic: 8.644 on 6 and 3016 DF,  p-value: 2.397e-09</code></pre>
 <pre class="r"><code>set.seed(1)
 # Use 10-fold validation 
 train = trainControl(method = &quot;cv&quot;, number = 10)
 y1 &lt;- data.frame(cbind(sq_df$long, sq_df$lat))
-model_caret1 = train(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
+model_caret1 = train(long ~ primary_fur_color + reaction + sounds, data = sq_df,
 trControl = train,
 method = &#39;lm&#39;,
-na.action = na.pass)# fitting a regression line
+na.action = na.pass)
+
+# fitting a regression line
 model_caret1$finalModel</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
 ## Coefficients:
-##             (Intercept)  hectare_squirrel_number        primary_fur_color  
-##              -7.397e+01               -3.282e-04               -5.158e-04  
-##                reaction                   sounds  
-##               5.102e-04                2.141e-03</code></pre>
+##       (Intercept)  primary_fur_color           reaction             sounds  
+##        -7.397e+01         -5.880e-04          5.122e-04          2.103e-03</code></pre>
 <pre class="r"><code>model_caret1</code></pre>
 <pre><code>## Linear Regression 
 ## 
 ## 3023 samples
-##    4 predictor
+##    3 predictor
 ## 
 ## No pre-processing
 ## Resampling: Cross-Validated (10 fold) 
@@ -666,28 +851,28 @@ model_caret1$finalModel</code></pre>
 ## Resampling results:
 ## 
 ##   RMSE         Rsquared    MAE        
-##   0.007628988  0.03056643  0.006449628
+##   0.007690637  0.01094338  0.006537054
 ## 
 ## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
-<pre class="r"><code>model_caret2 = train(lat ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df,
+<pre class="r"><code>model_caret2 = train(lat ~ primary_fur_color + reaction + sounds, data = sq_df,
 trControl = train,
 method = &#39;lm&#39;,
-na.action = na.pass)# fitting a regression line
+na.action = na.pass)
+
+# fitting a regression line
 model_caret2$finalModel</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
 ## Coefficients:
-##             (Intercept)  hectare_squirrel_number        primary_fur_color  
-##              40.7829452               -0.0003998               -0.0012261  
-##                reaction                   sounds  
-##               0.0007759                0.0029532</code></pre>
+##       (Intercept)  primary_fur_color           reaction             sounds  
+##        40.7814005         -0.0013140          0.0007784          0.0029072</code></pre>
 <pre class="r"><code>model_caret2</code></pre>
 <pre><code>## Linear Regression 
 ## 
 ## 3023 samples
-##    4 predictor
+##    3 predictor
 ## 
 ## No pre-processing
 ## Resampling: Cross-Validated (10 fold) 
@@ -695,7 +880,7 @@ model_caret2$finalModel</code></pre>
 ## Resampling results:
 ## 
 ##   RMSE        Rsquared    MAE        
-##   0.01014815  0.02968373  0.008923583
+##   0.01022068  0.01539182  0.009042755
 ## 
 ## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 <div id="longitudinal-model-selection" class="section level1">

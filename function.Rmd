@@ -68,6 +68,26 @@ ols_step_best_subset(model_criterion_lat)
 ```
 
 ```{r}
+# model comparisons for long
+long_model2 = 
+  lm(long ~ sounds + reaction + age + activity + shift + primary_fur_color, data = sq_df)
+summary(long_model1)
+summary(long_model2)
+
+```
+
+```{r}
+# model comparisons for lat
+lat_model2 = 
+  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
+lat_model3 = 
+  lm(lat ~ sounds + reaction + age + activity + shift + primary_fur_color, data = sq_df)
+summary(lat_model1)
+summary(lat_model2)
+summary(lat_model3)
+```
+
+```{r}
 set.seed(1)
 # Use 10-fold validation 
 train = trainControl(method = "cv", number = 10)
@@ -108,3 +128,4 @@ summary(lat_model)
 ```{r}
 # latitudinal model selection
 ```
+
