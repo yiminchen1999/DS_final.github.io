@@ -11,6 +11,7 @@ library(glmnet)
 library(olsrr)
 library(MASS)
 library(caret)
+library(modelr)
 
 options(digits = 7)
 ```
@@ -68,7 +69,7 @@ ols_step_best_subset(model_criterion_lat)
 ```{r}
 # model selection using LASSO procedure: longitude
 y_long <- sq_df$long
-#hist(y_long)
+hist(y_long)
 x <- sq_df %>% 
   dplyr::select(
     shift, age, primary_fur_color,location, activity, reaction, sounds
@@ -85,7 +86,7 @@ coef(long_lasso)
 ```{r}
 # model selection using LASSO procedure: latitude
 y_lat <- sq_df$lat
-#hist(y_lat)
+hist(y_lat)
 x <- sq_df %>% 
   dplyr::select(
     shift, age, primary_fur_color,location, activity, reaction, sounds
@@ -149,7 +150,7 @@ ols_step_best_subset(model_criterion)
 model_stepwise <- lm(long ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 ols_step_both_p(model_stepwise)
 
-
+model_lasso = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds)
 
 ```{r}
 # latitudinal data function
@@ -159,6 +160,118 @@ summary(lat_model)
 ```
 
 ```{r}
+# all latitude models
+pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+summary(pvalue_fit_lat)$adj.r.squared
+
+auto_fit_lat = lm(lat ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
+summary(auto_fit_lat)$adj.r.squared
+
+crit_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity +  reaction + sounds, data = sq_df)
+summary(crit_fit_lat)$adj.r.squared
+
+lasso_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+summary(lasso_fit_lat)$adj.r.squared
+
+```
+
+```{r}
+# all longitude models
+pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
+summary(pvalue_fit_long)$adj.r.squared
+
+auto_fit_long = lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
+summary(auto_fit_long)$adj.r.squared
+
+crit_fit_long = lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+summary(crit_fit_long)$adj.r.squared
+
+lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(lasso_fit_long)$adj.r.squared
+```
+
+
+```{r}
+# cross- validation
+cv_df <- crossv_mc(sq_df, 100)
+cv_df <- cv_df %>% 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  )
+```
+
+```{r}
 # latitudinal model selection
+cv_df_lat = 
+  cv_df %>% 
+  mutate(
+    pvalue_fit = map(train, ~lm(lat ~ primary_fur_color + reaction + sounds, data = .x)),
+    auto_fit = map(train, ~lm(lat ~ sounds + primary_fur_color + reaction + activity + shift ,data = .x)),
+    crit_fit = map(train, ~lm(lat ~ shift + age + primary_fur_color + activity +  reaction + sounds, data = .x)),
+    lasso_fit = map(train, ~lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = .x))
+  ) %>%
+  mutate(
+    rmse_pvalue = map2_dbl(pvalue_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_auto = map2_dbl(auto_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_crit = map2_dbl(crit_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_lasso = map2_dbl(lasso_fit, test, ~rmse(model = .x, data = .y))
+  )
+
+# Comparing the RMSE
+cv_df_lat %>% 
+  dplyr::select(starts_with('rmse_')) %>% 
+  map(median)
+
+cv_df_lat %>% 
+  dplyr::select(starts_with("rmse")) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = fct_inorder(model)) %>% 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(
+    title = 'RMSE for Cross Validation of Latitude Models',
+       x = 'models', y = 'RMSE'
+  )
+```
+
+```{r}
+cv_df_long = 
+  cv_df %>% 
+  mutate(
+    pvalue_fit = map(train, ~lm(long ~ shift + age + activity + reaction + sounds, data = .x)),
+    auto_fit = map(train, ~lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = .x)),
+    crit_fit = map(train, ~lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = .x)),
+    lasso_fit = map(train, ~lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = .x))
+  ) %>% 
+  mutate(
+    rmse_pvalue = map2_dbl(pvalue_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_auto = map2_dbl(auto_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_crit = map2_dbl(crit_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_lasso = map2_dbl(lasso_fit, test, ~rmse(model = .x, data = .y))
+  )
+
+# Comparing the RMSE
+cv_df_long %>% 
+  dplyr::select(starts_with('rmse_')) %>% 
+  map(median)
+
+cv_df_long %>% 
+  dplyr::select(starts_with("rmse")) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = fct_inorder(model)) %>% 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(
+    title = 'RMSE for Cross Validation of Longitude Models',
+       x = 'models', y = 'RMSE'
+  )
+
 ```
 

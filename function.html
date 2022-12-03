@@ -448,6 +448,13 @@ library(glmnet)</code></pre>
 ## The following object is masked from &#39;package:purrr&#39;:
 ## 
 ##     lift</code></pre>
+<pre class="r"><code>library(modelr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;modelr&#39;
+## 
+## The following object is masked from &#39;package:broom&#39;:
+## 
+##     bootstrap</code></pre>
 <pre class="r"><code>options(digits = 7)</code></pre>
 <p>This will be model building procedure…</p>
 <pre class="r"><code>sq_df = read_csv(&#39;squirrel_tidy.csv&#39;) %&gt;% 
@@ -712,8 +719,9 @@ ols_step_best_subset(model_criterion_lat)</code></pre>
 ##  APC: Amemiya Prediction Criteria</code></pre>
 <pre class="r"><code># model selection using LASSO procedure: longitude
 y_long &lt;- sq_df$long
-#hist(y_long)
-x &lt;- sq_df %&gt;% 
+hist(y_long)</code></pre>
+<p><img src="function_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>x &lt;- sq_df %&gt;% 
   dplyr::select(
     shift, age, primary_fur_color,location, activity, reaction, sounds
     ) %&gt;%
@@ -737,8 +745,9 @@ coef(long_lasso)</code></pre>
 ## sounds             2.073993e-03</code></pre>
 <pre class="r"><code># model selection using LASSO procedure: latitude
 y_lat &lt;- sq_df$lat
-#hist(y_lat)
-x &lt;- sq_df %&gt;% 
+hist(y_lat)</code></pre>
+<p><img src="function_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>x &lt;- sq_df %&gt;% 
   dplyr::select(
     shift, age, primary_fur_color,location, activity, reaction, sounds
     ) %&gt;%
@@ -958,6 +967,8 @@ ols_step_best_subset(model_criterion)</p>
 <p>model_stepwise &lt;- lm(long ~ hectare_squirrel_number +
 primary_fur_color + location + activity + reaction + sounds, data =
 sq_df) ols_step_both_p(model_stepwise)</p>
+<p>model_lasso = lm(long ~ shift + age + primary_fur_color + location +
+activity + reaction + sounds)</p>
 <pre class="r"><code># latitudinal data function
 lat_model =
   lm(lat ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
@@ -986,7 +997,128 @@ summary(lat_model)</code></pre>
 ## Residual standard error: 0.01014 on 3016 degrees of freedom
 ## Multiple R-squared:  0.02993,    Adjusted R-squared:  0.028 
 ## F-statistic: 15.51 on 6 and 3016 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code># latitudinal model selection</code></pre>
+<pre class="r"><code># all latitude models
+pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+summary(pvalue_fit_lat)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.01307076</code></pre>
+<pre class="r"><code>auto_fit_lat = lm(lat ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
+summary(auto_fit_lat)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.01445713</code></pre>
+<pre class="r"><code>crit_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity +  reaction + sounds, data = sq_df)
+summary(crit_fit_lat)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.01494983</code></pre>
+<pre class="r"><code>lasso_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+summary(lasso_fit_lat)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.01494983</code></pre>
+<pre class="r"><code># all longitude models
+pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
+summary(pvalue_fit_long)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.01255306</code></pre>
+<pre class="r"><code>auto_fit_long = lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
+summary(auto_fit_long)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.01175137</code></pre>
+<pre class="r"><code>crit_fit_long = lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+summary(crit_fit_long)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.01339045</code></pre>
+<pre class="r"><code>lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(lasso_fit_long)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.01318516</code></pre>
+<pre class="r"><code># cross- validation
+cv_df &lt;- crossv_mc(sq_df, 100)
+cv_df &lt;- cv_df %&gt;% 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  )</code></pre>
+<pre class="r"><code># latitudinal model selection
+cv_df_lat = 
+  cv_df %&gt;% 
+  mutate(
+    pvalue_fit = map(train, ~lm(lat ~ primary_fur_color + reaction + sounds, data = .x)),
+    auto_fit = map(train, ~lm(lat ~ sounds + primary_fur_color + reaction + activity + shift ,data = .x)),
+    crit_fit = map(train, ~lm(lat ~ shift + age + primary_fur_color + activity +  reaction + sounds, data = .x)),
+    lasso_fit = map(train, ~lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = .x))
+  ) %&gt;%
+  mutate(
+    rmse_pvalue = map2_dbl(pvalue_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_auto = map2_dbl(auto_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_crit = map2_dbl(crit_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_lasso = map2_dbl(lasso_fit, test, ~rmse(model = .x, data = .y))
+  )
+
+# Comparing the RMSE
+cv_df_lat %&gt;% 
+  dplyr::select(starts_with(&#39;rmse_&#39;)) %&gt;% 
+  map(median)</code></pre>
+<pre><code>## $rmse_pvalue
+## [1] 0.01021509
+## 
+## $rmse_auto
+## [1] 0.01021608
+## 
+## $rmse_crit
+## [1] 0.01020896
+## 
+## $rmse_lasso
+## [1] 0.01020896</code></pre>
+<pre class="r"><code>cv_df_lat %&gt;% 
+  dplyr::select(starts_with(&quot;rmse&quot;)) %&gt;% 
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) %&gt;% 
+  mutate(model = fct_inorder(model)) %&gt;% 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(
+    title = &#39;RMSE for Cross Validation of Latitude Models&#39;,
+       x = &#39;models&#39;, y = &#39;RMSE&#39;
+  )</code></pre>
+<p><img src="function_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<pre class="r"><code>cv_df_long = 
+  cv_df %&gt;% 
+  mutate(
+    pvalue_fit = map(train, ~lm(long ~ shift + age + activity + reaction + sounds, data = .x)),
+    auto_fit = map(train, ~lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = .x)),
+    crit_fit = map(train, ~lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = .x)),
+    lasso_fit = map(train, ~lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = .x))
+  ) %&gt;% 
+  mutate(
+    rmse_pvalue = map2_dbl(pvalue_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_auto = map2_dbl(auto_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_crit = map2_dbl(crit_fit, test, ~rmse(model = .x, data = .y)),
+    rmse_lasso = map2_dbl(lasso_fit, test, ~rmse(model = .x, data = .y))
+  )
+
+# Comparing the RMSE
+cv_df_long %&gt;% 
+  dplyr::select(starts_with(&#39;rmse_&#39;)) %&gt;% 
+  map(median)</code></pre>
+<pre><code>## $rmse_pvalue
+## [1] 0.007696558
+## 
+## $rmse_auto
+## [1] 0.007692802
+## 
+## $rmse_crit
+## [1] 0.007691777
+## 
+## $rmse_lasso
+## [1] 0.00769105</code></pre>
+<pre class="r"><code>cv_df_long %&gt;% 
+  dplyr::select(starts_with(&quot;rmse&quot;)) %&gt;% 
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) %&gt;% 
+  mutate(model = fct_inorder(model)) %&gt;% 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(
+    title = &#39;RMSE for Cross Validation of Longitude Models&#39;,
+       x = &#39;models&#39;, y = &#39;RMSE&#39;
+  )</code></pre>
+<p><img src="function_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 
 
