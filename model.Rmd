@@ -16,6 +16,7 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 library(shiny)
+library(scales)
 library(patchwork)
 
 knitr::opts_chunk$set(
@@ -61,7 +62,7 @@ census =
 
 ### Central Park Squirrels Distribution by Days (AM/PM)
 
-In this part, we were interested in looking at the Central Park Squirrel Census collected in October 2018. We make this graph to analysis the frequency of Squirrel recorded for each of the observation (AM or PM).
+In this part, we were interested in looking at the central park squirrel census collected in October 2018. We make this graph to analysis the frequency of squirrels recorded for each of the observation (AM or PM).
 
 ```{r}
 dates = 
@@ -82,7 +83,7 @@ dates %>%
 
 ### Central Park Squirrels Distribution by Primary Fur Colors
 
-In this part, we were interested in the frequency of Squirrel recorded for each of the observation by primary fur color. 
+In this part, we  make this graph to analysis the frequency of squirrels recorded for each of the observation by primary fur color. 
 
 ```{r}
 dates %>%
@@ -100,38 +101,22 @@ dates %>%
 
 ### Central Park Squirrels Distribution by Age Group
 
+In this part, we make this pie chart to display the percentage of squirrels by age group.
+
 ```{r}
-dates %>% 
+pie_1 = 
+  dates %>% 
   filter(age !='?') %>%
   group_by(age) %>%
-  count()%>%
+  count() 
+
+pie_1 %>% 
+  mutate(prop = percent(n/sum(pie_1$n))) %>% 
   ggplot(aes(x="", y = n, fill = age)) +
   geom_bar(stat="identity", width=1, color="white") +
-  coord_polar("y", start=0) + 
+  coord_polar("y", start = 0, direction = 1) + 
   theme_void() + 
   ggtitle('Squirrels Distribution by Age Group') +
-  geom_text(aes(y = n, label = age), color = "black", size=4) +
-  scale_fill_brewer(palette="Blues")
+  geom_text(aes(label = prop),position = position_stack(vjust = 0.5)) +
+  scale_fill_brewer()
 ```
-
-
-
-```{r}
-dates %>%
-  filter(age !='?') %>%
-  mutate(n=1) %>%
-  group_by(age,primary_fur_color) %>% 
-  count() %>% 
-  ggplot(aes(x="", y = n, fill = primary_fur_color)) +
-  geom_bar(stat="identity", width=1, color="white") +
-  facet_grid(~age) + 
-  coord_polar("y", start=0) +
-  theme_void() + 
-  theme(legend.position="none") +
-  labs( x ='Age Group', y= 'Proportion') +
-  labs(fill='Primary Fur Color') +
-  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
-```
-
-pie(x = dates1$n, labels = dates1$primary_fur_color, main = "Squirrels Distribution by Fur color") +
-

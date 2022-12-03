@@ -19,19 +19,52 @@ sq_df = read_csv('squirrel_tidy.csv') %>%
 ```
 
 ```{r}
-# longitudinal data function
-long_lat_model =
-  lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-summary(long_lat_model)
-print(long_lat_model)
+# longitudinal/latitudinal function
+# raw data input (no hectare information because the user would not know the info. about it)
 long_model =
-  lm(long ~ hectare_squirrel_number + primary_fur_color + reaction + sounds, data = sq_df)
+  lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 summary(long_model)
 print(long_model)
+
+lat_model =
+  lm(lat ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(lat_model)
+print(lat_model)
+```
+
+```{r}
+# model selection using p-value
 long_model1 = 
-  lm(cbind(long, lat) ~ primary_fur_color + reaction + sounds, data = sq_df)
+  lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
 summary(long_model1)
 print(long_model1)
+
+lat_model1 =
+  lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+summary(lat_model1)
+print(lat_model1)
+```
+
+```{r}
+# model selection using automatic procedure (forward/backward)
+model_stepwise_long <- lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_both_p(model_stepwise_long)
+
+model_stepwise_lat <- lm(lat ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_both_p(model_stepwise_lat)
+```
+
+```{r}
+# model selection using criterion-based procedure
+model_criterion_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion_long)
+
+model_criterion_lat <- lm(lat ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion_lat)
+```
+
+```{r}
+# model selection using LASSO procedure
 ```
 
 ```{r}
