@@ -46,7 +46,9 @@ Since the outputs are both longitudinal and latitudinal, we expected to make two
 # Results
 
 ### Data summaries:
-First graph we drew was 'Number of Observations' v.s. 'Day', and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight...
+First graph we drew was 'Number of Observations' v.s. 'Time of Day', and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight.
+Second graph we drew was ‘Number of Observations’ v.s. 'Primary Fur Color', it's clearly shown that different number of observations were made in different days and there is no clear pattern. Squirrels were observed to be the most active on Oct.7 and Oct.13, and they clearly became less active in last few days. Generally, the gray squirrels are the most massive and black ones are the fewest. The color of cinnamon was also pretty frequently observed with some color-not-identified ones.
+Third graph we drew was a pie chart indicating the distribution of squirrels by their physiological age. The majority (89%) of the population is juvenile while the remaining 11% is adult. It's not sure how their age stage was determined by the observers, maybe by their sizes. The limitation is only 'adult' and 'juvenile' were categorized, but the predictions might be more valid if other stages like 'baby' or 'old' are provided.
     
     Some interesting plots:
     
