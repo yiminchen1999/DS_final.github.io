@@ -335,34 +335,16 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="map.html">Squirrel Map</a>
+  <a href="about.html">About</a>
 </li>
 <li>
-  <a href="P8105_final_proposal.html">Proposal</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Exploratory Analyses
+  <a href="mailto:&lt;you@youremail.com&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
      
-    <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="model.html">Frequency</a>
-    </li>
-  </ul>
 </li>
 <li>
-  <a href="shinny-base.html">Shinny Map</a>
-</li>
-<li>
-  <a href="undecided.html">Shinyapp</a>
-</li>
-<li>
-  <a href="report-writing.html">Report</a>
-</li>
-<li>
-  <a href="https://github.com/yiminchen1999/DS_final.github.io">
+  <a href="http://github.com/&lt;YOUR_GH_NAME&gt;/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -392,7 +374,7 @@ div.tocify {
 <div id="central-park-squirrels-distribution-by-days-ampm"
 class="section level3">
 <h3>Central Park Squirrels Distribution by Days (AM/PM)</h3>
-<p>In this part, we were interested in looking at the central park
+<p>In this part, we are interested in looking at the central park
 squirrel census collected in October 2018. We make this graph to
 analysis the frequency of squirrels recorded for each of the observation
 (AM or PM).</p>
@@ -411,6 +393,13 @@ dates %&gt;%
   theme(plot.title = element_text(hjust = 0.5)) +
   labs(fill=&#39;Time of day&#39;) </code></pre>
 <p><img src="model_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
+<p>First graph we drew was ‘Number of Observations’ v.s. ‘Day’, and
+morning and afternoon data were separated and found out that squirrels
+tend to be more active in the afternoon or at night time. However, the
+limitation of the data is that we were not able to get the exact time
+period of their activities but only either morning or evening, we can
+assume they are present prior to sunset since they should be busy
+collecting the food when there is sunlight.</p>
 </div>
 <div id="central-park-squirrels-distribution-by-primary-fur-colors"
 class="section level3">
