@@ -7,10 +7,12 @@ library(faraway)
 library(tidyverse)
 library(dplyr)
 library(broom)
-#library(glmnet)
+library(glmnet)
 library(olsrr)
 library(MASS)
 library(caret)
+
+options(digits = 7)
 ```
 This will be model building procedure...
 ```{r}
@@ -64,7 +66,38 @@ ols_step_best_subset(model_criterion_lat)
 ```
 
 ```{r}
-# model selection using LASSO procedure
+# model selection using LASSO procedure: longitude
+y_long <- sq_df$long
+#hist(y_long)
+x <- sq_df %>% 
+  dplyr::select(
+    shift, age, primary_fur_color,location, activity, reaction, sounds
+    ) %>%
+  data.matrix()
+
+set.seed(2022)
+cv_model_long <- cv.glmnet(x,y_long, alpha = 1)
+(best_lambda_long <- cv_model_long$lambda.min)
+long_lasso <- glmnet(x, y_long, alpha = 1, lambda = best_lambda_long)
+coef(long_lasso)
+```
+
+```{r}
+# model selection using LASSO procedure: latitude
+y_lat <- sq_df$lat
+#hist(y_lat)
+x <- sq_df %>% 
+  dplyr::select(
+    shift, age, primary_fur_color,location, activity, reaction, sounds
+    ) %>%
+  data.matrix()
+
+set.seed(2023)
+cv_model_lat <- cv.glmnet(x,y_lat, alpha = 1)
+(best_lambda_lat <- cv_model_lat$lambda.min)
+lat_lasso <- glmnet(x, y_lat, alpha = 1, lambda = best_lambda_lat)
+coef(lat_lasso)
+
 ```
 
 ```{r}
