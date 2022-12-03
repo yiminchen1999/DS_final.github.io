@@ -1,13 +1,36 @@
-name: "Yay internet!"
+name: "Squirrel Website"
 output_dir: "."
 navbar:
   title: "Home"
+  
   right:
-    - text: "About"
-      href: about.html
-    - icon: fa-envelope fa-lg
-      href: mailto:<you@youremail.com>
+    - text: "Squirrel Map"
+      href: map.html  
+
+    - text: "Proposal"
+      href: P8105_final_proposal.html
+
+    - text: "Exploratory Analyses"
+      menu:
+      - text: "Frequency"
+        href: model.html
+
+    - text: "Shinny Map"
+      href: shinny-base.html
+
+    - text: "Shinyapp"
+      href: undecided.html
+
+    - text: "Report"
+      href: report-writing.html
+
     - icon: fa-github fa-lg
-      href: http://github.com/<YOUR_GH_NAME>/
+      href: https://github.com/yiminchen1999/DS_final.github.io
+
+
 output:
-  html_document
+  html_document:
+    theme: cosmo
+    toc : true
+    toc_float: true
+    code_folding: hide
