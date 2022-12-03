@@ -1,10 +1,11 @@
 ---
 title: "Location Predictions of Squirrels Based on Several Characteristics"
-output: 
+output:
   html_document:
-    code_folding: hide
-    toc: true
+    theme: cosmo
+    toc : true
     toc_float: true
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
