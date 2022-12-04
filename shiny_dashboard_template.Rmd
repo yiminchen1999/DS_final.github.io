@@ -1,5 +1,10 @@
 ---
 title: "Shiny Dashboard"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
 runtime: shiny
 ---
 
