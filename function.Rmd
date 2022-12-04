@@ -143,15 +143,8 @@ na.action = na.pass)
 model_caret2$finalModel
 model_caret2
 ```
-# longitudinal model selection
-model_criterion = lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-ols_step_best_subset(model_criterion)
 
-model_stepwise <- lm(long ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-ols_step_both_p(model_stepwise)
-
-model_lasso = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds)
-
+# latitudinal model selection
 ```{r}
 # latitudinal data function
 lat_model =
@@ -159,35 +152,58 @@ lat_model =
 summary(lat_model)
 ```
 
+
+pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+pvalue_adjrsquared_lat <- summary(pvalue_fit_lat)$adj.r.squared
+
+auto_fit_lat = lm(lat ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
+auto_adjrsquared_lat <- summary(auto_fit_lat)$adj.r.squared
+
+crit_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity +  reaction + sounds, data = sq_df)
+crit_adjrsquared_lat <- summary(crit_fit_lat)$adj.r.squared
+
+lasso_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+
 ```{r}
 # all latitude models
 pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
-summary(pvalue_fit_lat)$adj.r.squared
+pvalue_adjrsquared_lat <- summary(pvalue_fit_lat)$adj.r.squared
 
 auto_fit_lat = lm(lat ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
-summary(auto_fit_lat)$adj.r.squared
+auto_adjrsquared_lat <- summary(auto_fit_lat)$adj.r.squared
 
 crit_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity +  reaction + sounds, data = sq_df)
-summary(crit_fit_lat)$adj.r.squared
+crit_adjrsquared_lat <- summary(crit_fit_lat)$adj.r.squared
 
 lasso_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
-summary(lasso_fit_lat)$adj.r.squared
+lasso_adjrsquared_lat <- summary(lasso_fit_lat)$adj.r.squared
 
 ```
+
+# longitudinal model selection
+model_pvalue = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
+
+model_criterion = lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion)
+
+model_stepwise <- lm(long ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_both_p(model_stepwise)
+
+model_lasso = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 
 ```{r}
 # all longitude models
 pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
-summary(pvalue_fit_long)$adj.r.squared
+pvalue_adjrsquared_long <- summary(pvalue_fit_long)$adj.r.squared
 
 auto_fit_long = lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
-summary(auto_fit_long)$adj.r.squared
+auto_adjrsquared_long <- summary(auto_fit_long)$adj.r.squared
 
 crit_fit_long = lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
-summary(crit_fit_long)$adj.r.squared
+crit_adjrsquared_long <- summary(crit_fit_long)$adj.r.squared
 
 lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-summary(lasso_fit_long)$adj.r.squared
+lasso_adjrsquared_long <- summary(lasso_fit_long)$adj.r.squared
 ```
 
 
@@ -275,3 +291,40 @@ cv_df_long %>%
 
 ```
 
+```{r}
+# RMSE and adj Rsqured comparison table
+# latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods hava 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
+
+methods <- c('pvalue','automatic','criterion-based','LASSO')
+RMSE_lat <- 
+  cv_df_lat %>% 
+  dplyr::select(starts_with('rmse_')) %>% 
+  map(median) %>% 
+  unlist()
+
+adjrsquared_lat <- c(pvalue_adjrsquared_lat,auto_adjrsquared_lat,
+                       crit_adjrsquared_lat, lasso_adjrsquared_lat)
+lat_comparison <- tibble(
+  methods,
+  RMSE_lat, 
+  adjrsquared_lat
+)
+lat_comparison %>% knitr::kable()
+
+#longitude: criterion based method is chosen: lowest median RMSE(since evry method's RMSE distribution is pretty similar) and highest adjusted R squared
+RMSE_long <- 
+  cv_df_long %>% 
+  dplyr::select(starts_with('rmse_')) %>% 
+  map(median) %>% 
+  unlist()
+
+adjrsquared_long <- c(pvalue_adjrsquared_long,auto_adjrsquared_long,
+                       crit_adjrsquared_long, lasso_adjrsquared_long)
+long_comparison <- tibble(
+  methods,
+  RMSE_long, 
+  adjrsquared_long
+)
+long_comparison %>% knitr::kable()
+
+```
