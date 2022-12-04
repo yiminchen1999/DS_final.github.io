@@ -1133,6 +1133,14 @@ cv_df_long %&gt;%
        x = &#39;models&#39;, y = &#39;RMSE&#39;
   )</code></pre>
 <p><img src="function_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>latitude: automatic method is chosen due to the rule of
+parsimony.(only 5 predictors while LASSO and criterion-based methods
+hava 6 predictors). When the RMSE distributions are basically same among
+the methods, the automatic method has slightly lower median both RMSE
+and Rsquared.</p>
+<p>longitude: criterion based method is chosen: lowest median RMSE(since
+evry method’s RMSE distribution is pretty similar) and highest adjusted
+R squared</p>
 <pre class="r"><code># RMSE and adj Rsqured comparison table
 # latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods hava 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
 
