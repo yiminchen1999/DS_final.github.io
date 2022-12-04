@@ -118,40 +118,26 @@ census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版�
 census %>%
   ggplot(aes(long, lat)) +
   geom_point()
-by_hectare <- census %>%
-  filter(!is.na(primary_fur_color)) %>%
-  group_by(hectare) %>%
-  summarize(long = mean(long),
-            lat = mean(lat),
-            pct_gray = mean(primary_fur_color == "Gray", na.rm = TRUE),
-            n = n())
-by_hectare %>%
-  filter(n >= 10) %>%
-  ggplot(aes(long, lat, size = n, color = pct_gray)) +
-  geom_point() +
-  theme_void()
-by_hectare %>%
-  filter(n >= 10) %>%
-  ggplot(aes(lat, pct_gray)) +
-  geom_point() +
-  geom_smooth()
-by_hectare %>%
-  mutate(n_gray = round(pct_gray * n)) %>%
-  glm(cbind(n_gray, n - n_gray) ~ lat, data = ., family = "binomial") %>%
-  summary()
 
 
+library(tidyverse)
+theme_set(theme_light())
+nyc_squirrels =
+  read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")
+
+library(sf)
 central_park_sf <- read_sf("CentralAndProspectParks/")
-by_hectare <- census %>%
+by_hectare <- nyc_squirrels %>%
   add_count(hectare) %>%
+  mutate(above_ground = !is.na(location) & location == "Above Ground") %>%
   group_by(hectare, n) %>%
-  summarize_at(vars(long, lat), mean) %>%
+  summarize_at(vars(long, lat, approaches:runs_from,  ends_with("ing"), above_ground), mean) %>%
   ungroup()
 by_hectare %>%
   filter(n >= 10) %>%
   ggplot() +
   geom_sf(data = central_park_sf) +  
-  geom_point(aes(long, lat, size = n)) +
+  geom_point(aes(long, lat, size = n, color = runs_from)) +
   theme_void() +
   scale_color_gradient2(low = "blue", high = "red", mid = "pink",
                         midpoint = .3, labels = scales::percent) +
@@ -161,15 +147,12 @@ by_hectare %>%
   coord_sf(datum = NA)
 
 
-
 central_park_sf %>%
   count(lanes, sort = TRUE)
 ggplot(central_park_sf) +
   geom_sf() +
-  geom_point(aes(long, lat, color = activity), data = by_hectare) +
+  geom_point(aes(long, lat, color = runs_from), data = by_hectare) +
   coord_sf(datum = NA)
-
-
 
 central_park_sf %>%
   ggplot() +
@@ -177,6 +160,7 @@ central_park_sf %>%
   coord_sf(datum = NA)
 
 
+library(shiny)
 
 squirrel_variables <- by_hectare %>%
   select(-(hectare:lat)) %>%
