@@ -455,9 +455,33 @@ same data cleaning step was followed.</p>
 <div id="model-building-process" class="section level3">
 <h3>Model building process:</h3>
 <p>Since the outputs are both longitudinal and latitudinal, we expected
-to make two functions, with longitudinal and latitudinal being the
-outputs separately against predictors, and combine the two outputs in
-the end.</p>
+to make two linear functions, with longitudinal and latitudinal being
+the outputs separately against predictors, and combine the two outputs
+in the end. We built several models for both longitudinal and
+latitudinal outcomes using different methods (p-value, step-wise (both
+backward and forward at the same time), criterion-based, and LASSO). The
+following explanations are for longitudinal only and the latitudinal one
+follows the exactly same procedures. The first step is to throw all the
+numerical variables into the model and check the p-value, the variables
+are shift + age + primary_fur_color + location + activity + reaction +
+sounds. Although hectare is also a numerical variable, it’s not included
+because the users of the model would not have the information of how
+many squirrels are there within a specific hectare, but they only have
+the information about the characteristics of specific squirrels that
+they want to look for. The variables with p-value less than 0.05 were
+removed from the model, and the model built with remaining variables was
+checked again to make sure that all of them had p-value less than 0.05.
+So, the first model candidate was produced with predictors being
+‘shift’, ’ age’, ‘activity’, ‘reaction’, ‘sounds’. Then, we selected
+model using automatic procedure, specifically step-wise regression
+procedure. Backward, Forward or step-wise methods might produce
+different results, but we chose to use step-wise since it gives a single
+‘best’ model. As the result, except for the location, all other 6
+variables are included in this model, which is the second model
+candidate. Next, we used criterion-based procedure. The model with the
+largest adjusted R-square valued along with smallest AIC and BIC values
+are chosen to be the model candidate. It turned out that it also had all
+those 6 variables as the one in automatic procedure.</p>
 </div>
 </div>
 <div id="results" class="section level1">
