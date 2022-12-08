@@ -130,7 +130,6 @@ nyc_squirrelmap <- leaflet(data=census1) %>%
   addTiles() %>%  
   addMarkers(lng=~long, lat=~lat, popup= ~hectare,clusterOptions = markerClusterOptions())
 nyc_squirrelmap
-#这个要在shiny的格式里看，我以防万一还是用了markdown
 ```
 
 ### Motivation
