@@ -342,3 +342,9 @@ lat_model_final=
   lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
 print(lat_model_final)
 ```
+
+```{r}
+# final model diagnostic
+plot(long_model_final)
+plot(lat_model_final)
+```
