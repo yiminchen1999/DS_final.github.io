@@ -1,4 +1,4 @@
-#Install and load the following packages
+
 
 library(shiny)
 library(DT)
@@ -12,7 +12,6 @@ library(shinybusy)
 library(rsconnect)
 library(magrittr)
 
-#import the squirrels_fin.csv data file
 
 squirrels <-read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv") %>%janitor::clean_names()
 
@@ -41,10 +40,9 @@ tod <- c("AM", "PM")
 interact <- c("approaches", "indifferent", "runs away")
 activ <- c("running", "chasing", "climbing", "eating", "foraging")
 
-#color pallet
 pal <- colorFactor(palette = c("blue", "black", "red"), levels = c("Gray", "Black", "Cinnamon"))
 
-#Create Shiny Dahboard theme and add a side panel
+#Create Shiny Dahboard theme 
 
 ui <- dashboardPage(
   #set header color
@@ -69,7 +67,7 @@ ui <- dashboardPage(
     tabItems(
       
       
-      #develop leaflet tab
+      #leaflet
       tabItem(
         tabName = "home",
         fluidPage(
@@ -80,7 +78,7 @@ ui <- dashboardPage(
           
           sidebarLayout(
             
-            #add in user selection items in the sidebar
+            # user selection items in the sidebar
             sidebarPanel(
               
               pickerInput("color", "Fur Color", choices = fur_color, 
