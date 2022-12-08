@@ -5,7 +5,7 @@ navbar:
   
   right:
     - text: "Squirrel Map"
-      href: map.html  
+      href: map.html
 
     - text: "Proposal"
       href: P8105_final_proposal.html
@@ -15,14 +15,19 @@ navbar:
       - text: "Frequency"
         href: model.html
 
-    - text: "Shinny Map"
-      href: shinny-base.html
-
-    - text: "Shinyapp"
-      href: undecided.html
+    - text: "Shiny"
+      menu:
+      - text: "Shinny Map"
+        href: shinny-base.html
+      
+      - text: "Shiny Dashboard"
+        href: shiny_dashboard_template.html
 
     - text: "Report"
       href: report-writing.html
+      
+    - text: "Screencast"
+      href: youtube.com
 
     - icon: fa-github fa-lg
       href: https://github.com/yiminchen1999/DS_final.github.io

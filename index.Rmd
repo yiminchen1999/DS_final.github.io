@@ -15,7 +15,13 @@ Squirrels are everywhere, but is there a trend of where they prefer to stay with
 
 ### Screencast
 
-### Parts
+### Website Overview
+
+Under the [squirrel map]() tab, you will find:
+
+In the exploratory analyses section, you will find:
+
+In the shiny section, you will find:
 
 ### Collaborators
 
