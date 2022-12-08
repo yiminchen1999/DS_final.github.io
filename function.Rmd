@@ -331,3 +331,14 @@ long_comparison <- tibble(
 long_comparison %>% knitr::kable()
 
 ```
+
+```{r}
+# final model
+long_model_final=
+  lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+print(long_model_final)
+
+lat_model_final=
+  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
+print(lat_model_final)
+```
