@@ -5,7 +5,7 @@ output:
     code_folding: hide
     toc: true
     toc_float: true
-runtime: shiny
+    theme: cosmo
 ---
 
 ```{r setup, include=FALSE}

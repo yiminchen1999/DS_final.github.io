@@ -122,17 +122,15 @@ census %>%
 
 library(tidyverse)
 theme_set(theme_light())
-nyc_squirrels =
-  read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")
+nyc_squirrels =read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")
 
 library(sf)
 central_park_sf <- read_sf("CentralAndProspectParks/")
 by_hectare <- nyc_squirrels %>%
   add_count(hectare) %>%
   mutate(above_ground = !is.na(location) & location == "Above Ground") %>%
-  group_by(hectare, n) %>%
-  summarize_at(vars(long, lat, approaches:runs_from,  ends_with("ing"), above_ground), mean) %>%
-  ungroup()
+  summarize_at(vars(long, lat, approaches:runs_from,  ends_with("ing"), above_ground), mean) 
+ 
 by_hectare %>%
   filter(n >= 10) %>%
   ggplot() +
