@@ -123,7 +123,7 @@ census %>%
 library(tidyverse)
 theme_set(theme_light())
 nyc_squirrels =read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")
-
+nyc_squirrels
 library(sf)
 central_park_sf <- read_sf("CentralAndProspectParks/")
 by_hectare <- nyc_squirrels %>%

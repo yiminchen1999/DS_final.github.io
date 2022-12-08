@@ -126,97 +126,62 @@ census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版�
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 #write.csv(census1,"~/Desktop/squirrel_tidy.csv", row.names = TRUE)
 
-library(shiny.semantic)
 
+# import libraries
+library(shiny)
 
-ui <- semanticPage(
-  segment(
-    class = "basic",
-    a(class="ui blue ribbon label", "Leaflet demo"),
-    leafletOutput("map"),semantic_DTOutput("table")
-    
-  ))
+##########
+# SERVER #
+##########
 
-server <- function(input, output, session) {
-  output$map <- renderLeaflet({
-    map <- leaflet(data=census1) %>%
-      addTiles() %>%  
-      addMarkers(lng=~long, lat=~lat, popup= ~hectare,clusterOptions = markerClusterOptions())
-    map
-  })
-}
+#generic line initiating the SERVER 
 
-shinyApp(ui = ui, server = server)
-
-ui <- semanticPage(
-  h2("Pretty tables in Shiny Semantic"),
-  semantic_DTOutput("table")
-)
-server <- function(input, output, session) {
-  output$table <- renderDataTable(census1)
+server <- shinyServer(function(input, output) {
   
+  #########################
+  # Data load and cleanup #
+  #########################
   
-}
-shinyApp(ui, server)
+  #Import data
+  
+  #Clean data
+  
+  #############
+  # Reactives #
+  #############
+  
+  # define any reactive elements of the app
+  
+  #Close the server definition
+})
 
+##################
+# User Interface #
+##################
 
-ui <- semanticPage(
-  segment(
-    class = "basic",
-    a(class="ui green ribbon label", "Plotly demo"),
-    plotlyOutput("plot")
+#generic line initiating the UI
+ui <- shinyUI(fluidPage(
+  
+  #Add a title
+  titlePanel("Add Title Here"),
+  
+  #This creates a layout with a left sidebar and main section
+  sidebarLayout(
     
+    #beginning of sidebar section
+    #usually includes inputs
+    sidebarPanel(),
+    
+    #beginning of main section
+    mainPanel()
   )
-)
+  
+  #Close the UI definition
+))
 
-server <- function(input, output, session) {
-  output$plot <- renderPlotly({
-    plot_ly(census1, x = ~lat,  color=~hectare) %>%
-      add_lines(y = ~long) 
-  })
-}
+##############
+# Launch App #
+##############
 
-shinyApp(ui = ui, server = server)
-
-
-
-# Define UI for application that draws a histogram
-ui <- fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
-    )
-)
-
-# Define server logic required to draw a histogram
-server <- function(input, output) {
-
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
-}
-
-# Run the application 
+#generic line that launches the app
 shinyApp(ui = ui, server = server)
