@@ -12,8 +12,15 @@ navbar:
 
     - text: "Exploratory Analyses"
       menu:
-      - text: "Frequency"
+      - text: "Central Park Data Analysis"
         href: model.html
+      - text: "NYC Data Analysis"
+    
+    - text: "Inferential Statistics"
+      menu:
+      - text: "Predictive Model Building"
+        href: function.html
+      - text: "Statistics Testing"
 
     - text: "Shiny"
       menu:
@@ -25,9 +32,6 @@ navbar:
 
     - text: "Report"
       href: report-writing.html
-      
-    - text: "Screencast"
-      href: youtube.com
 
     - icon: fa-github fa-lg
       href: https://github.com/yiminchen1999/DS_final.github.io
