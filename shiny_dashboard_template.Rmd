@@ -6,6 +6,7 @@ output:
     toc: true
     toc_float: true
     theme: cosmo
+    runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
