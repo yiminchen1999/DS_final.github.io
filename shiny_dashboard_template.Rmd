@@ -148,7 +148,10 @@ map
 ```
 
 ```{r}
-datatable(head(census1), filter = "top")
+library(formattable)
+datatable(head(census1), filter = "top",escape = FALSE,
+               options = list(scrollX = TRUE),
+               rownames = FALSE)
 ```
 
 ```{r}
