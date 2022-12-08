@@ -4,9 +4,6 @@ navbar:
   title: "Home"
   
   right:
-    - text: "Squirrel Map"
-      href: map.html
-
     - text: "Proposal"
       href: P8105_final_proposal.html
 
