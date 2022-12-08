@@ -42,11 +42,17 @@ For data tidy and cleaning, the categorical variables were transformed to numeri
 
 ### Model building process:
 Since the outputs are both longitudinal and latitudinal, we expected to make two linear functions, with longitudinal and latitudinal being the outputs separately against predictors, and combine the two outputs in the end. We built several models for both longitudinal and latitudinal outcomes using different methods (p-value, step-wise (both backward and forward at the same time), criterion-based, and LASSO). The following explanations are for longitudinal only and the latitudinal one follows the exactly same procedures. 
+
 The first step is to throw all the numerical variables into the model and check the p-value, the variables are shift + age + primary_fur_color + location + activity + reaction + sounds. Although hectare is also a numerical variable, it's not included because the users of the model would not have the information of how many squirrels are there within a specific hectare, but they only have the information about the characteristics of specific squirrels that they want to look for. The variables with p-value less than 0.05 were removed from the model, and the model built with remaining variables was checked again to make sure that all of them had p-value less than 0.05. So, the first model candidate was produced with predictors being 'shift', ' age', 'activity', 'reaction', 'sounds'.
+
 Then, we selected model using automatic procedure, specifically step-wise regression procedure. Backward, Forward or step-wise methods might produce different results, but we chose to use step-wise since it gives a single 'best' model. As the result, except for the location, all other 6 variables are included in this model, which is the second model candidate.
+
 Next, we used criterion-based procedure. The model with the largest adjusted R-square valued along with smallest AIC and BIC values are chosen to be the model candidate. It turned out that it also had all those 6 variables as the one in automatic procedure.
+
 LASSO model selection method was then used. After looking for the best lamda value, the third model candidate has all seven predictors, which means no variable was deleted from the selection procedure.
+
 We have three different models as the final 'best' model candidate for now, and they are all nested within each other. We choose the 'best' model according two criteria, adjusted R-squared value and RMSE. For longitudinal model, the final predictors have 6 predictors (shift + age + primary_fur_color + activity + reaction + sounds) since it has the highest adjust R-squared value and pretty much similar RMSE distribution as all other models.
+
 As for the latitudinal model, it has 5 predictors (sounds + primary_fur_color + reaction + activity + shift), but all other models candidates have 6 predictors. Since the RMSE values and adjusted R-squared are approximately same among all models, the principal of parsimony tells us to choose the the most succinct model.
 
 
