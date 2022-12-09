@@ -62,7 +62,7 @@ census =
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 ```
 
-## Frequency by Days
+## Frequency
 
 In this part, we are interested in looking at the central park squirrel census collected in October 2018. We make this graph to analysis the frequency of squirrels recorded for each of the observation (AM or PM).
 
@@ -174,13 +174,14 @@ plot_2 =
   theme_classic() + 
   facet_wrap(~primary_fur_color, nrow = 1) +
   labs(title = "Squirrel Activity by Primary Fur Color", y = 'Number of Observations', x = 'Activity') +
+  theme(plot.title = element_text(hjust = 0.5)) +
   coord_flip()
 
 plot_2
 ```
 
 
-## Squirrel Activity by Location of Squirrel
+## Squirrel Activity by Location
 
 We make this plot to analysis central park squirrel activity by their location (above ground, ground plane). 
 
@@ -200,6 +201,8 @@ dates %>%
 
 
 ## Primary Fur Color Map
+
+We build this map to visualize the distribution of each squirrel by different primary fur color clearly. 
 
 ```{r}
 pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Grey", "NA"))
