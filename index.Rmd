@@ -145,9 +145,9 @@ In the shiny section, you will find:
 
 **Yimin Chen**	  (yc4195)
 
-**Feng Yan**	    (fy2297)
-
 **Jiong Ma**	    (jm5509)
+
+**Feng Yan**	    (fy2297)
 
 **Wenjing Yang**	(wy2369)
 
