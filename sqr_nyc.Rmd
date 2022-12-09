@@ -141,7 +141,7 @@ sqr_nyc %>%
 ## Primary Fur Color Map
 
 ```{r}
-pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Grey", "NA"))
+pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("black", "cinnamon", "gray", "NA"))
 
 #Locations based on fur color
 sqr_nyc %>%
