@@ -39,6 +39,7 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
 
+
 ```{r, include=FALSE}
 census =
   read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")%>% 
@@ -62,15 +63,19 @@ census =
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 ```
 
-## Frequency
-
-In this part, we are interested in looking at the central park squirrel census collected in October 2018. We make this graph to analysis the frequency of squirrels recorded for each of the observation (AM or PM).
-
 ```{r}
 dates = 
   census %>%
   mutate(Month = substr(date, 1,2), Day = substr(date, 3,4), Year = substr(date,5,9))
 
+skimr::skim_without_charts(dates)
+```
+
+## Frequency
+
+In this part, we are interested in looking at the central park squirrel census collected in October 2018. We make this graph to analysis the frequency of squirrels recorded for each of the observation (AM or PM).
+
+```{r}
 dates %>% 
   group_by(Day, shift) %>%
   count() %>%
