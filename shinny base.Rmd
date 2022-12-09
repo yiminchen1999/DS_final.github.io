@@ -1,6 +1,5 @@
 ---
 title: "shinny base"
-author: "yimin chen"
 date: "2022-11-29"
 output: 
   html_document:

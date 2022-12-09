@@ -1,8 +1,8 @@
 ---
-title: "function"
+title: "Central Park Data Analysis"
 output: github_document
 ---
-```{r}
+```{r, include = FALSE}
 library(faraway)
 library(tidyverse)
 library(dplyr)
@@ -16,7 +16,7 @@ library(modelr)
 options(digits = 7)
 ```
 This will be model building procedure...
-```{r}
+```{r, message = FALSE}
 sq_df = read_csv('squirrel_tidy.csv') %>% 
   janitor::clean_names()
 ```

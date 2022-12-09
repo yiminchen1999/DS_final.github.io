@@ -1,5 +1,5 @@
 ---
-title: "Frequency"
+title: "Central Park Squirrels Data Analysis"
 output:
   html_document:
     theme: cosmo
@@ -18,12 +18,14 @@ library(ggplot2)
 library(shiny)
 library(scales)
 library(patchwork)
+library(plotly)
+
 
 knitr::opts_chunk$set(
-	echo = TRUE,
-	warning = FALSE,
-	message = FALSE, 
-	fig.width = 8, 
+ echo = TRUE,
+ warning = FALSE,
+ message = FALSE, 
+ fig.width = 8, 
   fig.height = 6,
   out.width = "90%"
 )
@@ -35,6 +37,7 @@ options(
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
+
 
 
 ```{r, include=FALSE}
@@ -60,15 +63,19 @@ census =
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 ```
 
-### Central Park Squirrels Distribution by Days (AM/PM)
-
-In this part, we are interested in looking at the central park squirrel census collected in October 2018. We make this graph to analysis the frequency of squirrels recorded for each of the observation (AM or PM).
-
 ```{r}
 dates = 
   census %>%
   mutate(Month = substr(date, 1,2), Day = substr(date, 3,4), Year = substr(date,5,9))
 
+skimr::skim_without_charts(dates)
+```
+
+## Frequency
+
+In this part, we are interested in looking at the central park squirrel census collected in October 2018. We make this graph to analysis the frequency of squirrels recorded for each of the observation (AM or PM).
+
+```{r}
 dates %>% 
   group_by(Day, shift) %>%
   count() %>%
@@ -77,15 +84,15 @@ dates %>%
   scale_fill_brewer(palette = "Paired") +
   labs(x = "Day", y = "Number of Observations", fill = 'Shift') +
   ggtitle('Central Park Squirrels Distribution by Days (AM/PM)') +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(hjust = 0.5), panel.grid.minor = element_blank(),panel.grid.major = element_blank())+
   labs(fill='Time of day') 
 ```
 
-First graph we drew was 'Number of Observations' v.s. 'Day', and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight.
+First graph we drew was ‘Number of Observations’ v.s. ‘Time of Day’, and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight. 
 
-### Central Park Squirrels Distribution by Primary Fur Colors
+## Distribution by Primary Fur Colors
 
-In this part, we  make this graph to analysis the frequency of squirrels recorded for each of the observation by primary fur color. 
+In this part, we make this graph to analysis the frequency of squirrels recorded for each of the observation by primary fur color. 
 
 ```{r}
 dates %>%
@@ -95,31 +102,123 @@ dates %>%
   geom_col(aes(x = Day, y = n, fill = primary_fur_color)) +
   scale_fill_brewer(palette = "Paired") +
   ggtitle('Central Park Squirrels Distribution by Primary Fur Color') +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(hjust = 0.5), panel.grid.minor = element_blank(),panel.grid.major = element_blank()) +
   labs( x='Day', y= 'Number of Observations') +
   labs(fill='Primary Fur Color') +
   scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
 ```
 
+Second graph we drew was ‘Number of Observations’ v.s. ‘Primary Fur Color’, it’s clearly shown that different number of observations were made in different days and there is no clear pattern. Squirrels were observed to be the most active on Oct.7 and Oct.13, and they clearly became less active in last few days. Generally, the gray squirrels are the most massive and black ones are the fewest. The color of cinnamon was also pretty frequently observed with some color-not-identified ones. 
 
-### Central Park Squirrels Distribution by Age Group
+## Distribution by Age Group
 
 In this part, we make this pie chart to display the percentage of squirrels by age group.
 
 ```{r}
 pie_1 = 
   dates %>% 
-  filter(age !='?') %>%
-  group_by(age) %>%
-  count() 
+  filter(age !='?') %>% 
+  filter(!is.na(age)) 
 
-pie_1 %>% 
-  mutate(prop = percent(n/sum(pie_1$n))) %>% 
-  ggplot(aes(x="", y = n, fill = age)) +
-  geom_bar(stat="identity", width=1, color="white") +
-  coord_polar("y", start = 0, direction = 1) + 
-  theme_void() + 
-  ggtitle('Squirrels Distribution by Age Group') +
-  geom_text(aes(label = prop),position = position_stack(vjust = 0.5)) +
-  scale_fill_brewer()
+
+fig_1 = 
+  plot_ly(data = count(pie_1, age), labels = ~age, values = ~n, type = 'pie', insidetextfont = list(color = '#FFFFFF')) %>% 
+  layout(title = 'Central Park Squirrels Distribution by Age Group',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+fig_1
 ```
+
+In this plot, we display the primary fur color distribution of central park squirrels by age groups (adult, juvenile).
+
+```{r}
+pie_2 = 
+  dates %>% 
+  filter(age == "Adult") %>% 
+  filter(!is.na(primary_fur_color))
+
+fig_2 = 
+  plot_ly(data = count(pie_2, primary_fur_color), labels = ~primary_fur_color, values = ~n, type = 'pie', insidetextfont = list(color = '#FFFFFF')) %>% 
+  layout(title = 'Squirrels Fur Color Distribution (Adult)',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+fig_2
+```
+
+
+```{r}
+pie_3  =
+  dates %>% 
+  filter(age == "Juvenile") %>%
+  filter(!is.na(primary_fur_color))
+
+fig_3 = 
+  plot_ly(data = count(pie_3, primary_fur_color), labels = ~primary_fur_color, values = ~n, type = 'pie', insidetextfont = list(color = '#FFFFFF')) %>% 
+  layout(title = 'Squirrels Fur Color Distribution (Juvenile)',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+fig_3
+```
+
+## Squirrel Activity by Primary Fur Color
+
+In our dataset, there are 5 different kinds of activities reported which are foraging, running, eating, climbing and chasing. We make this plot to analysis central park squirrel activity by their primary fur color. 
+
+```{r}
+plot_2 = 
+  dates %>%
+  filter(!is.na(activity)) %>% 
+  filter(!is.na(primary_fur_color)) %>% 
+  group_by(primary_fur_color) %>%
+  count(activity, sort = TRUE)%>%
+  ggplot(aes(x = reorder(activity, n), y = n)) + 
+  geom_bar(aes(fill = primary_fur_color), stat = "identity") + 
+  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white")) +
+  theme_classic() + 
+  facet_wrap(~primary_fur_color, nrow = 1) +
+  labs(title = "Squirrel Activity by Primary Fur Color", y = 'Number of Observations', x = 'Activity') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  coord_flip()
+
+plot_2
+```
+
+
+## Squirrel Activity by Location
+
+We make this plot to analysis central park squirrel activity by their location (above ground, ground plane). 
+
+```{r}
+dates %>%
+  filter(!is.na(activity)) %>% 
+  filter(!is.na(location)) %>% 
+  group_by(activity) %>%
+  mutate(n=1) %>%
+  ggplot() +
+  geom_col(aes(y=n,x = activity, fill = location), position="fill") +
+  ggtitle('Central Park Squirrels Acitivities by Location') +
+  theme(plot.title = element_text(hjust = 0.5), panel.grid.minor = element_blank(),panel.grid.major = element_blank())+ labs( x = 'Activity', y= 'Proportion') +
+  labs(fill = 'Location') 
+```
+
+
+## Primary Fur Color Map
+
+We build this map to visualize the distribution of each squirrel by different primary fur color clearly. 
+
+```{r}
+pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Grey", "NA"))
+
+#Locations based on fur color
+census %>%
+  filter(!is.na(primary_fur_color)) %>%
+  leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~long,
+                   lat = ~lat, radius = 3, color = ~pal_coats(primary_fur_color), stroke = FALSE, fillOpacity = 0.5) %>%
+  addLegend(position = "topright",pal = pal_coats, values = ~primary_fur_color)
+```
+
