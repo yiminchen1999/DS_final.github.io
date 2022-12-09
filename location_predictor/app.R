@@ -120,14 +120,14 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   output$Power <- renderPrint({
-    long <- 0.0005588*input$shift-73.97-0.0008995*input$age-0.0005278*input$primary_fur_color-0.0002236*input$activity+0.0005043*input$reaction+0.002109*input$sounds
-    lat <- 40.7810047+0.0006262*input$shift-0.0012940*input$primary_fur_color-0.0002411*input$activity+0.0007625*input$reaction+0.0029603*input$sounds
+    long <- 0.0005639*input$shift-73.397-0.0009412*input$age-0.0002267*input$activity+0.0004809*input$reaction+0.002142*input$sounds
+    lat <- 40.781005-0.0013140*input$primary_fur_color+0.0007784*input$reaction+0.0029074*input$sounds
     results <- paste(long,lat)
     results 
   })
   output$map <- renderLeaflet({
-    long1 <- 0.0005588*input$shift-73.97-0.0008995*input$age-0.0005278*input$primary_fur_color-0.0002236*input$activity+0.0005043*input$reaction+0.002109*input$sounds
-    lat1 <- 40.7810047+0.0006262*input$shift-0.0012940*input$primary_fur_color-0.0002411*input$activity+0.0007625*input$reaction+0.0029603*input$sounds
+    long1 <- 0.0005639*input$shift-73.397-0.0009412*input$age-0.0002267*input$activity+0.0004809*input$reaction+0.002142*input$sounds
+    lat1 <- 40.781005-0.0013140*input$primary_fur_color+0.0007784*input$reaction+0.0029074*input$sounds
     leaflet(data = census2) %>%
       setView(lng = -73.9561344937861, lat = 40.7840823884086,zoom = 23) %>%
       addTiles()  %>%
