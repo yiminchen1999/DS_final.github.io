@@ -59,6 +59,8 @@ As for the latitudinal model, it has 5 predictors (sounds + primary_fur_color + 
 # Results
 
 ### Data summaries:
+Except for the central park squirrel data, we also found another dataset which contains the squirrels data in whole NYC so that we could compare if there is a difference between squirrels in central park and other places in New York.
+
 The first graph we drew was 'Number of Observations' v.s. 'Time of Day', and morning and afternoon data were separated and found out that squirrels tended to be more active in the afternoon or at night time. However, the limitation of the data was that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight.
 
 The second graph we drew was ‘Number of Observations’ v.s. 'Primary Fur Color', it's clearly shown that different number of observations were made in different days and there is no clear pattern. Squirrels were observed to be the most active on Oct.7 and Oct.13, and they clearly became less active in last few days. Generally, the gray squirrels were the most massive and black ones were the fewest. The color of cinnamon was also pretty frequently observed with some color-not-identified ones.
@@ -73,14 +75,17 @@ The sixth graph we drew was to show the activities in squirrels by their differe
 
 The last graph of central park dataset we drew was to show how distributions of different activities differ by the locations. For example, climbing happened above ground most of the time, but foraging, running and eating basically happened on ground plane. Activities like chasing has equal probabilities of happening both above ground and on ground plane. 
 
-The interactive map shows the distribution of each squirrel by different primary fur colors. Users could zoom in or out to find the clusters of squirrels.
+The first graph we drew about NYC data was to show the activities in squirrels by their different primary fur colors. As for the activities indicated in the central park dataset, gray squirrels like to climb the most frequently and chase the least frequently. Black and gray squirrels like to forage the most and chase the least.
 
+The second graph about NYC data was to show how distributions of different activities differ by the locations. Activities like eating, foraging and running most happened on the ground plane, but other activities like chasing and climbing happened above ground for the most of time.
 
-    Some interesting plots:
+The interactive map show the distribution of each squirrel by different primary fur colors. Users could zoom in or out to find the clusters of squirrels.
     
-    Main model:
+### Main model:
+
     
-    Comparions:
+### Comparisons:
+We made comparisons between squirrels data in only central park and whole NYC. We found that the squirrels in central park, no matter of their colors, like to forage the most and chase the least. However, squirrels with different colors behaved differently in NYC. Gray squirrels like to climb the most, but black and cinnamon squirrels tend to forage the most frequently.
     
     
 

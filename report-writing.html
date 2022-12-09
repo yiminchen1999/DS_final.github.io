@@ -13,7 +13,7 @@
 
 <title>Location Predictions of Squirrels Based on Several Characteristics</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -537,6 +530,10 @@ parsimony tells us to choose the the most succinct model.</p>
 <h1>Results</h1>
 <div id="data-summaries" class="section level3">
 <h3>Data summaries:</h3>
+<p>Except for the central park squirrel data, we also found another
+dataset which contains the squirrels data in whole NYC so that we could
+compare if there is a difference between squirrels in central park and
+other places in New York.</p>
 <p>The first graph we drew was ‘Number of Observations’ v.s. ‘Time of
 Day’, and morning and afternoon data were separated and found out that
 squirrels tended to be more active in the afternoon or at night time.
@@ -578,14 +575,31 @@ example, climbing happened above ground most of the time, but foraging,
 running and eating basically happened on ground plane. Activities like
 chasing has equal probabilities of happening both above ground and on
 ground plane.</p>
-<p>The interactive map shows the distribution of each squirrel by
+<p>The first graph we drew about NYC data was to show the activities in
+squirrels by their different primary fur colors. As for the activities
+indicated in the central park dataset, gray squirrels like to climb the
+most frequently and chase the least frequently. Black and gray squirrels
+like to forage the most and chase the least.</p>
+<p>The second graph about NYC data was to show how distributions of
+different activities differ by the locations. Activities like eating,
+foraging and running most happened on the ground plane, but other
+activities like chasing and climbing happened above ground for the most
+of time.</p>
+<p>The interactive map show the distribution of each squirrel by
 different primary fur colors. Users could zoom in or out to find the
 clusters of squirrels.</p>
-<pre><code>Some interesting plots:
-
-Main model:
-
-Comparions:</code></pre>
+</div>
+<div id="main-model" class="section level3">
+<h3>Main model:</h3>
+</div>
+<div id="comparisons" class="section level3">
+<h3>Comparisons:</h3>
+<p>We made comparisons between squirrels data in only central park and
+whole NYC. We found that the squirrels in central park, no matter of
+their colors, like to forage the most and chase the least. However,
+squirrels with different colors behaved differently in NYC. Gray
+squirrels like to climb the most, but black and cinnamon squirrels tend
+to forage the most frequently.</p>
 </div>
 </div>
 <div id="discussion" class="section level1">
