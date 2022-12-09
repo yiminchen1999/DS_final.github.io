@@ -174,7 +174,7 @@ server <- function(input, output) {
    If sounds = ”moans”, input = 3 ;" 
   })
   output$verb7 <- renderText({ 
-    "   The missing values or unknowns directly are recoded as 0" 
+    "   If unknown, input = 0 ; "
   })
   
 }  

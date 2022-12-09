@@ -5,9 +5,9 @@ account: yc4195
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7860301
-bundleId: 6617818
+bundleId: 6617839
 url: https://yc4195.shinyapps.io/location_predictor/
-when: 1670624286.17415
-lastSyncTime: 1670624286.17415
+when: 1670624498.28415
+lastSyncTime: 1670624498.28416
 asMultiple: FALSE
 asStatic: FALSE
