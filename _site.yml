@@ -15,6 +15,7 @@ navbar:
       - text: "Central Park Data Analysis"
         href: model.html
       - text: "NYC Data Analysis"
+        href: sqr_nyc.html
     
     - text: "Inferential Statistics"
       menu:
