@@ -88,7 +88,7 @@ dates %>%
   labs(fill='Time of day') 
 ```
 
-First graph we drew was 'Number of Observations' v.s. 'Day', and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight.
+First graph we drew was ‘Number of Observations’ v.s. ‘Time of Day’, and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight. 
 
 ## Distribution by Primary Fur Colors
 
@@ -108,6 +108,7 @@ dates %>%
   scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
 ```
 
+Second graph we drew was ‘Number of Observations’ v.s. ‘Primary Fur Color’, it’s clearly shown that different number of observations were made in different days and there is no clear pattern. Squirrels were observed to be the most active on Oct.7 and Oct.13, and they clearly became less active in last few days. Generally, the gray squirrels are the most massive and black ones are the fewest. The color of cinnamon was also pretty frequently observed with some color-not-identified ones. 
 
 ## Distribution by Age Group
 
@@ -209,7 +210,7 @@ dates %>%
 We build this map to visualize the distribution of each squirrel by different primary fur color clearly. 
 
 ```{r}
-pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Gray", "NA"))
+pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Grey", "NA"))
 
 #Locations based on fur color
 census %>%
