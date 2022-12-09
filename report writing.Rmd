@@ -12,7 +12,18 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Names
+Yimin Chen (yc4195)
 
+Jiong Ma (jm5509)
+
+Feng Yan (fy2297)
+
+Wenjing Yang (wy2369)
+
+Yang Yi (yy3307)
+
+### 
 # Abstract...
 
 # Introduction
@@ -38,7 +49,21 @@ The original raw data we used to analysis is from NYC Open Data, it includes 3,0
 First off, the original raw dataset only includes the data from 2018 in central park, other two datasets were found as extra supporting materials to compare with the raw model. One dataset contains information about not only the squirrels in central park, but also in the whole new york city. Another one is about characteristics and behaviors of different animals and squirrels are also included. 
 
 ### Data cleaning:
-For data tidy and cleaning, the categorical variables were transformed to numeric ones for analysis and model building. We didn't discard the missing values directly but code them as 0 since there are a lot of them, and omitting them might lose the validity of the prediction. The dates were also cleaned. For other comparison plots, same data cleaning step was followed.
+For data tidy and cleaning, the categorical variables were transformed to numeric ones for analysis and model building. We didn't discard the missing values or unknowns directly but recode them as 0 since there are a lot of them, and omitting them might may lose the validity of the prediction. The dates were also cleaned.
+
+We encoded squirrels’ activities under the "activity" column: If activity = ”running”, the specific observations were recoded to "1"; If activity = "eating", the specific observations were recoded to "2"; If activity = "foraging", the specific observations were recoded to "3"; If activity = "climbing", the specific observations were recoded to "4"; If activity = "chasing", the specific observations were recoded to "5".
+
+We encoded squirrels’ interaction with humans under the "reaction" column: If reaction = "indifferent", the specific observations were recoded to "1"; If reaction= "runs_from", the specific observations were recoded to "2"; If reaction= "approaches", the specific observations were recoded to "3".
+
+We encoded squirrels’ sounds under the "sounds" column: If sound = "kuks", the specific observations were recoded to "1"; If sound = "quaas", the specific observations were recoded to "2"; If sound = "moans", the specific observations were recoded to "3".
+
+We encoded squirrels’ primary fur color under the "primary_fur_color" column: If color = "Gray", the specific observations were recoded to "1"; If color = "Cinnamon", the specific observations were recoded to "2"; If color = "Black", the specific observations were recoded to "3".
+
+We encoded whether the sighting session of squirrels occurred in the morning or late afternoon under the "shift" column: If shift = "AM", the specific observations were recoded to "1"; If shift = "PM", the specific observations were recoded to "2".
+
+We encoded age groups of squirrels under the "age" column: If age = "Adult", the specific observations were recoded to "1"; If age = "Juvenile", the specific observations were recoded to "2".
+
+At last, we kept "unique_squirrel_id", "hectare", "shift", "date", "heactare_squirrel_number", "age", "primary_fur_color", "highlight_fur_color", "combination_of_primary_and_highlight_color", "location", "lat_long", "long", "lat", "activity", "reaction", and "sounds" columns in tidied dataset to do the further data analysis and model building.
 
 ### Model building process:
 Since the outputs are both longitudinal and latitudinal, we expected to make two linear functions, with longitudinal and latitudinal being the outputs separately against predictors, and combine the two outputs in the end. We built several models for both longitudinal and latitudinal outcomes using different methods (p-value, step-wise (both backward and forward at the same time), criterion-based, and LASSO). The following explanations are for longitudinal only and the latitudinal one follows the exactly same procedures. 
@@ -54,6 +79,8 @@ LASSO model selection method was then used. After looking for the best lamda val
 We have three different models as the final 'best' model candidate for now, and they are all nested within each other. We choose the 'best' model according two criteria, adjusted R-squared value and RMSE. For longitudinal model, the final predictors have 6 predictors (shift + age + primary_fur_color + activity + reaction + sounds) since it has the highest adjust R-squared value and pretty much similar RMSE distribution as all other models.
 
 As for the latitudinal model, it has 5 predictors (sounds + primary_fur_color + reaction + activity + shift), but all other models candidates have 6 predictors. Since the RMSE values and adjusted R-squared are approximately same among all models, the principal of parsimony tells us to choose the the most succinct model.
+
+### Statistical tests:
 
 
 # Results
@@ -95,10 +122,11 @@ We found that the squirrels in central park, no matter of their colors, like to 
 
 As for the activities in different locations, both central park and whole NYC follow basically the same trend that activities like eating, foraging and running were most likely on ground plane and other activities happened above ground. However, activity of chasing was a little bit different. In central park, chasing on ground plane is a slightly more likely than above ground, but for whole NYC, about half of the chasing are above ground.
     
-
+    
 # Discussion
 
 ### Findings:
+
 
 # Conclusion
 

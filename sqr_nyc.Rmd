@@ -1,5 +1,5 @@
 ---
-title: "Central Park Squirrels Data Analysis"
+title: "NYC Squirrels Data Analysis"
 output:
   html_document:
     theme: cosmo
@@ -53,8 +53,7 @@ sqr_nyc <-
     primary_fur_color = case_when(
       primary_fur_color == "Gray" ~ "gray",
       primary_fur_color == "Cinnamon" ~ "cinnamon",
-      primary_fur_color == "Black" ~ "black",
-      TRUE ~ "others"
+      primary_fur_color == "Black" ~ "black"
          )
     )%>%
   mutate(
@@ -89,18 +88,13 @@ sqr_nyc <-
   dplyr::select(unique_squirrel_id,everything()) %>% 
   filter(long < -70 )
 
-# sqr_nyc %>% group_by(activity) %>%
-#   summarize(n = n()) %>%
-#   filter(
-#     activity %in% c('eating','foraging','climbing', 'chasing','running')
-#     ) #332/433
-
-#write_csv(sqr_nyc, file = './squirrel_data_in_nyc/sqr_nyc_clean.csv')
+sqr_nyc %>% skimr::skim_without_charts()
 ```
 
 ## Squirrel Activity by Primary Fur Color
 
-In our dataset, there are 5 different kinds of activities reported which are foraging, running, eating, climbing and chasing. We make this plot to analysis central park squirrel activity by their primary fur color. 
+In our dataset, there are 5 main different kinds of activities reported which are foraging, running, eating, climbing and chasing. We make this plot to analyze central park squirrel activity by their primary fur color. 
+The first graph we drew about NYC data was to show the activities in squirrels by their different primary fur colors. Constrained on the activities indicated in the central park dataset, gray squirrels like to climb the most frequently and chase the least frequently. Black and gray squirrels like to forage the most and chase the least.
 
 ```{r}
 (plot_1 = 
@@ -111,7 +105,7 @@ In our dataset, there are 5 different kinds of activities reported which are for
   count(activity, sort = TRUE)%>%
   ggplot(aes(x = reorder(activity, n), y = n)) + 
   geom_bar(aes(fill = primary_fur_color), stat = "identity") + 
-  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white")) +
+  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "indianred4")) +
   theme_classic() + 
   facet_wrap(~primary_fur_color, nrow = 1) +
   labs(title = "Squirrel Activity by Primary Fur Color", y = 'Number of Observations', x = 'Activity') +
@@ -122,7 +116,8 @@ In our dataset, there are 5 different kinds of activities reported which are for
 
 ## Squirrel Activity by Location of Squirrel
 
-We make this plot to analysis central park squirrel activity by their location (above ground, ground plane). 
+We make this plot to analyze central park squirrel activity by their location (above ground, ground plane). 
+The second graph about NYC data was to show how distributions of different activities differ by the locations. Activities like eating, foraging and running most happened on the ground plane, but other activities like chasing and climbing happened above ground for the most of time.
 
 ```{r}
 sqr_nyc %>%
@@ -141,8 +136,10 @@ sqr_nyc %>%
 
 ## Primary Fur Color Map
 
+We build this map to visualize the distribution of each squirrel by different primary fur color clearly.
+
 ```{r}
-pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("black", "cinnamon", "grey", "others"))
+pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("black", "cinnamon", "grey"))
 
 #Locations based on fur color
 sqr_nyc %>%
@@ -153,8 +150,3 @@ sqr_nyc %>%
                    lat = ~lat, radius = 3, color = ~pal_coats(primary_fur_color), stroke = FALSE, fillOpacity = 0.5) %>%
   addLegend(position = "topright",pal = pal_coats, values = ~primary_fur_color)
 ```
-
-
-
-
-
