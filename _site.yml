@@ -23,14 +23,9 @@ navbar:
         href: function.html
       - text: "Statistics Testing"
 
-    - text: "Shiny"
-      menu:
-      - text: "Shinny Map"
-        href: shinny-base.html
+    - text: "Location Predictor Shinyapp"
+      href: https://yc4195.shinyapps.io/location_predictor/
       
-      - text: "Shiny Dashboard"
-        href: shiny_dashboard_template.html
-
     - text: "Report"
       href: report-writing.html
 
