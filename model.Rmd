@@ -84,7 +84,7 @@ dates %>%
   scale_fill_brewer(palette = "Paired") +
   labs(x = "Day", y = "Number of Observations", fill = 'Shift') +
   ggtitle('Central Park Squirrels Distribution by Days (AM/PM)') +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(hjust = 0.5), panel.grid.minor = element_blank(),panel.grid.major = element_blank())+
   labs(fill='Time of day') 
 ```
 
@@ -102,7 +102,7 @@ dates %>%
   geom_col(aes(x = Day, y = n, fill = primary_fur_color)) +
   scale_fill_brewer(palette = "Paired") +
   ggtitle('Central Park Squirrels Distribution by Primary Fur Color') +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(hjust = 0.5), panel.grid.minor = element_blank(),panel.grid.major = element_blank()) +
   labs( x='Day', y= 'Number of Observations') +
   labs(fill='Primary Fur Color') +
   scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
@@ -199,8 +199,7 @@ dates %>%
   ggplot() +
   geom_col(aes(y=n,x = activity, fill = location), position="fill") +
   ggtitle('Central Park Squirrels Acitivities by Location') +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  labs( x = 'Activity', y= 'Proportion') +
+  theme(plot.title = element_text(hjust = 0.5), panel.grid.minor = element_blank(),panel.grid.major = element_blank())+ labs( x = 'Activity', y= 'Proportion') +
   labs(fill = 'Location') 
 ```
 
@@ -210,7 +209,7 @@ dates %>%
 We build this map to visualize the distribution of each squirrel by different primary fur color clearly. 
 
 ```{r}
-pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Grey", "NA"))
+pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Gray", "NA"))
 
 #Locations based on fur color
 census %>%
