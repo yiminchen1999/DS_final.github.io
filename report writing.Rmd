@@ -24,7 +24,8 @@ Wenjing Yang (wy2369)
 Yang Yi (yy3307)
 
 ### 
-# Abstract...
+# Abstract
+
 
 # Introduction
    
@@ -126,7 +127,7 @@ As for the activities in different locations, both central park and whole NYC fo
 # Discussion
 
 ### Findings:
-
+In this project, we
 
 # Conclusion
 
