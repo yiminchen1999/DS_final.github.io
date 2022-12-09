@@ -133,7 +133,6 @@ server <- function(input, output) {
       addTiles()  %>%
       addCircles(
         ~long1, ~lat1,
-        popup= ~hectare,
         color = "red",
         radius = 150,
         fillColor = "transparent"
