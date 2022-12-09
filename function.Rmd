@@ -291,9 +291,9 @@ cv_df_long %>%
 
 ```
 
-latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods hava 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
+latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods have 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
 
-longitude: criterion based method is chosen: lowest median RMSE(since evry method's RMSE distribution is pretty similar) and highest adjusted R squared
+longitude: criterion based method is chosen: lowest median RMSE(since every method's RMSE distribution is pretty similar) and highest adjusted R squared
 ```{r}
 # RMSE and adj Rsqured comparison table
 # latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods hava 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
@@ -330,4 +330,21 @@ long_comparison <- tibble(
 )
 long_comparison %>% knitr::kable()
 
+```
+
+```{r}
+# final model
+long_model_final=
+  lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+print(long_model_final)
+
+lat_model_final=
+  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
+print(lat_model_final)
+```
+
+```{r}
+# final model diagnostic
+plot(long_model_final)
+plot(lat_model_final)
 ```

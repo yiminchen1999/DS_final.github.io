@@ -5,7 +5,7 @@ output:
     code_folding: hide
     toc: true
     toc_float: true
-runtime: shiny
+    theme: cosmo
 ---
 
 ```{r setup, include=FALSE}
@@ -141,55 +141,22 @@ library(shiny)
 library(shiny.semantic)
 library(leaflet)
 
-ui <- semanticPage(
-  segment(
-    class = "basic",
-    a(class="ui blue ribbon label", "Leaflet demo"),
-    leafletOutput("map"),semantic_DTOutput("table")
-
-))
-
-server <- function(input, output, session) {
-  output$map <- renderLeaflet({
-    map <- leaflet(data=census1) %>%
+map <- leaflet(data=census1) %>%
   addTiles() %>%  
   addMarkers(lng=~long, lat=~lat, popup= ~hectare,clusterOptions = markerClusterOptions())
-    map
-  })
-}
-
-shinyApp(ui = ui, server = server)
+map
 ```
 
 ```{r}
-ui <- semanticPage(
-   h2("Pretty tables in Shiny Semantic"),
-   semantic_DTOutput("table")
- )
- server <- function(input, output, session) {
-   output$table <- renderDataTable(census1)
-
-
- }
- shinyApp(ui, server)
+library(formattable)
+datatable(head(census1), filter = "top",escape = FALSE,
+               options = list(scrollX = TRUE),
+               rownames = FALSE)
 ```
 
 ```{r}
-ui <- semanticPage(
-  segment(
-    class = "basic",
-    a(class="ui green ribbon label", "Plotly demo"),
-    plotlyOutput("plot")
-
-  )
-)
-
-server <- function(input, output, session) {
-  output$plot <- renderPlotly({
-    plot_ly(census1, x = ~lat,  color=~hectare) %>%
+plot2 <- plot_ly(census1, x = ~lat,  color=~hectare) %>%
       add_lines(y = ~long) 
-  })
-}
 
-shinyApp(ui = ui, server = server)
+plot2
 ```

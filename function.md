@@ -25,11 +25,12 @@ sq_df = read_csv('squirrel_tidy.csv') %>%
     ## New names:
     ## Rows: 3023 Columns: 17
     ## ── Column specification
-    ## ─────────────────────────────────────────────────────────────────────── Delimiter: "," chr
-    ## (5): unique_squirrel_id, hectare, highlight_fur_color, combination_of_... dbl (11): ...1,
-    ## shift, hectare_squirrel_number, age, primary_fur_color, loc... date (1): date
-    ## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ Specify the column
-    ## types or set `show_col_types = FALSE` to quiet this message.
+    ## ──────────────────────────────────────────────────────── Delimiter: "," chr
+    ## (5): unique_squirrel_id, hectare, highlight_fur_color, combination_of_... dbl
+    ## (11): ...1, shift, hectare_squirrel_number, age, primary_fur_color, loc... date
+    ## (1): date
+    ## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+    ## Specify the column types or set `show_col_types = FALSE` to quiet this message.
     ## • `` -> `...1`
 
 ``` r
@@ -629,18 +630,7 @@ model_caret2
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
 
-# longitudinal model selection
-
-model_criterion = lm(cbind(long, lat) \~ shift +
-hectare_squirrel_number + primary_fur_color + location + activity +
-reaction + sounds, data = sq_df) ols_step_best_subset(model_criterion)
-
-model_stepwise \<- lm(long \~ hectare_squirrel_number +
-primary_fur_color + location + activity + reaction + sounds, data =
-sq_df) ols_step_both_p(model_stepwise)
-
-model_lasso = lm(long \~ shift + age + primary_fur_color + location +
-activity + reaction + sounds)
+# latitudinal model selection
 
 ``` r
 # latitudinal data function
@@ -674,63 +664,65 @@ summary(lat_model)
     ## Multiple R-squared:  0.02993,    Adjusted R-squared:  0.028 
     ## F-statistic: 15.51 on 6 and 3016 DF,  p-value: < 2.2e-16
 
+pvalue_fit_lat = lm(lat \~ primary_fur_color + reaction + sounds, data =
+sq_df) pvalue_adjrsquared_lat \<- summary(pvalue_fit_lat)\$adj.r.squared
+
+auto_fit_lat = lm(lat \~ sounds + primary_fur_color + reaction +
+activity + shift ,data = sq_df) auto_adjrsquared_lat \<-
+summary(auto_fit_lat)\$adj.r.squared
+
+crit_fit_lat = lm(lat \~ shift + age + primary_fur_color + activity +
+reaction + sounds, data = sq_df) crit_adjrsquared_lat \<-
+summary(crit_fit_lat)\$adj.r.squared
+
+lasso_fit_lat = lm(lat \~ shift + age + primary_fur_color + activity +
+reaction + sounds, data = sq_df)
+
 ``` r
 # all latitude models
 pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
-summary(pvalue_fit_lat)$adj.r.squared
-```
+pvalue_adjrsquared_lat <- summary(pvalue_fit_lat)$adj.r.squared
 
-    ## [1] 0.01307076
-
-``` r
 auto_fit_lat = lm(lat ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
-summary(auto_fit_lat)$adj.r.squared
-```
+auto_adjrsquared_lat <- summary(auto_fit_lat)$adj.r.squared
 
-    ## [1] 0.01445713
-
-``` r
 crit_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity +  reaction + sounds, data = sq_df)
-summary(crit_fit_lat)$adj.r.squared
-```
+crit_adjrsquared_lat <- summary(crit_fit_lat)$adj.r.squared
 
-    ## [1] 0.01494983
-
-``` r
 lasso_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
-summary(lasso_fit_lat)$adj.r.squared
+lasso_adjrsquared_lat <- summary(lasso_fit_lat)$adj.r.squared
 ```
 
-    ## [1] 0.01494983
+# longitudinal model selection
+
+model_pvalue = lm(long \~ shift + age + activity + reaction + sounds,
+data = sq_df)
+
+model_criterion = lm(cbind(long, lat) \~ shift +
+hectare_squirrel_number + primary_fur_color + location + activity +
+reaction + sounds, data = sq_df) ols_step_best_subset(model_criterion)
+
+model_stepwise \<- lm(long \~ hectare_squirrel_number +
+primary_fur_color + location + activity + reaction + sounds, data =
+sq_df) ols_step_both_p(model_stepwise)
+
+model_lasso = lm(long \~ shift + age + primary_fur_color + location +
+activity + reaction + sounds, data = sq_df)
 
 ``` r
 # all longitude models
 pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
-summary(pvalue_fit_long)$adj.r.squared
-```
+pvalue_adjrsquared_long <- summary(pvalue_fit_long)$adj.r.squared
 
-    ## [1] 0.01255306
-
-``` r
 auto_fit_long = lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
-summary(auto_fit_long)$adj.r.squared
-```
+auto_adjrsquared_long <- summary(auto_fit_long)$adj.r.squared
 
-    ## [1] 0.01175137
-
-``` r
 crit_fit_long = lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
-summary(crit_fit_long)$adj.r.squared
-```
+crit_adjrsquared_long <- summary(crit_fit_long)$adj.r.squared
 
-    ## [1] 0.01339045
-
-``` r
 lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-summary(lasso_fit_long)$adj.r.squared
+lasso_adjrsquared_long <- summary(lasso_fit_long)$adj.r.squared
 ```
-
-    ## [1] 0.01318516
 
 ``` r
 # cross- validation
@@ -846,3 +838,113 @@ cv_df_long %>%
 ```
 
 ![](function_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+latitude: automatic method is chosen due to the rule of parsimony.(only
+5 predictors while LASSO and criterion-based methods have 6 predictors).
+When the RMSE distributions are basically same among the methods, the
+automatic method has slightly lower median both RMSE and Rsquared.
+
+longitude: criterion based method is chosen: lowest median RMSE(since
+every method’s RMSE distribution is pretty similar) and highest adjusted
+R squared
+
+``` r
+# RMSE and adj Rsqured comparison table
+# latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods hava 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
+
+methods <- c('pvalue','automatic','criterion-based','LASSO')
+RMSE_lat <- 
+  cv_df_lat %>% 
+  dplyr::select(starts_with('rmse_')) %>% 
+  map(median) %>% 
+  unlist()
+
+adjrsquared_lat <- c(pvalue_adjrsquared_lat,auto_adjrsquared_lat,
+                       crit_adjrsquared_lat, lasso_adjrsquared_lat)
+lat_comparison <- tibble(
+  methods,
+  RMSE_lat, 
+  adjrsquared_lat
+)
+lat_comparison %>% knitr::kable()
+```
+
+| methods         |  RMSE_lat | adjrsquared_lat |
+|:----------------|----------:|----------------:|
+| pvalue          | 0.0102151 |       0.0130708 |
+| automatic       | 0.0102161 |       0.0144571 |
+| criterion-based | 0.0102090 |       0.0149498 |
+| LASSO           | 0.0102090 |       0.0149498 |
+
+``` r
+#longitude: criterion based method is chosen: lowest median RMSE(since evry method's RMSE distribution is pretty similar) and highest adjusted R squared
+RMSE_long <- 
+  cv_df_long %>% 
+  dplyr::select(starts_with('rmse_')) %>% 
+  map(median) %>% 
+  unlist()
+
+adjrsquared_long <- c(pvalue_adjrsquared_long,auto_adjrsquared_long,
+                       crit_adjrsquared_long, lasso_adjrsquared_long)
+long_comparison <- tibble(
+  methods,
+  RMSE_long, 
+  adjrsquared_long
+)
+long_comparison %>% knitr::kable()
+```
+
+| methods         | RMSE_long | adjrsquared_long |
+|:----------------|----------:|-----------------:|
+| pvalue          | 0.0076966 |        0.0125531 |
+| automatic       | 0.0076928 |        0.0117514 |
+| criterion-based | 0.0076918 |        0.0133905 |
+| LASSO           | 0.0076910 |        0.0131852 |
+
+``` r
+# final model
+long_model_final=
+  lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+print(long_model_final)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = long ~ shift + age + primary_fur_color + activity + 
+    ##     reaction + sounds, data = sq_df)
+    ## 
+    ## Coefficients:
+    ##       (Intercept)              shift                age  primary_fur_color  
+    ##        -7.397e+01          5.588e-04         -8.995e-04         -5.278e-04  
+    ##          activity           reaction             sounds  
+    ##        -2.236e-04          5.043e-04          2.109e-03
+
+``` r
+lat_model_final=
+  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
+print(lat_model_final)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = lat ~ sounds + primary_fur_color + reaction + activity + 
+    ##     shift, data = sq_df)
+    ## 
+    ## Coefficients:
+    ##       (Intercept)             sounds  primary_fur_color           reaction  
+    ##        40.7810047          0.0029603         -0.0012940          0.0007625  
+    ##          activity              shift  
+    ##        -0.0002411          0.0006264
+
+``` r
+# final model diagnostic
+plot(long_model_final)
+```
+
+![](function_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->![](function_files/figure-gfm/unnamed-chunk-20-2.png)<!-- -->![](function_files/figure-gfm/unnamed-chunk-20-3.png)<!-- -->![](function_files/figure-gfm/unnamed-chunk-20-4.png)<!-- -->
+
+``` r
+plot(lat_model_final)
+```
+
+![](function_files/figure-gfm/unnamed-chunk-20-5.png)<!-- -->![](function_files/figure-gfm/unnamed-chunk-20-6.png)<!-- -->![](function_files/figure-gfm/unnamed-chunk-20-7.png)<!-- -->![](function_files/figure-gfm/unnamed-chunk-20-8.png)<!-- -->

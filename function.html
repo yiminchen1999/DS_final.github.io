@@ -335,9 +335,6 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="map.html">Squirrel Map</a>
-</li>
-<li>
   <a href="P8105_final_proposal.html">Proposal</a>
 </li>
 <li class="dropdown">
@@ -348,15 +345,38 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="model.html">Frequency</a>
+      <a href="model.html">Central Park Data Analysis</a>
     </li>
+    <li class="dropdown-header">NYC Data Analysis</li>
   </ul>
 </li>
-<li>
-  <a href="shinny-base.html">Shinny Map</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Inferential Statistics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="function.html">Predictive Model Building</a>
+    </li>
+    <li class="dropdown-header">Statistics Testing</li>
+  </ul>
 </li>
-<li>
-  <a href="undecided.html">Shinyapp</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Shiny
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="shinny-base.html">Shinny Map</a>
+    </li>
+    <li>
+      <a href="shiny_dashboard_template.html">Shiny Dashboard</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="report-writing.html">Report</a>
@@ -389,10 +409,11 @@ div.tocify {
 </div>
 
 
-<pre class="r"><code>library(faraway)
-library(tidyverse)</code></pre>
+<pre class="r"><code>library(faraway)</code></pre>
+<pre><code>## Warning: package &#39;faraway&#39; was built under R version 4.2.2</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.3.6      ✔ purrr   0.3.5 
+## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
 ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
 ## ✔ tidyr   1.2.0      ✔ stringr 1.4.1 
 ## ✔ readr   2.1.2      ✔ forcats 0.5.2 
@@ -402,16 +423,18 @@ library(tidyverse)</code></pre>
 <pre class="r"><code>library(dplyr)
 library(broom)
 library(glmnet)</code></pre>
-<pre><code>## Loading required package: Matrix
-## 
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## Warning: package &#39;Matrix&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## 
 ## Attaching package: &#39;Matrix&#39;
 ## 
 ## The following objects are masked from &#39;package:tidyr&#39;:
 ## 
 ##     expand, pack, unpack
 ## 
-## Loaded glmnet 4.1-6</code></pre>
+## Loaded glmnet 4.1-4</code></pre>
 <pre class="r"><code>library(olsrr)</code></pre>
+<pre><code>## Warning: package &#39;olsrr&#39; was built under R version 4.2.2</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;olsrr&#39;
 ## 
@@ -434,6 +457,7 @@ library(glmnet)</code></pre>
 ## 
 ##     select</code></pre>
 <pre class="r"><code>library(caret)</code></pre>
+<pre><code>## Warning: package &#39;caret&#39; was built under R version 4.2.2</code></pre>
 <pre><code>## Loading required package: lattice
 ## 
 ## Attaching package: &#39;lattice&#39;
@@ -1135,11 +1159,11 @@ cv_df_long %&gt;%
 <p><img src="function_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>latitude: automatic method is chosen due to the rule of
 parsimony.(only 5 predictors while LASSO and criterion-based methods
-hava 6 predictors). When the RMSE distributions are basically same among
+have 6 predictors). When the RMSE distributions are basically same among
 the methods, the automatic method has slightly lower median both RMSE
 and Rsquared.</p>
 <p>longitude: criterion based method is chosen: lowest median RMSE(since
-evry method’s RMSE distribution is pretty similar) and highest adjusted
+every method’s RMSE distribution is pretty similar) and highest adjusted
 R squared</p>
 <pre class="r"><code># RMSE and adj Rsqured comparison table
 # latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods hava 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
@@ -1236,6 +1260,38 @@ long_comparison %&gt;% knitr::kable()</code></pre>
 </tr>
 </tbody>
 </table>
+<pre class="r"><code># final model
+long_model_final=
+  lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+print(long_model_final)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = long ~ shift + age + primary_fur_color + activity + 
+##     reaction + sounds, data = sq_df)
+## 
+## Coefficients:
+##       (Intercept)              shift                age  primary_fur_color  
+##        -7.397e+01          5.588e-04         -8.995e-04         -5.278e-04  
+##          activity           reaction             sounds  
+##        -2.236e-04          5.043e-04          2.109e-03</code></pre>
+<pre class="r"><code>lat_model_final=
+  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
+print(lat_model_final)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ sounds + primary_fur_color + reaction + activity + 
+##     shift, data = sq_df)
+## 
+## Coefficients:
+##       (Intercept)             sounds  primary_fur_color           reaction  
+##        40.7810047          0.0029603         -0.0012940          0.0007625  
+##          activity              shift  
+##        -0.0002411          0.0006264</code></pre>
+<pre class="r"><code># final model diagnostic
+plot(long_model_final)</code></pre>
+<p><img src="function_files/figure-html/unnamed-chunk-20-1.png" width="672" /><img src="function_files/figure-html/unnamed-chunk-20-2.png" width="672" /><img src="function_files/figure-html/unnamed-chunk-20-3.png" width="672" /><img src="function_files/figure-html/unnamed-chunk-20-4.png" width="672" /></p>
+<pre class="r"><code>plot(lat_model_final)</code></pre>
+<p><img src="function_files/figure-html/unnamed-chunk-20-5.png" width="672" /><img src="function_files/figure-html/unnamed-chunk-20-6.png" width="672" /><img src="function_files/figure-html/unnamed-chunk-20-7.png" width="672" /><img src="function_files/figure-html/unnamed-chunk-20-8.png" width="672" /></p>
 </div>
 
 
