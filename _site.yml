@@ -4,6 +4,9 @@ navbar:
   title: "Home"
   
   right:
+    - text: "Interactive App"
+      href: https://yc4195.shinyapps.io/DS_final_squirrel_tracker/
+    
     - text: "Proposal"
       href: P8105_final_proposal.html
 
