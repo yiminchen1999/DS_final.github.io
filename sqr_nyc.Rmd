@@ -1,0 +1,159 @@
+---
+title: "Central Park Squirrels Data Analysis"
+output:
+  html_document:
+    theme: cosmo
+    toc : true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(leaflet)
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(shiny)
+library(scales)
+library(patchwork)
+library(plotly)
+
+
+knitr::opts_chunk$set(
+ echo = TRUE,
+ warning = FALSE,
+ message = FALSE, 
+ fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+```
+
+```{r}
+sqr_nyc <- 
+  read_csv('./squirrel_data_in_nyc/squirrel-data.csv') %>% 
+  janitor::clean_names() %>% 
+  mutate(
+    lat = squirrel_latitude_dd_dddddd,
+    long = squirrel_longitude_dd_dddddd,
+    lat_long = str_c('POINT (', long, ' ',lat,')'),
+    activity = tolower(activities),
+    unique_squirrel_id = squirrel_id
+  ) %>% 
+  mutate(
+    primary_fur_color = case_when(
+      primary_fur_color == "Gray" ~ "gray",
+      primary_fur_color == "Cinnamon" ~ "cinnamon",
+      primary_fur_color == "Black" ~ "black",
+      TRUE ~ "others"
+         )
+    )%>%
+  mutate(
+    activity = map(str_split(activity, ','), 1) %>% unlist(),
+    activity = map(str_split(activity, ' '), 1) %>% unlist()
+      )%>% 
+  mutate(
+    activity = case_when(
+      activity == "running" ~ "running",
+      activity == "eating" ~ "eating",
+      activity == "foraging" ~ "foraging",
+      activity == "climbing" ~ "climbing",
+      activity == "chasing" ~ "chasing",
+          TRUE ~ 'others'
+         )
+    )%>%
+  mutate(
+    location = map(str_split(location, ','), 1) %>% unlist()
+      ) %>% 
+  mutate(
+    location = case_when(
+    location == "Ground Plane"~ "gound plane",
+    location =="Above Ground" ~ "above ground",
+    TRUE ~ 'others'
+         )
+    ) %>%
+  dplyr::select(
+    -c("squirrel_id" ,"color_notes", "activities",
+       "other_notes_or_observations",  "squirrel_longitude_dd_dddddd",
+          "squirrel_latitude_dd_dddddd")
+    ) %>% 
+  dplyr::select(unique_squirrel_id,everything()) 
+
+# sqr_nyc %>% group_by(activity) %>%
+#   summarize(n = n()) %>%
+#   filter(
+#     activity %in% c('eating','foraging','climbing', 'chasing','running')
+#     ) #332/433
+
+#write_csv(sqr_nyc, file = './squirrel_data_in_nyc/sqr_nyc_clean.csv')
+```
+
+## Squirrel Activity by Primary Fur Color
+
+In our dataset, there are 5 different kinds of activities reported which are foraging, running, eating, climbing and chasing. We make this plot to analysis central park squirrel activity by their primary fur color. 
+
+```{r}
+(plot_1 = 
+  sqr_nyc %>%
+  filter(!is.na(activity)) %>% 
+  filter(!is.na(primary_fur_color)) %>% 
+  group_by(primary_fur_color) %>%
+  count(activity, sort = TRUE)%>%
+  ggplot(aes(x = reorder(activity, n), y = n)) + 
+  geom_bar(aes(fill = primary_fur_color), stat = "identity") + 
+  scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white")) +
+  theme_classic() + 
+  facet_wrap(~primary_fur_color, nrow = 1) +
+  labs(title = "Squirrel Activity by Primary Fur Color", y = 'Number of Observations', x = 'Activity') +
+  coord_flip())
+
+```
+
+
+## Squirrel Activity by Location of Squirrel
+
+We make this plot to analysis central park squirrel activity by their location (above ground, ground plane). 
+
+```{r}
+sqr_nyc %>%
+  filter(!is.na(activity)) %>% 
+  filter(!is.na(location)) %>% 
+  group_by(activity) %>%
+  mutate(n=1) %>%
+  ggplot() +
+  geom_col(aes(y=n,x = activity, fill = location), position="fill") +
+  ggtitle('Central Park Squirrels Acitivities by Location') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs( x = 'Activity', y= 'Proportion') +
+  labs(fill = 'Location') 
+```
+
+
+## Primary Fur Color Map
+
+```{r}
+pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Grey", "NA"))
+
+#Locations based on fur color
+sqr_nyc %>%
+  filter(!is.na(primary_fur_color)) %>%
+  leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~long,
+                   lat = ~lat, radius = 3, color = ~pal_coats(primary_fur_color), stroke = FALSE, fillOpacity = 0.5) %>%
+  addLegend(position = "topright",pal = pal_coats, values = ~primary_fur_color)
+```
+
+
+
+
+
