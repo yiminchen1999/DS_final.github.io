@@ -1,6 +1,13 @@
 ---
 title: "Predictive Model Building"
-output: github_document
+output: 
+  html_document:
+    css: style.css
+    includes:
+      in_header: [header.html,hero-image.html]
+    code_folding: hide
+    toc: true
+    toc_float: true
 ---
 <style type="text/css">
 
