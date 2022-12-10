@@ -8,6 +8,23 @@ output:
     toc: true
     toc_float: true
 ---
+<style type="text/css">
+
+.main-container {
+  max-width: 20%;
+  margin: auto;
+}
+
+body{ 
+  font-size: 16px;
+}
+a{
+  color: black;
+  font-weight: bold;
+}
+  
+</style>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(leaflet)

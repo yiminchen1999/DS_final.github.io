@@ -7,6 +7,28 @@ output:
     toc_float: true
     code_folding: hide
 ---
+<style type="text/css">
+
+h1.title {
+  font-size: 45px;
+  text-align: left;
+  color: black;
+  font-weight: bold;
+}
+
+.main-container {
+  max-width: 20%;
+  margin: auto;
+}
+
+body{ 
+  font-size: 16px;
+}
+a{
+  color: black;
+  font-weight: bold;
+}
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -91,7 +113,7 @@ sqr_nyc <-
 sqr_nyc %>% skimr::skim_without_charts()
 ```
 
-## Squirrel Activity by Primary Fur Color
+## **Squirrel Activity by Primary Fur Color**
 
 In our dataset, there are 5 main different kinds of activities reported which are foraging, running, eating, climbing and chasing. 
 The first graph we drew about NYC data was to show the activities in squirrels by their different primary fur colors. 
@@ -115,7 +137,7 @@ The first graph we drew about NYC data was to show the activities in squirrels b
 
 Constrained on the activities indicated in the central park dataset, gray squirrels like to climb the most frequently and chase the least frequently. Black and gray squirrels like to forage the most and chase the least.
 
-## Squirrel Activity by Location of Squirrel
+## **Squirrel Activity by Location of Squirrel**
 
 We make this plot to analyze central park squirrel activity by their location (above ground, ground plane). It was to show how distributions of different activities differ by the locations in the NYC.
 
@@ -135,7 +157,7 @@ sqr_nyc %>%
 
 Activities like eating, foraging and running most happened on the ground plane, but other activities like chasing and climbing happened above ground for the most of time.
 
-## Primary Fur Color Map
+## **Primary Fur Color Map**
 
 We build this map to visualize the distribution of each squirrel by different primary fur color clearly.
 

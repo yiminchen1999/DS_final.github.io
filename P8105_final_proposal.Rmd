@@ -8,6 +8,29 @@ output:
     toc_float: true
     code_folding: hide
 ---
+<style type="text/css">
+
+h1.title {
+  font-size: 45px;
+  text-align: left;
+  color: black;
+  font-weight: bold;
+}
+
+.main-container {
+  max-width: 20%;
+  margin: auto;
+}
+
+body{ 
+  font-size: 16px;
+}
+a{
+  color: black;
+  font-weight: bold;
+}
+
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -16,33 +39,34 @@ library(tidyverse)
 
 ![](Squirrel_PICs/squirrel_on_human.jpg){width=100%}
 
-### Team member!!
+## **Team member!!**
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 tibble(Name = c("Yimin Chen", "Jiong Ma", "Feng Yan", "Wenjing Yang", "Yang Yi"),
        UNI = c("yc4195", 
                 "jm5509", 
                 "fy2297",
                 "wy2369",
-                "yy3307"),)%>%
+                "yy3307"),) %>%
          knitr::kable()
 ```
 
 
-### Tentative Title: Central Park Squirrel Data Analysis
+## **Tentative Title: Central Park Squirrel Data Analysis**
 
-### Data sources: 
+## **Data sources**
 
-- [City of New York Squirrel Census   2018](https://data.cityofnewyork.us/Environment/2018-Central-Park-Squirrel-Census-Squirrel-Data/vfnx-vebw) 
+- [City of New York Squirrel Census 2018](https://data.cityofnewyork.us/Environment/2018-Central-Park-Squirrel-Census-Squirrel-Data/vfnx-vebw) 
+
+- [NYC squirrels data](https://data.cityofnewyork.us/Environment/Urban-Park-Ranger-Animal-Condition-Response/fuhs-xmg2)
 
 
-
-### Motivation
+## **Motivation**
 - Squirrels are everywhere, but is there a trend of where they prefer to stay with respect to their color, age, activities and all other features? Doing an analysis using squirrel census data may answer the question. Based on the results of the investigation we can compile relevant charts and make reasonable exploits, prevention or prediction based on information about squirrel habitat and activity patterns in Central Park.
 
 
 
 
-### Intended final products
+## **Intended final products**
 
 - A written report summarizing results of investigations
 - A webpage containing motivation, introduction, questions and analyses, visualizations with interpretations and explanations (tables, graphs, interactive map, etc.), discussion, conclusions and next steps, limitations, and references. 
@@ -55,7 +79,7 @@ Researchers who want to collect data related to squirrel habits can accurately f
 
 
 
-### Analyses, visualizations, and challenges
+## **Analyses, visualizations, and challenges**
 
 - analyses: 
 Find location distribution of squirrels in Central Park in 2018.
@@ -73,7 +97,7 @@ Plot: Does the combination of squirrel's fur color produce a certain regularity 
 
 
 
-### Planned timeline
+## **Planned timeline**
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 tibble(Date = c("Nov 3", "Nov 10", "Nov 15-18", "Nov 19", "Nov 25",  "Dec 1", "Dec 3", "Dec 6", "Dec 15"),

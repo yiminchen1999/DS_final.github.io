@@ -7,6 +7,29 @@ output:
     toc_float: true
     code_folding: hide
 ---
+<style type="text/css">
+
+h1.title {
+  font-size: 45px;
+  text-align: left;
+  color: black;
+  font-weight: bold;
+}
+
+.main-container {
+  max-width: 20%;
+  margin: auto;
+}
+
+body{ 
+  font-size: 16px;
+}
+a{
+  color: black;
+  font-weight: bold;
+}
+
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -71,7 +94,7 @@ dates =
 skimr::skim_without_charts(dates)
 ```
 
-## Frequency
+## **Frequency**
 
 In this part, we are interested in looking at the central park squirrel census collected in October 2018. We make this graph to analyze the frequency of squirrels recorded for each of the observation (AM or PM).
 
@@ -91,7 +114,7 @@ dates %>%
 The first graph we drew was ‘Number of Observations’ v.s. ‘Time of Day’, and morning and afternoon data were separated and found out that squirrels tended to be more active in the afternoon or at night time. However, the limitation of the data was that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight.
 
 
-## Distribution by Primary Fur Colors
+## **Distribution by Primary Fur Colors**
 
 In this part, we make this graph to analyze the frequency of squirrels recorded for each of the observation by their primary fur color. 
 
@@ -112,7 +135,7 @@ dates %>%
 The second graph we drew was ‘Number of Observations’ v.s. ‘Primary Fur Color’, it’s clearly shown that different number of observations were made in different days and there is no clear pattern. Squirrels were observed to be the most active on Oct.7 and Oct.13, and they clearly became less active in last few days. Generally, the gray squirrels were the most massive and black ones were the fewest. The color of cinnamon was also pretty frequently observed with some color-not-identified ones.
 
 
-## Distribution by Age Group
+## **Distribution by Age Group**
 
 ```{r}
 pie_1 = 
@@ -132,7 +155,7 @@ fig_1
 
 The third graph we drew was a pie chart indicating the distribution of squirrels by their physiological age. The majority (88.6%) of the them was adult while the remaining 11.4% was juvenile. It’s not sure how their age stage was determined by the observers, maybe by their sizes. The limitation was that only ‘adult’ and ‘juvenile’ were categorized, but the predictions might be more valid if other stages like ‘baby’ or ‘old’ were provided.
 
-### Adult Group
+### **Adult Group**
 
 ```{r}
 pie_2 = 
@@ -151,7 +174,7 @@ fig_2
 
 The fourth graph we drew was to show the distribution of only adult squirrels by their primary fur color. The majority (83.6%) of the adult squirrels were gray. 12.8% of them were cinnamon, and the rest 3.62% were color of black.
 
-### Juvenile Group
+### **Juvenile Group**
 
 ```{r}
 pie_3  =
@@ -171,7 +194,7 @@ fig_3
 The fifth graph we drew was to show the distribution of only juvenile squirrels by their primary fur color. The distribution was similar as the adult ones. 79.5% of the juvenile squirrels were gray. 18% of them were cinnamon, and the rest 2.5% were black.
 
 
-## Squirrel Activity by Primary Fur Color
+## **Squirrel Activity by Primary Fur Color**
 
 In our dataset, there are 5 different kinds of activities reported which are foraging, running, eating, climbing and chasing. We make this plot to analyze central park squirrel activity by their primary fur color. 
 
@@ -197,7 +220,7 @@ plot_2
 The sixth graph we drew was to show the activities in squirrels by their different primary fur colors. No matter of the fur colors, they tended to forage the most frequently and chase the least frequently, which makes sense because squirrels needed to store foods during cold months.
 
 
-## Squirrel Activity by Location
+## **Squirrel Activity by Location**
 
 We make this plot to analyze central park squirrel activity by their location (above ground or ground plane). 
 
@@ -216,7 +239,7 @@ dates %>%
 
 The last graph we drew was to show how distributions of different activities differ by the locations. For example, climbing happened above ground most of the time, but foraging, running and eating basically happened on ground plane. Activities like chasing has equal probabilities of happening both above ground and on ground plane.
 
-## Central Park Squirrel Overall Map
+## **Central Park Squirrel Overall Map**
 
 We build this overall map to visualize the distribution of each squirrel in central park by their different primary fur color clearly.
 
