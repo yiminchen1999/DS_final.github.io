@@ -143,9 +143,7 @@ We used tidied central park data to make the prediction models and app for both 
 
 [NYC squirrels data] ()
 
-<script>
-   $(document).ready(function() {
-     $head = $('#header');
-     $head.prepend('< img src="Squirrel_PICs/squirrel_census.png" style=\"float: right;width: 150px;\"/>')
-   });
-</script>
+
+```{r,echo=FALSE, out.width="50%", fig.cap="NYC BUS DELAY", fig.align = 'center'}
+knitr::include_graphics("Squirrel_PICs/squirrel_census.png") 
+```
