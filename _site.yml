@@ -25,7 +25,7 @@ navbar:
       - text: "Predictive Model Building"
         href: function.html
       - text: "Statistics Testing"
-        href: stat test.html
+        href: stat-test.html
       
     - text: "Report"
       href: report-writing.html

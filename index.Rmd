@@ -52,7 +52,7 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 </script>
 
 <center>
-![](Squirrel_PICs/squirrel_gif3.gif){width=75%}
+![](Squirrel_PICs/squirrel_gif3.gif){width=65%, length=65%}
 </center>
 
 ```{r,include=FALSE}
