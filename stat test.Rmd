@@ -8,7 +8,50 @@ output:
     code_folding: hide
 ---
 
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(leaflet)
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(shiny)
+library(scales)
+library(patchwork)
+library(plotly)
 
+
+knitr::opts_chunk$set(
+ echo = TRUE,
+ warning = FALSE,
+ message = FALSE, 
+ fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+```
+
+## Anova test
+
+```{r}
+sq_df = read_csv('squirrel_tidy.csv') %>% 
+  janitor::clean_names()
+```
+
+```{r}
+long_model_final = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
+anova(long_model_final)
+```
+
+```{r}
+lat_model_final = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+anova(lat_model_final)
 ```
 
