@@ -19,7 +19,7 @@
 
 .top-text {
   position: relative;
-  font-size: 30px;
+  font-size: 34px;
   padding-bottom: 0.5em
   text-transform: uppercase;
   text-align: center;
@@ -31,12 +31,12 @@
   position: relative;
   letter-spacing: 0.065em;
   line-height: 1em;
-  font-size: 30px;
+  font-size: 64px;
   text-transform: uppercase;
   text-align: center;
   display: block; /* Change to `display: none` for no bottom text */
   color: #ffffff;
-  margin-bottom: 2.0rem;
+  margin-bottom: 2.5rem;
   font-weight: bold;
 }
 
@@ -54,8 +54,24 @@
   position: sticky; 
   top: 120px; /*Controls where TOC stops when sticky */
   width: 100% !important;
+  border: none;
 }
+   /* TOC links */
 
+.list-group-item {
+    color: #7b8a8b;
+    font-size: 16px;
+}
+.list-group-item.active {
+    color: #2c3e50;
+    background-color: white;
+    border: none;
+}
+.list-group-item:hover, 
+.list-group-item.active:hover {
+    color: #131b23;
+    background-color: white;
+}
 /* NO TOC on mobile */
 @media screen and (max-width: 767px){
 
@@ -72,4 +88,36 @@
   }
   
   
+}
+
+
+/*----------------NAVBAR ---------------*/
+.navbar-default {
+    background-color: #141c25f2;
+}
+
+.navbar-default .navbar-nav>.open>a, 
+.navbar-default .navbar-nav>.active>a, 
+a.dropdown-toggle:hover {
+  background-color: #141c25 !important;
+}
+
+/* Dropdown menu color */
+.navbar-default .dropdown-menu {
+  background-color: #141c25;
+}
+
+/* Dropdown menu hover color */
+  .navbar-default .dropdown-menu>li>a:hover {
+    background-color: #202831f2;
+  }
+
+/* Navbar Links when hovered*/
+.navbar-default .dropdown-menu>.active>a
+.navbar-default .navbar-nav>.active>a:hover, 
+.navbar-default .navbar-nav:hover, 
+.navbar-default .navbar-nav>li>a:hover, 
+a.navbar-brand:hover {
+  color: #ffffffab !important;
+  background-color: #141c25;
 }
