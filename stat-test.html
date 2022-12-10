@@ -13,7 +13,7 @@
 
 <title>ANOVA Test</title>
 
-<script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -185,8 +185,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -194,9 +194,16 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
+  content: "&#xe258;";
   border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -332,9 +339,6 @@ div.tocify {
   <a href="https://yc4195.shinyapps.io/DS_final_squirrel_tracker/">Squirrel Tracker APP</a>
 </li>
 <li>
-  <a href="https://yc4195.shinyapps.io/location_predictor/">Location Predictor APP</a>
-</li>
-<li>
   <a href="P8105_final_proposal.html">Proposal</a>
 </li>
 <li class="dropdown">
@@ -366,6 +370,9 @@ div.tocify {
       <a href="stat-test.html">Statistics Testing</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="https://yc4195.shinyapps.io/location_predictor/">Location Predictor APP</a>
 </li>
 <li>
   <a href="report-writing.html">Report</a>
