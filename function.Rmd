@@ -19,13 +19,14 @@ library(patchwork)
 options(digits = 7)
 ```
 
-# Model Building
-This will be model building procedure...
 
 ```{r, message = FALSE}
 sq_df = read_csv('squirrel_tidy.csv') %>% 
   janitor::clean_names()
 ```
+
+# Model Building
+We are going to use four different model selection procedures to build our model.
 
 ## P-value
 The first step is to throw all the numerical variables into the model and check the p-value, the variables are shift + age + primary_fur_color + location + activity + reaction + sounds. Although hectare is also a numerical variable, it’s not included because the users of the model would not have the information of how many squirrels are there within a specific hectare, but they only have the information about the characteristics of specific squirrels that they want to look for. The variables with p-value less than 0.05 were removed from the model, and the model built with remaining variables was checked again to make sure that all of them had p-value less than 0.05. So, the first model candidate was produced with predictors being ‘shift’, ’ age’, ‘activity’, ‘reaction’, ‘sounds’.

@@ -339,9 +339,6 @@ div.tocify {
   <a href="https://yc4195.shinyapps.io/DS_final_squirrel_tracker/">Squirrel Tracker APP</a>
 </li>
 <li>
-  <a href="https://yc4195.shinyapps.io/location_predictor/">Location Predictor APP</a>
-</li>
-<li>
   <a href="P8105_final_proposal.html">Proposal</a>
 </li>
 <li class="dropdown">
@@ -375,6 +372,9 @@ div.tocify {
   </ul>
 </li>
 <li>
+  <a href="https://yc4195.shinyapps.io/location_predictor/">Location Predictor APP</a>
+</li>
+<li>
   <a href="report-writing.html">Report</a>
 </li>
 <li>
@@ -405,11 +405,12 @@ div.tocify {
 </div>
 
 
-<div id="model-building" class="section level1">
-<h1>Model Building</h1>
-<p>This will be model building procedure…</p>
 <pre class="r"><code>sq_df = read_csv(&#39;squirrel_tidy.csv&#39;) %&gt;% 
   janitor::clean_names()</code></pre>
+<div id="model-building" class="section level1">
+<h1>Model Building</h1>
+<p>We are going to use four different model selection procedures to
+build our model.</p>
 <div id="p-value" class="section level2">
 <h2>P-value</h2>
 <p>The first step is to throw all the numerical variables into the model
