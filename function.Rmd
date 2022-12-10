@@ -298,7 +298,7 @@ lat_comparison %>% knitr::kable()
 # Final Models
 ## Final Longitudinal Model
 The function of longitudinal has 5 predictors (shift + age + activity + reaction + sounds). Since the RMSE values and adjusted R-squared are approximately same among all functions, the principal of parsimony tells us to choose the the most succinct model. 
-The formula of the latitudinal function is: longitudinal = -73.97 + 0.0005588 shift - 0.0009412 age - 0.0002267 activity + 0.0004809 reaction + 0.002142 sounds.
+The formula of the latitudinal function is: longitudinal = -73.97 + 0.0005639 shift - 0.0009412 age - 0.0002267 activity + 0.0004809 reaction + 0.002142 sounds.
 
 ```{r}
 # final model
