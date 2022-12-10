@@ -140,4 +140,12 @@ We used tidied central park data to make the prediction models and app for both 
 
 # Reference
 [Central park squirrels data] (https://data.cityofnewyork.us/Environment/2018-Central-Park-Squirrel-Census-Squirrel-Data/vfnx-vebw)
+
 [NYC squirrels data] ()
+
+<script>
+   $(document).ready(function() {
+     $head = $('#header');
+     $head.prepend('< img src="Squirrel_PICs/squirrel_census.png" style=\"float: right;width: 150px;\"/>')
+   });
+</script>
