@@ -66,6 +66,10 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 </center>
 
+### **Screencast**
+
+<iframe width="720" height="480" src="https://www.youtube.com/embed/rTel6kk6zDs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ### **Motivation**
 Squirrels are everywhere, but is there a trend of where they prefer to stay with respect to their color, age, activities and all other features? Doing an analysis using squirrel data census may answer the question. Based on the results of the investigation we can compile relevant charts and make reasonable exploits, prevention or prediction based on information about squirrel habitat and activity patterns in Central Park and New York City.
 
