@@ -7,12 +7,9 @@ navbar:
     - text: "Squirrel Tracker APP"
       href: https://yc4195.shinyapps.io/DS_final_squirrel_tracker/
       
-    - text: "Location Predictor APP"
-      href: https://yc4195.shinyapps.io/location_predictor/
-      
     - text: "Proposal"
       href: P8105_final_proposal.html
-
+   
     - text: "Exploratory Analyses"
       menu:
       - text: "Central Park Data Analysis"
@@ -26,6 +23,9 @@ navbar:
         href: function.html
       - text: "Statistics Testing"
         href: stat-test.html
+        
+    - text: "Location Predictor APP"
+      href: https://yc4195.shinyapps.io/location_predictor/
       
     - text: "Report"
       href: report-writing.html
@@ -36,7 +36,10 @@ navbar:
 
 output:
   html_document:
+    css: style.css
     theme: cosmo
     toc : true
     toc_float: true
     code_folding: hide
+    output:
+  
