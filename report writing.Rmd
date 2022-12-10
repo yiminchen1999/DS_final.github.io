@@ -12,6 +12,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+![](Squirrel_PICs/squirrel_on_flower.jpg){width=100%}
+
 # Names
 Yimin Chen (yc4195)
 
