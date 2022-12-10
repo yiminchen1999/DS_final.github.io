@@ -106,6 +106,8 @@ The sixth graph we drew was to show the activities in squirrels by their differe
 
 The last graph of central park dataset we drew was to show how distributions of different activities differ by the locations. For example, climbing happened above ground most of the time, but foraging, running and eating basically happened on ground plane. Activities like chasing has equal probabilities of happening both above ground and on ground plane. 
 
+Then comes the analysis of NYC squirrels.
+
 The first graph we drew about NYC data was to show the activities in squirrels by their different primary fur colors. Constrained on the activities indicated in the central park dataset, gray squirrels like to climb the most frequently and chase the least frequently. Black and gray squirrels like to forage the most and chase the least.
 
 The second graph about NYC data was to show how distributions of different activities differ by the locations. Activities like eating, foraging and running most happened on the ground plane, but other activities like chasing and climbing happened above ground for the most of time.
@@ -141,9 +143,5 @@ We used tidied central park data to make the prediction models and app for both 
 # Reference
 [Central park squirrels data] (https://data.cityofnewyork.us/Environment/2018-Central-Park-Squirrel-Census-Squirrel-Data/vfnx-vebw)
 
-[NYC squirrels data] ()
+[NYC squirrels data] (https://data.cityofnewyork.us/Environment/Urban-Park-Ranger-Animal-Condition-Response/fuhs-xmg2)
 
-
-```{r,echo=FALSE, out.width="50%", fig.cap="NYC BUS DELAY", fig.align = 'center'}
-knitr::include_graphics("Squirrel_PICs/squirrel_census.png") 
-```
