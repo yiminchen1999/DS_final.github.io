@@ -1,5 +1,5 @@
 ---
-title: "Location Predictions of Squirrels Based on Several Characteristics"
+title: ""
 output: 
   html_document:
     includes:
