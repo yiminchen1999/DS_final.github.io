@@ -10,7 +10,7 @@ navbar:
     - text: "Proposal"
       href: P8105_final_proposal.html
    
-    - text: "Exploratory Analyses"
+    - text: "Exploratory Analysis"
       menu:
       - text: "Central Park Data Analysis"
         href: model.html
