@@ -2,6 +2,8 @@
 title: "Location Predictions of Squirrels Based on Several Characteristics"
 output: 
   html_document:
+    includes:
+      in_header: hero-image.html
     code_folding: hide
     toc: true
     toc_float: true

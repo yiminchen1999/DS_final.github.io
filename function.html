@@ -11,7 +11,7 @@
 
 
 
-<title>Central Park Data Analysis</title>
+<title>function</title>
 
 <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -36,8 +36,6 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -64,6 +62,7 @@ if (window.hljs) {
 
 
 
+<link rel="stylesheet" href="style.css" type="text/css" />
 
 
 
@@ -399,23 +398,36 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Central Park Data Analysis</h1>
 
 </div>
 
 
-<div id="model-building" class="section level1">
-<h1>Model Building</h1>
+<div id="function" class="section level1">
+<h1>function</h1>
+<pre class="r"><code>library(faraway)
+library(tidyverse)
+library(dplyr)
+library(broom)
+library(glmnet)
+library(olsrr)
+library(MASS)
+library(caret)
+library(modelr)
+
+options(digits = 7)</code></pre>
 <p>This will be model building procedure…</p>
 <pre class="r"><code>sq_df = read_csv(&#39;squirrel_tidy.csv&#39;) %&gt;% 
   janitor::clean_names()</code></pre>
-<p>The first step is to throw all the numerical variables into the model
-and check the p-value, the variables are shift + age + primary_fur_color
-+ location + activity + reaction + sounds. Although hectare is also a
-numerical variable, it’s not included because the users of the model
-would not have the information of how many squirrels are there within a
-specific hectare, but they only have the information about the
-characteristics of specific squirrels that they want to look for.</p>
+<pre><code>## New names:
+## Rows: 3023 Columns: 17
+## ── Column specification
+## ──────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
+## (5): unique_squirrel_id, hectare, highlight_fur_color, combination_of_... dbl
+## (11): ...1, shift, hectare_squirrel_number, age, primary_fur_color, loc... date
+## (1): date
+## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## • `` -&gt; `...1`</code></pre>
 <pre class="r"><code># longitudinal/latitudinal function
 # raw data input (no hectare information because the user would not know the info. about it)
 long_model =
@@ -496,13 +508,6 @@ summary(lat_model)</code></pre>
 ##         4.078e+01          6.023e-04         -7.666e-04         -1.260e-03  
 ##          location           activity           reaction             sounds  
 ##        -8.062e-05         -2.279e-04          7.655e-04          2.934e-03</code></pre>
-<div id="p-value" class="section level2">
-<h2>P-value</h2>
-<p>The variables with p-value less than 0.05 were removed from the
-model, and the model built with remaining variables was checked again to
-make sure that all of them had p-value less than 0.05. So, the first
-model candidate was produced with predictors being ‘shift’, ’ age’,
-‘activity’, ‘reaction’, ‘sounds’.</p>
 <pre class="r"><code># model selection using p-value
 long_model1 = 
   lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
@@ -570,15 +575,6 @@ summary(lat_model1)</code></pre>
 ## Coefficients:
 ##       (Intercept)  primary_fur_color           reaction             sounds  
 ##        40.7814005         -0.0013140          0.0007784          0.0029072</code></pre>
-</div>
-<div id="automaticstepwise" class="section level2">
-<h2>Automatic(Stepwise)</h2>
-<p>Then, we selected model using automatic procedure, specifically
-step-wise regression procedure. Backward, Forward or step-wise methods
-might produce different results, but we chose to use step-wise since it
-gives a single ‘best’ model. As the result, except for the location, all
-other 6 variables are included in this model, which is the second model
-candidate.</p>
 <pre class="r"><code># model selection using automatic procedure (forward/backward)
 model_stepwise_long &lt;- lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 ols_step_both_p(model_stepwise_long)</code></pre>
@@ -609,13 +605,6 @@ ols_step_both_p(model_stepwise_lat)</code></pre>
 ##    4        activity         addition       0.015       0.014     7.3460    -19129.1353    0.0102    
 ##    5          shift          addition       0.016       0.014     6.5490    -19129.9364    0.0102    
 ## -------------------------------------------------------------------------------------------------</code></pre>
-</div>
-<div id="criterion-based" class="section level2">
-<h2>Criterion-based</h2>
-<p>Next, we used criterion-based procedure. The model with the largest
-adjusted R-square valued along with smallest AIC and BIC values are
-chosen to be the model candidate. It turned out that it also had all
-those 6 variables as the one in automatic procedure.</p>
 <pre class="r"><code># model selection using criterion-based procedure
 model_criterion_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 ols_step_best_subset(model_criterion_long)</code></pre>
@@ -687,16 +676,12 @@ ols_step_best_subset(model_criterion_lat)</code></pre>
 ##  FPE: Final Prediction Error 
 ##  HSP: Hocking&#39;s Sp 
 ##  APC: Amemiya Prediction Criteria</code></pre>
-</div>
-<div id="lasso" class="section level2">
-<h2>LASSO</h2>
-<p>LASSO model selection method was then used. After looking for the
-best lamda value, the third model candidate has all seven predictors,
-which means no variable was deleted from the selection procedure.</p>
 <pre class="r"><code># model selection using LASSO procedure: longitude
 y_long &lt;- sq_df$long
-# hist(y_long)
-x &lt;- sq_df %&gt;% 
+hist(y_long)</code></pre>
+<p><img
+src="function_files/figure-gfm/unnamed-chunk-7-1.png" /><!-- --></p>
+<pre class="r"><code>x &lt;- sq_df %&gt;% 
   dplyr::select(
     shift, age, primary_fur_color,location, activity, reaction, sounds
     ) %&gt;%
@@ -704,8 +689,9 @@ x &lt;- sq_df %&gt;%
 
 set.seed(2022)
 cv_model_long &lt;- cv.glmnet(x,y_long, alpha = 1)
-best_lambda_long &lt;- cv_model_long$lambda.min
-long_lasso &lt;- glmnet(x, y_long, alpha = 1, lambda = best_lambda_long)
+(best_lambda_long &lt;- cv_model_long$lambda.min)</code></pre>
+<pre><code>## [1] 2.246901e-06</code></pre>
+<pre class="r"><code>long_lasso &lt;- glmnet(x, y_long, alpha = 1, lambda = best_lambda_long)
 coef(long_lasso)</code></pre>
 <pre><code>## 8 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                              s0
@@ -719,8 +705,10 @@ coef(long_lasso)</code></pre>
 ## sounds             2.073993e-03</code></pre>
 <pre class="r"><code># model selection using LASSO procedure: latitude
 y_lat &lt;- sq_df$lat
-# hist(y_lat)
-x &lt;- sq_df %&gt;% 
+hist(y_lat)</code></pre>
+<p><img
+src="function_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
+<pre class="r"><code>x &lt;- sq_df %&gt;% 
   dplyr::select(
     shift, age, primary_fur_color,location, activity, reaction, sounds
     ) %&gt;%
@@ -728,8 +716,9 @@ x &lt;- sq_df %&gt;%
 
 set.seed(2023)
 cv_model_lat &lt;- cv.glmnet(x,y_lat, alpha = 1)
-best_lambda_lat &lt;- cv_model_lat$lambda.min
-lat_lasso &lt;- glmnet(x, y_lat, alpha = 1, lambda = best_lambda_lat)
+(best_lambda_lat &lt;- cv_model_lat$lambda.min)</code></pre>
+<pre><code>## [1] 6.154509e-05</code></pre>
+<pre class="r"><code>lat_lasso &lt;- glmnet(x, y_lat, alpha = 1, lambda = best_lambda_lat)
 coef(lat_lasso)</code></pre>
 <pre><code>## 8 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                              s0
@@ -741,40 +730,226 @@ coef(lat_lasso)</code></pre>
 ## activity          -0.0001948355
 ## reaction           0.0006874044
 ## sounds             0.0027034309</code></pre>
+<pre class="r"><code># model comparisons for long
+long_model2 = 
+  lm(long ~ sounds + reaction + age + activity + shift + primary_fur_color, data = sq_df)
+summary(long_model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = long ~ shift + age + activity + reaction + sounds, 
+##     data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.015899 -0.005878 -0.001336  0.006651  0.018671 
+## 
+## Coefficients:
+##               Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept) -7.397e+01  6.978e-04 -1.060e+05  &lt; 2e-16 ***
+## shift        5.639e-04  2.817e-04  2.001e+00  0.04543 *  
+## age         -9.412e-04  3.663e-04 -2.569e+00  0.01024 *  
+## activity    -2.267e-04  1.031e-04 -2.200e+00  0.02787 *  
+## reaction     4.809e-04  1.681e-04  2.862e+00  0.00424 ** 
+## sounds       2.142e-03  4.873e-04  4.396e+00 1.14e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007678 on 3017 degrees of freedom
+## Multiple R-squared:  0.01419,    Adjusted R-squared:  0.01255 
+## F-statistic: 8.684 on 5 and 3017 DF,  p-value: 3.478e-08</code></pre>
+<pre class="r"><code>summary(long_model2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = long ~ sounds + reaction + age + activity + shift + 
+##     primary_fur_color, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.016016 -0.005863 -0.001302  0.006615  0.019090 
+## 
+## Coefficients:
+##                     Estimate Std. Error    t value Pr(&gt;|t|)    
+## (Intercept)       -7.397e+01  7.571e-04 -97703.566  &lt; 2e-16 ***
+## sounds             2.109e-03  4.874e-04      4.326 1.56e-05 ***
+## reaction           5.043e-04  1.684e-04      2.994  0.00278 ** 
+## age               -8.995e-04  3.668e-04     -2.452  0.01426 *  
+## activity          -2.236e-04  1.030e-04     -2.170  0.03007 *  
+## shift              5.588e-04  2.816e-04      1.984  0.04731 *  
+## primary_fur_color -5.278e-04  2.797e-04     -1.887  0.05926 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007674 on 3016 degrees of freedom
+## Multiple R-squared:  0.01535,    Adjusted R-squared:  0.01339 
+## F-statistic: 7.836 on 6 and 3016 DF,  p-value: 2.164e-08</code></pre>
+<pre class="r"><code># model comparisons for lat
+lat_model2 = 
+  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
+lat_model3 = 
+  lm(lat ~ sounds + reaction + age + activity + shift + primary_fur_color, data = sq_df)
+summary(lat_model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019726 -0.009004 -0.002850  0.010370  0.021857 
+## 
+## Coefficients:
+##                     Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)       40.7814005  0.0005212 78244.152  &lt; 2e-16 ***
+## primary_fur_color -0.0013140  0.0003716    -3.536 0.000412 ***
+## reaction           0.0007784  0.0002234     3.484 0.000501 ***
+## sounds             0.0029072  0.0006480     4.486 7.51e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01022 on 3019 degrees of freedom
+## Multiple R-squared:  0.01405,    Adjusted R-squared:  0.01307 
+## F-statistic: 14.34 on 3 and 3019 DF,  p-value: 2.813e-09</code></pre>
+<pre class="r"><code>summary(lat_model2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ sounds + primary_fur_color + reaction + activity + 
+##     shift, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019713 -0.008909 -0.002889  0.010318  0.021904 
+## 
+## Coefficients:
+##                     Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)       40.7810047  0.0008763 46538.475  &lt; 2e-16 ***
+## sounds             0.0029603  0.0006480     4.568 5.11e-06 ***
+## primary_fur_color -0.0012940  0.0003714    -3.484 0.000501 ***
+## reaction           0.0007625  0.0002241     3.403 0.000674 ***
+## activity          -0.0002411  0.0001370    -1.760 0.078586 .  
+## shift              0.0006264  0.0003746     1.672 0.094556 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01021 on 3017 degrees of freedom
+## Multiple R-squared:  0.01609,    Adjusted R-squared:  0.01446 
+## F-statistic: 9.866 on 5 and 3017 DF,  p-value: 2.266e-09</code></pre>
+<pre class="r"><code>summary(lat_model3)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ sounds + reaction + age + activity + shift + 
+##     primary_fur_color, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019694 -0.008938 -0.002912  0.010297  0.021788 
+## 
+## Coefficients:
+##                     Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)       40.7817911  0.0010070 40498.748  &lt; 2e-16 ***
+## sounds             0.0029217  0.0006483     4.507 6.83e-06 ***
+## reaction           0.0007693  0.0002240     3.434 0.000604 ***
+## age               -0.0007729  0.0004879    -1.584 0.113299    
+## activity          -0.0002339  0.0001370    -1.706 0.088025 .  
+## shift              0.0006100  0.0003746     1.628 0.103575    
+## primary_fur_color -0.0012585  0.0003720    -3.383 0.000727 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01021 on 3016 degrees of freedom
+## Multiple R-squared:  0.01691,    Adjusted R-squared:  0.01495 
+## F-statistic: 8.644 on 6 and 3016 DF,  p-value: 2.397e-09</code></pre>
+<pre class="r"><code>set.seed(1)
+# Use 10-fold validation 
+train = trainControl(method = &quot;cv&quot;, number = 10)
+y1 &lt;- data.frame(cbind(sq_df$long, sq_df$lat))
+model_caret1 = train(long ~ primary_fur_color + reaction + sounds, data = sq_df,
+trControl = train,
+method = &#39;lm&#39;,
+na.action = na.pass)
+
+# fitting a regression line
+model_caret1$finalModel</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ ., data = dat)
+## 
+## Coefficients:
+##       (Intercept)  primary_fur_color           reaction             sounds  
+##        -7.397e+01         -5.880e-04          5.122e-04          2.103e-03</code></pre>
+<pre class="r"><code>model_caret1</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 3023 samples
+##    3 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 2721, 2721, 2721, 2720, 2720, 2720, ... 
+## Resampling results:
+## 
+##   RMSE         Rsquared    MAE        
+##   0.007690637  0.01094338  0.006537054
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
+<pre class="r"><code>model_caret2 = train(lat ~ primary_fur_color + reaction + sounds, data = sq_df,
+trControl = train,
+method = &#39;lm&#39;,
+na.action = na.pass)
+
+# fitting a regression line
+model_caret2$finalModel</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ ., data = dat)
+## 
+## Coefficients:
+##       (Intercept)  primary_fur_color           reaction             sounds  
+##        40.7814005         -0.0013140          0.0007784          0.0029072</code></pre>
+<pre class="r"><code>model_caret2</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 3023 samples
+##    3 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 2720, 2720, 2720, 2721, 2722, 2720, ... 
+## Resampling results:
+## 
+##   RMSE        Rsquared    MAE        
+##   0.01022068  0.01539182  0.009042755
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
-</div>
-<div id="model-selection" class="section level1">
-<h1>Model Selection</h1>
-<p>We have four different models as the final ‘best’ model candidate for
-now, and they are all nested within each other. We choose the ‘best’
-model according to 3 criteria, the adjusted R-squared value, the
-cross-validation outcome(i.e. RMSE) and the rule of parsimony.</p>
-<div id="prediction-models" class="section level2">
-<h2>Prediction models</h2>
-<p>The four different longitute-prediction model are as follows:</p>
-<p>pvalue_fit_long = lm(long ~ shift + age + activity + reaction +
-sounds, data = sq_df)</p>
-<p>auto_fit_long = lm(cbind(long, lat) ~ shift + hectare_squirrel_number
-+ primary_fur_color + location + activity + reaction + sounds, data =
-sq_df) ols_step_best_subset(model_criterion)</p>
-<p>crit_fit_long &lt;- lm(long ~ hectare_squirrel_number +
-primary_fur_color + location + activity + reaction + sounds, data =
-sq_df) ols_step_both_p(model_stepwise)</p>
-<p>lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location
-+ activity + reaction + sounds, data = sq_df)</p>
-<pre class="r"><code># all longitude models
-pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
-pvalue_adjrsquared_long &lt;- summary(pvalue_fit_long)$adj.r.squared
-
-auto_fit_long = lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
-auto_adjrsquared_long &lt;- summary(auto_fit_long)$adj.r.squared
-
-crit_fit_long = lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
-crit_adjrsquared_long &lt;- summary(crit_fit_long)$adj.r.squared
-
-lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-lasso_adjrsquared_long &lt;- summary(lasso_fit_long)$adj.r.squared</code></pre>
-<p>The four different latitude-prediction model are as follows:</p>
+<div id="latitudinal-model-selection" class="section level1">
+<h1>latitudinal model selection</h1>
+<pre class="r"><code># latitudinal data function
+lat_model =
+  lm(lat ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+summary(lat_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lat ~ hectare_squirrel_number + primary_fur_color + 
+##     location + activity + reaction + sounds, data = sq_df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.019948 -0.008798 -0.002505  0.010204  0.022433 
+## 
+## Coefficients:
+##                           Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)              4.078e+01  8.031e-04 50780.935  &lt; 2e-16 ***
+## hectare_squirrel_number -4.034e-04  5.971e-05    -6.756 1.70e-11 ***
+## primary_fur_color       -1.215e-03  3.691e-04    -3.292  0.00101 ** 
+## location                -3.407e-04  3.952e-04    -0.862  0.38871    
+## activity                -2.335e-04  1.391e-04    -1.678  0.09343 .  
+## reaction                 7.289e-04  2.230e-04     3.268  0.00109 ** 
+## sounds                   3.049e-03  6.462e-04     4.718 2.49e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01014 on 3016 degrees of freedom
+## Multiple R-squared:  0.02993,    Adjusted R-squared:  0.028 
+## F-statistic: 15.51 on 6 and 3016 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data
 = sq_df) pvalue_adjrsquared_lat &lt;-
 summary(pvalue_fit_lat)$adj.r.squared</p>
@@ -799,11 +974,31 @@ crit_adjrsquared_lat &lt;- summary(crit_fit_lat)$adj.r.squared
 lasso_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
 lasso_adjrsquared_lat &lt;- summary(lasso_fit_lat)$adj.r.squared</code></pre>
 </div>
-<div id="cross-validation" class="section level2">
-<h2>Cross Validation</h2>
-<p>The cross-validation divides model into the training set and the
-testing set. Models’ comparison could be further done by comparing the
-cross-validation output: RMSE.</p>
+<div id="longitudinal-model-selection" class="section level1">
+<h1>longitudinal model selection</h1>
+<p>model_pvalue = lm(long ~ shift + age + activity + reaction + sounds,
+data = sq_df)</p>
+<p>model_criterion = lm(cbind(long, lat) ~ shift +
+hectare_squirrel_number + primary_fur_color + location + activity +
+reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion)</p>
+<p>model_stepwise &lt;- lm(long ~ hectare_squirrel_number +
+primary_fur_color + location + activity + reaction + sounds, data =
+sq_df) ols_step_both_p(model_stepwise)</p>
+<p>model_lasso = lm(long ~ shift + age + primary_fur_color + location +
+activity + reaction + sounds, data = sq_df)</p>
+<pre class="r"><code># all longitude models
+pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
+pvalue_adjrsquared_long &lt;- summary(pvalue_fit_long)$adj.r.squared
+
+auto_fit_long = lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
+auto_adjrsquared_long &lt;- summary(auto_fit_long)$adj.r.squared
+
+crit_fit_long = lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+crit_adjrsquared_long &lt;- summary(crit_fit_long)$adj.r.squared
+
+lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+lasso_adjrsquared_long &lt;- summary(lasso_fit_long)$adj.r.squared</code></pre>
 <pre class="r"><code># cross- validation
 cv_df &lt;- crossv_mc(sq_df, 100)
 cv_df &lt;- cv_df %&gt;% 
@@ -832,16 +1027,16 @@ cv_df_lat %&gt;%
   dplyr::select(starts_with(&#39;rmse_&#39;)) %&gt;% 
   map(median)</code></pre>
 <pre><code>## $rmse_pvalue
-## [1] 0.01023593
+## [1] 0.01021509
 ## 
 ## $rmse_auto
-## [1] 0.01023509
+## [1] 0.01021608
 ## 
 ## $rmse_crit
-## [1] 0.01022908
+## [1] 0.01020896
 ## 
 ## $rmse_lasso
-## [1] 0.01022908</code></pre>
+## [1] 0.01020896</code></pre>
 <pre class="r"><code>cv_df_lat %&gt;% 
   dplyr::select(starts_with(&quot;rmse&quot;)) %&gt;% 
   pivot_longer(
@@ -855,7 +1050,8 @@ cv_df_lat %&gt;%
     title = &#39;RMSE for Cross Validation of Latitude Models&#39;,
        x = &#39;models&#39;, y = &#39;RMSE&#39;
   )</code></pre>
-<p><img src="function_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img
+src="function_files/figure-gfm/unnamed-chunk-16-1.png" /><!-- --></p>
 <pre class="r"><code>cv_df_long = 
   cv_df %&gt;% 
   mutate(
@@ -876,16 +1072,16 @@ cv_df_long %&gt;%
   dplyr::select(starts_with(&#39;rmse_&#39;)) %&gt;% 
   map(median)</code></pre>
 <pre><code>## $rmse_pvalue
-## [1] 0.007678063
+## [1] 0.007696558
 ## 
 ## $rmse_auto
-## [1] 0.007689238
+## [1] 0.007692802
 ## 
 ## $rmse_crit
-## [1] 0.007684016
+## [1] 0.007691777
 ## 
 ## $rmse_lasso
-## [1] 0.007683816</code></pre>
+## [1] 0.00769105</code></pre>
 <pre class="r"><code>cv_df_long %&gt;% 
   dplyr::select(starts_with(&quot;rmse&quot;)) %&gt;% 
   pivot_longer(
@@ -899,13 +1095,18 @@ cv_df_long %&gt;%
     title = &#39;RMSE for Cross Validation of Longitude Models&#39;,
        x = &#39;models&#39;, y = &#39;RMSE&#39;
   )</code></pre>
-<p><img src="function_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-</div>
-<div id="visualization-tables" class="section level2">
-<h2>Visualization Tables</h2>
-<p>Visualization Tables are made for better comparison.</p>
-<pre class="r"><code># RMSE and adj Rsquared comparison table
-# latitude: parsimony since the RMSE and Rsquared are similar
+<p><img
+src="function_files/figure-gfm/unnamed-chunk-17-1.png" /><!-- --></p>
+<p>latitude: automatic method is chosen due to the rule of
+parsimony.(only 5 predictors while LASSO and criterion-based methods
+have 6 predictors). When the RMSE distributions are basically same among
+the methods, the automatic method has slightly lower median both RMSE
+and Rsquared.</p>
+<p>longitude: criterion based method is chosen: lowest median RMSE(since
+every method’s RMSE distribution is pretty similar) and highest adjusted
+R squared</p>
+<pre class="r"><code># RMSE and adj Rsqured comparison table
+# latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods hava 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
 
 methods &lt;- c(&#39;pvalue&#39;,&#39;automatic&#39;,&#39;criterion-based&#39;,&#39;LASSO&#39;)
 RMSE_lat &lt;- 
@@ -933,27 +1134,27 @@ lat_comparison %&gt;% knitr::kable()</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">pvalue</td>
-<td align="right">0.0102359</td>
+<td align="right">0.0102151</td>
 <td align="right">0.0130708</td>
 </tr>
 <tr class="even">
 <td align="left">automatic</td>
-<td align="right">0.0102351</td>
+<td align="right">0.0102161</td>
 <td align="right">0.0144571</td>
 </tr>
 <tr class="odd">
 <td align="left">criterion-based</td>
-<td align="right">0.0102291</td>
+<td align="right">0.0102090</td>
 <td align="right">0.0149498</td>
 </tr>
 <tr class="even">
 <td align="left">LASSO</td>
-<td align="right">0.0102291</td>
+<td align="right">0.0102090</td>
 <td align="right">0.0149498</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>#longitude: parsimony since the RMSE and Rsquared are similar
+<pre class="r"><code>#longitude: criterion based method is chosen: lowest median RMSE(since evry method&#39;s RMSE distribution is pretty similar) and highest adjusted R squared
 RMSE_long &lt;- 
   cv_df_long %&gt;% 
   dplyr::select(starts_with(&#39;rmse_&#39;)) %&gt;% 
@@ -979,26 +1180,27 @@ long_comparison %&gt;% knitr::kable()</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">pvalue</td>
-<td align="right">0.0076781</td>
+<td align="right">0.0076966</td>
 <td align="right">0.0125531</td>
 </tr>
 <tr class="even">
 <td align="left">automatic</td>
-<td align="right">0.0076892</td>
+<td align="right">0.0076928</td>
 <td align="right">0.0117514</td>
 </tr>
 <tr class="odd">
 <td align="left">criterion-based</td>
-<td align="right">0.0076840</td>
+<td align="right">0.0076918</td>
 <td align="right">0.0133905</td>
 </tr>
 <tr class="even">
 <td align="left">LASSO</td>
-<td align="right">0.0076838</td>
+<td align="right">0.0076910</td>
 <td align="right">0.0131852</td>
 </tr>
 </tbody>
 </table>
+<<<<<<< HEAD
 </div>
 </div>
 <div id="final-models" class="section level1">
@@ -1009,67 +1211,50 @@ long_comparison %&gt;% knitr::kable()</code></pre>
 + reaction + sounds). Since the RMSE values and adjusted R-squared are
 approximately same among all functions, the principal of parsimony tells
 us to choose the the most succinct model. The formula of the latitudinal
-function is: longitudinal = -73.97 + 0.0005588shift - 0.0009412age -
-0.0002267activity + 0.0004809reaction + 0.002142sounds.</p>
+function is: longitudinal = -73.97 + 0.0005639 shift - 0.0009412 age -
+0.0002267 activity + 0.0004809 reaction + 0.002142 sounds.</p>
+=======
+>>>>>>> 84563178820195aea14505e1583148b892e3c893
 <pre class="r"><code># final model
 long_model_final=
-  lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
+  lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
 print(long_model_final)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = long ~ shift + age + activity + reaction + sounds, 
-##     data = sq_df)
+## lm(formula = long ~ shift + age + primary_fur_color + activity + 
+##     reaction + sounds, data = sq_df)
 ## 
 ## Coefficients:
-## (Intercept)        shift          age     activity     reaction       sounds  
-##  -7.397e+01    5.639e-04   -9.412e-04   -2.267e-04    4.809e-04    2.142e-03</code></pre>
-<pre class="r"><code>long_model_final %&gt;% broom::tidy()</code></pre>
-<pre><code>## # A tibble: 6 × 5
-##   term          estimate std.error  statistic   p.value
-##   &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept) -74.0       0.000698 -105997.   0        
-## 2 shift         0.000564  0.000282       2.00 0.0454   
-## 3 age          -0.000941  0.000366      -2.57 0.0102   
-## 4 activity     -0.000227  0.000103      -2.20 0.0279   
-## 5 reaction      0.000481  0.000168       2.86 0.00424  
-## 6 sounds        0.00214   0.000487       4.40 0.0000114</code></pre>
-<p>The diagnosis plots of the final longitudinal prediction model:</p>
-<pre class="r"><code># final model diagnostic
-par(mfrow = c(2,2))
-plot(long_model_final)</code></pre>
-<p><img src="function_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-</div>
-<div id="final-latitudinal-model" class="section level2">
-<h2>Final Latitudinal Model</h2>
-<p>The function of latitudinal has 3 predictors (primary_fur_color +
-reaction + sounds). Since the RMSE values and adjusted R-squared are
-approximately same among all functions, the principal of parsimony tells
-us to choose the the most succinct model. The formula of the latitudinal
-function is: longitudinal = 40.7814005- 0.0013140primary_fur_color +
-0.0007784reaction + 0.0029072sounds.</p>
+##       (Intercept)              shift                age  primary_fur_color  
+##        -7.397e+01          5.588e-04         -8.995e-04         -5.278e-04  
+##          activity           reaction             sounds  
+##        -2.236e-04          5.043e-04          2.109e-03</code></pre>
 <pre class="r"><code>lat_model_final=
-  lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
 print(lat_model_final)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+## lm(formula = lat ~ sounds + primary_fur_color + reaction + activity + 
+##     shift, data = sq_df)
 ## 
 ## Coefficients:
-##       (Intercept)  primary_fur_color           reaction             sounds  
-##        40.7814005         -0.0013140          0.0007784          0.0029072</code></pre>
-<pre class="r"><code>lat_model_final %&gt;% broom::tidy()</code></pre>
-<pre><code>## # A tibble: 4 × 5
-##   term               estimate std.error statistic    p.value
-##   &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-## 1 (Intercept)       40.8       0.000521  78244.   0         
-## 2 primary_fur_color -0.00131   0.000372     -3.54 0.000412  
-## 3 reaction           0.000778  0.000223      3.48 0.000501  
-## 4 sounds             0.00291   0.000648      4.49 0.00000751</code></pre>
-<p>The diagnosis plots of the final latitudinal prediction model:</p>
-<pre class="r"><code>par(mfrow =c(2,2))
-plot(lat_model_final)</code></pre>
-<p><img src="function_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-</div>
+##       (Intercept)             sounds  primary_fur_color           reaction  
+##        40.7810047          0.0029603         -0.0012940          0.0007625  
+##          activity              shift  
+##        -0.0002411          0.0006264</code></pre>
+<pre class="r"><code># final model diagnostic
+plot(long_model_final)</code></pre>
+<p><img
+src="function_files/figure-gfm/unnamed-chunk-20-1.png" /><!-- --><img
+src="function_files/figure-gfm/unnamed-chunk-20-2.png" /><!-- --><img
+src="function_files/figure-gfm/unnamed-chunk-20-3.png" /><!-- --><img
+src="function_files/figure-gfm/unnamed-chunk-20-4.png" /><!-- --></p>
+<pre class="r"><code>plot(lat_model_final)</code></pre>
+<p><img
+src="function_files/figure-gfm/unnamed-chunk-20-5.png" /><!-- --><img
+src="function_files/figure-gfm/unnamed-chunk-20-6.png" /><!-- --><img
+src="function_files/figure-gfm/unnamed-chunk-20-7.png" /><!-- --><img
+src="function_files/figure-gfm/unnamed-chunk-20-8.png" /><!-- --></p>
 </div>
 
 

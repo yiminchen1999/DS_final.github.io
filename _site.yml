@@ -36,7 +36,10 @@ navbar:
 
 output:
   html_document:
+    css: style.css
     theme: cosmo
     toc : true
     toc_float: true
     code_folding: hide
+    output:
+  
