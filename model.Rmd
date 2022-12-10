@@ -73,7 +73,7 @@ skimr::skim_without_charts(dates)
 
 ## Frequency
 
-In this part, we are interested in looking at the central park squirrel census collected in October 2018. We make this graph to analysis the frequency of squirrels recorded for each of the observation (AM or PM).
+In this part, we are interested in looking at the central park squirrel census collected in October 2018. We make this graph to analyze the frequency of squirrels recorded for each of the observation (AM or PM).
 
 ```{r}
 dates %>% 
@@ -88,11 +88,12 @@ dates %>%
   labs(fill='Time of day') 
 ```
 
-First graph we drew was ‘Number of Observations’ v.s. ‘Time of Day’, and morning and afternoon data were separated and found out that squirrels tend to be more active in the afternoon or at night time. However, the limitation of the data is that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight. 
+The first graph we drew was ‘Number of Observations’ v.s. ‘Time of Day’, and morning and afternoon data were separated and found out that squirrels tended to be more active in the afternoon or at night time. However, the limitation of the data was that we were not able to get the exact time period of their activities but only either morning or evening, we can assume they are present prior to sunset since they should be busy collecting the food when there is sunlight.
+
 
 ## Distribution by Primary Fur Colors
 
-In this part, we make this graph to analysis the frequency of squirrels recorded for each of the observation by primary fur color. 
+In this part, we make this graph to analyze the frequency of squirrels recorded for each of the observation by their primary fur color. 
 
 ```{r}
 dates %>%
@@ -108,11 +109,10 @@ dates %>%
   scale_fill_manual(values = c("#000000", "#D2691E", "#D3D3D3", "white"))
 ```
 
-Second graph we drew was ‘Number of Observations’ v.s. ‘Primary Fur Color’, it’s clearly shown that different number of observations were made in different days and there is no clear pattern. Squirrels were observed to be the most active on Oct.7 and Oct.13, and they clearly became less active in last few days. Generally, the gray squirrels are the most massive and black ones are the fewest. The color of cinnamon was also pretty frequently observed with some color-not-identified ones. 
+The second graph we drew was ‘Number of Observations’ v.s. ‘Primary Fur Color’, it’s clearly shown that different number of observations were made in different days and there is no clear pattern. Squirrels were observed to be the most active on Oct.7 and Oct.13, and they clearly became less active in last few days. Generally, the gray squirrels were the most massive and black ones were the fewest. The color of cinnamon was also pretty frequently observed with some color-not-identified ones.
+
 
 ## Distribution by Age Group
-
-In this part, we make this pie chart to display the percentage of squirrels by age group.
 
 ```{r}
 pie_1 = 
@@ -130,7 +130,9 @@ fig_1 =
 fig_1
 ```
 
-In this plot, we display the primary fur color distribution of central park squirrels by age groups (adult, juvenile).
+The third graph we drew was a pie chart indicating the distribution of squirrels by their physiological age. The majority (88.6%) of the them was adult while the remaining 11.4% was juvenile. It’s not sure how their age stage was determined by the observers, maybe by their sizes. The limitation was that only ‘adult’ and ‘juvenile’ were categorized, but the predictions might be more valid if other stages like ‘baby’ or ‘old’ were provided.
+
+### Adult Group
 
 ```{r}
 pie_2 = 
@@ -147,6 +149,9 @@ fig_2 =
 fig_2
 ```
 
+The fourth graph we drew was to show the distribution of only adult squirrels by their primary fur color. The majority (83.6%) of the adult squirrels were gray. 12.8% of them were cinnamon, and the rest 3.62% were color of black.
+
+### Juvenile Group
 
 ```{r}
 pie_3  =
@@ -163,9 +168,12 @@ fig_3 =
 fig_3
 ```
 
+The fifth graph we drew was to show the distribution of only juvenile squirrels by their primary fur color. The distribution was similar as the adult ones. 79.5% of the juvenile squirrels were gray. 18% of them were cinnamon, and the rest 2.5% were black.
+
+
 ## Squirrel Activity by Primary Fur Color
 
-In our dataset, there are 5 different kinds of activities reported which are foraging, running, eating, climbing and chasing. We make this plot to analysis central park squirrel activity by their primary fur color. 
+In our dataset, there are 5 different kinds of activities reported which are foraging, running, eating, climbing and chasing. We make this plot to analyze central park squirrel activity by their primary fur color. 
 
 ```{r}
 plot_2 = 
@@ -186,10 +194,12 @@ plot_2 =
 plot_2
 ```
 
+The sixth graph we drew was to show the activities in squirrels by their different primary fur colors. No matter of the fur colors, they tended to forage the most frequently and chase the least frequently, which makes sense because squirrels needed to store foods during cold months.
+
 
 ## Squirrel Activity by Location
 
-We make this plot to analysis central park squirrel activity by their location (above ground, ground plane). 
+We make this plot to analyze central park squirrel activity by their location (above ground or ground plane). 
 
 ```{r}
 dates %>%
@@ -204,10 +214,11 @@ dates %>%
   labs(fill = 'Location') 
 ```
 
+The last graph we drew was to show how distributions of different activities differ by the locations. For example, climbing happened above ground most of the time, but foraging, running and eating basically happened on ground plane. Activities like chasing has equal probabilities of happening both above ground and on ground plane.
 
-## Primary Fur Color Map
+## Central Park Squirrel Overall Map
 
-We build this map to visualize the distribution of each squirrel by different primary fur color clearly. 
+We build this overall map to visualize the distribution of each squirrel in central park by their different primary fur color clearly.
 
 ```{r}
 pal_coats <- colorFactor(c("#000000", "#D2691E", "#D3D3D3", "white"), domain = c("Black", "Cinnamon", "Grey", "NA"))
@@ -222,3 +233,4 @@ census %>%
   addLegend(position = "topright",pal = pal_coats, values = ~primary_fur_color)
 ```
 
+If you would like to track squirrels by their several characteristics (fur color, age, time of day, interaction and activity), we have built an **AWESOME** interactive app, named ["Central Park Squirrel Tracker"](https://yc4195.shinyapps.io/DS_final_squirrel_tracker/).

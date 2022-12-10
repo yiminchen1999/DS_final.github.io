@@ -16,10 +16,10 @@ library(tidyverse)
 
 ### Team member!!
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-tibble(Name = c("Yimin Chen", "Feng Yan", "Jiong Ma", "Wenjing Yang", "Yang Yi"),
+tibble(Name = c("Yimin Chen", "Jiong Ma", "Feng Yan", "Wenjing Yang", "Yang Yi"),
        UNI = c("yc4195", 
-                "fy2297", 
-                "jm5509",
+                "jm5509", 
+                "fy2297",
                 "wy2369",
                 "yy3307"),)%>%
          knitr::kable()

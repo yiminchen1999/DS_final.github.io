@@ -13,7 +13,7 @@
 
 <title>Location Predictions of Squirrels Based on Several Characteristics</title>
 
-<script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,9 +193,16 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
+  content: "&#xe258;";
   border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -328,7 +335,10 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://yc4195.shinyapps.io/DS_final_squirrel_tracker/">Interactive App</a>
+  <a href="https://yc4195.shinyapps.io/DS_final_squirrel_tracker/">Squirrel Tracker APP</a>
+</li>
+<li>
+  <a href="https://yc4195.shinyapps.io/location_predictor/">Location Predictor APP</a>
 </li>
 <li>
   <a href="P8105_final_proposal.html">Proposal</a>
@@ -358,21 +368,8 @@ div.tocify {
     <li>
       <a href="function.html">Predictive Model Building</a>
     </li>
-    <li class="dropdown-header">Statistics Testing</li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Shiny
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="shinny-base.html">Shinny Map</a>
-    </li>
-    <li>
-      <a href="shiny_dashboard_template.html">Shiny Dashboard</a>
+      <a href="stat-test.html">Statistics Testing</a>
     </li>
   </ul>
 </li>
@@ -408,8 +405,19 @@ Several Characteristics</h1>
 </div>
 
 
+<div id="names" class="section level1">
+<h1>Names</h1>
+<p>Yimin Chen (yc4195)</p>
+<p>Jiong Ma (jm5509)</p>
+<p>Feng Yan (fy2297)</p>
+<p>Wenjing Yang (wy2369)</p>
+<p>Yang Yi (yy3307)</p>
+<div id="section" class="section level3">
+<h3></h3>
+</div>
+</div>
 <div id="abstract" class="section level1">
-<h1>Abstract…</h1>
+<h1>Abstract</h1>
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
@@ -472,10 +480,42 @@ behaviors of different animals and squirrels are also included.</p>
 <h3>Data cleaning:</h3>
 <p>For data tidy and cleaning, the categorical variables were
 transformed to numeric ones for analysis and model building. We didn’t
-discard the missing values directly but code them as 0 since there are a
-lot of them, and omitting them might lose the validity of the
-prediction. The dates were also cleaned. For other comparison plots,
-same data cleaning step was followed.</p>
+discard the missing values or unknowns directly but recode them as 0
+since there are a lot of them, and omitting them might may lose the
+validity of the prediction. The dates were also cleaned.</p>
+<p>We encoded squirrels’ activities under the “activity” column: If
+activity = ”running”, the specific observations were recoded to “1”; If
+activity = “eating”, the specific observations were recoded to “2”; If
+activity = “foraging”, the specific observations were recoded to “3”; If
+activity = “climbing”, the specific observations were recoded to “4”; If
+activity = “chasing”, the specific observations were recoded to “5”.</p>
+<p>We encoded squirrels’ interaction with humans under the “reaction”
+column: If reaction = “indifferent”, the specific observations were
+recoded to “1”; If reaction= “runs_from”, the specific observations were
+recoded to “2”; If reaction= “approaches”, the specific observations
+were recoded to “3”.</p>
+<p>We encoded squirrels’ sounds under the “sounds” column: If sound =
+“kuks”, the specific observations were recoded to “1”; If sound =
+“quaas”, the specific observations were recoded to “2”; If sound =
+“moans”, the specific observations were recoded to “3”.</p>
+<p>We encoded squirrels’ primary fur color under the “primary_fur_color”
+column: If color = “Gray”, the specific observations were recoded to
+“1”; If color = “Cinnamon”, the specific observations were recoded to
+“2”; If color = “Black”, the specific observations were recoded to
+“3”.</p>
+<p>We encoded whether the sighting session of squirrels occurred in the
+morning or late afternoon under the “shift” column: If shift = “AM”, the
+specific observations were recoded to “1”; If shift = “PM”, the specific
+observations were recoded to “2”.</p>
+<p>We encoded age groups of squirrels under the “age” column: If age =
+“Adult”, the specific observations were recoded to “1”; If age =
+“Juvenile”, the specific observations were recoded to “2”.</p>
+<p>At last, we kept “unique_squirrel_id”, “hectare”, “shift”, “date”,
+“heactare_squirrel_number”, “age”, “primary_fur_color”,
+“highlight_fur_color”, “combination_of_primary_and_highlight_color”,
+“location”, “lat_long”, “long”, “lat”, “activity”, “reaction”, and
+“sounds” columns in tidied dataset to do the further data analysis and
+model building.</p>
 </div>
 <div id="model-building-process" class="section level3">
 <h3>Model building process:</h3>
@@ -524,6 +564,9 @@ primary_fur_color + reaction + activity + shift), but all other models
 candidates have 6 predictors. Since the RMSE values and adjusted
 R-squared are approximately same among all models, the principal of
 parsimony tells us to choose the the most succinct model.</p>
+</div>
+<div id="statistical-tests" class="section level3">
+<h3>Statistical tests:</h3>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -630,6 +673,7 @@ the chasing are above ground.</p>
 <h1>Discussion</h1>
 <div id="findings" class="section level3">
 <h3>Findings:</h3>
+<p>In this project, we</p>
 </div>
 </div>
 <div id="conclusion" class="section level1">
