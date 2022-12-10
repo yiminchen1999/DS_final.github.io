@@ -137,3 +137,4 @@ We also found that the predictors used to predict longitudinal and latitudinal o
 # Conclusion
 We used tidied central park data to make the prediction models and app for both longitudinal and latitudinal of squirrels' locations. Data outside of central park was also analyzed and it didn't follow the same trend. So, the accurate predictions could only apply in central park. Squirrel tracker and map allow people to locate the squirrels. For future direction, we may collect more data which was not only constrained in 2018 but other years to compare the prediction models.
 
+# Reference
