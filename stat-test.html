@@ -11,7 +11,7 @@
 
 
 
-<title>Statistics Test</title>
+<title>ANOVA Test</title>
 
 <script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -64,6 +64,7 @@ if (window.hljs) {
 
 
 
+<link rel="stylesheet" href="style.css" type="text/css" />
 
 
 
@@ -392,17 +393,15 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Statistics Test</h1>
+<h1 class="title toc-ignore">ANOVA Test</h1>
 
 </div>
 
 
-<div id="anova-test" class="section level2">
-<h2>ANOVA Test</h2>
 <pre class="r"><code>sq_df = read_csv(&#39;squirrel_tidy.csv&#39;) %&gt;% 
   janitor::clean_names()</code></pre>
-<div id="longitudinal-model" class="section level3">
-<h3>Longitudinal Model</h3>
+<div id="longitudinal-model" class="section level2">
+<h2>Longitudinal Model</h2>
 <p><span class="math inline">\(H_0:\)</span> Every parameter of
 predictors in our regression model is equal to zero.</p>
 <p><span class="math inline">\(H_1:\)</span> Not every parameter of
@@ -479,8 +478,8 @@ sounds) are smaller than 0.05 so we reject the null hypothesis and
 conclude that every predictor in our final longitudinal model is
 significant.</p>
 </div>
-<div id="latitudinal-model" class="section level3">
-<h3>Latitudinal Model</h3>
+<div id="latitudinal-model" class="section level2">
+<h2>Latitudinal Model</h2>
 <p><span class="math inline">\(H_0:\)</span> Every parameter of
 predictors in our regression model is equal to zero.</p>
 <p><span class="math inline">\(H_1:\)</span> Not every parameter of
@@ -540,7 +539,6 @@ the p-values of all three predictors (primary fur color, reaction and
 sounds) are smaller than 0.05 so we reject the null hypothesis and
 conclude that every predictor in our final latitudinal model is
 significant.</p>
-</div>
 </div>
 
 

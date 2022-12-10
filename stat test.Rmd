@@ -1,5 +1,5 @@
 ---
-title: "Statistics Test"
+title: "ANOVA Test"
 output:
   html_document:
     theme: cosmo
@@ -32,14 +32,12 @@ options(
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
-## ANOVA Test
-
 ```{r}
 sq_df = read_csv('squirrel_tidy.csv') %>% 
   janitor::clean_names()
 ```
 
-### Longitudinal Model
+## Longitudinal Model
 
 $H_0:$ Every parameter of predictors in our regression model is equal to zero.
 
@@ -53,7 +51,7 @@ anova(long_model_final) %>%
 
 We use anova test to make sure the predictors of our final Longitudinal regression fit are significant. Based on the results, the p-values of all five predictors (shift, age, activity, reaction and sounds) are smaller than 0.05 so we reject the null hypothesis and conclude that every predictor in our final longitudinal model is significant.
 
-### Latitudinal Model
+## Latitudinal Model
 
 $H_0:$ Every parameter of predictors in our regression model is equal to zero.
 
