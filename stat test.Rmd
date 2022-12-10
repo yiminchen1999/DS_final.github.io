@@ -10,16 +10,10 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(leaflet)
 library(tidyverse)
 library(readr)
 library(dplyr)
-library(ggplot2)
 library(shiny)
-library(scales)
-library(patchwork)
-library(plotly)
-
 
 knitr::opts_chunk$set(
  echo = TRUE,
@@ -38,20 +32,39 @@ options(
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
-## Anova test
+## ANOVA Test
 
 ```{r}
 sq_df = read_csv('squirrel_tidy.csv') %>% 
   janitor::clean_names()
 ```
 
+### Longitudinal Model
+
+We use anova test to make sure the predictors of our final Longitudinal regression fit are significant. 
+
+$H_0:$ Every parameter of predictors in our regression model is equal to zero.
+
+$H_1:$ Not every parameters of predictors in our regression model is equal to zero. 
+
 ```{r}
 long_model_final = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
 anova(long_model_final)
 ```
+
+Based on the results, the p-values of all five predictors (shift, age, activity, reaction and sounds) are smaller than 0.05 so we reject the null hypothesis and conclude that every predictors in our final model is significant.
+
+### Latitudinal Model
+
+We use the same way (anova test) to make sure the predictors of our final Latitudinal regression fit are significant. 
+
+$H_0:$ Every parameter of predictors in our regression model is equal to zero.
+
+$H_1:$ Not every parameters of predictors in our regression model is equal to zero. 
 
 ```{r}
 lat_model_final = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
 anova(lat_model_final)
 ```
 
+Based on the results, the p-values of all three predictors (primary fur color, reaction and sounds) are smaller than 0.05 so we reject the null hypothesis and conclude that every predictors in our final model is significant.
