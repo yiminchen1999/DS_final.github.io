@@ -368,10 +368,18 @@ div.tocify {
     <li>
       <a href="function.html">Predictive Model Building</a>
     </li>
+<<<<<<< HEAD
+    <li class="dropdown-header">Statistics Testing</li>
+  </ul>
+</li>
+<li>
+  <a href="https://yc4195.shinyapps.io/location_predictor/">Location Predictor Shinyapp</a>
+=======
     <li>
       <a href="stat-test.html">Statistics Testing</a>
     </li>
   </ul>
+>>>>>>> 688eece5a6c72c4ab2622fba4ae4f98a9f6c8ed5
 </li>
 <li>
   <a href="report-writing.html">Report</a>
@@ -405,9 +413,17 @@ div.tocify {
 
 
 <div id="anova-test" class="section level2">
-<h2>Anova test</h2>
+<h2>ANOVA Test</h2>
 <pre class="r"><code>sq_df = read_csv(&#39;squirrel_tidy.csv&#39;) %&gt;% 
   janitor::clean_names()</code></pre>
+<div id="longitudinal-model" class="section level3">
+<h3>Longitudinal Model</h3>
+<p>We use anova test to make sure the predictors of our final
+Longitudinal regression fit are significant.</p>
+<p><span class="math inline">\(H_0:\)</span> Every parameter of
+predictors in our regression model is equal to zero.</p>
+<p><span class="math inline">\(H_1:\)</span> Not every parameters of
+predictors in our regression model is equal to zero.</p>
 <pre class="r"><code>long_model_final = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
 anova(long_model_final)</code></pre>
 <pre><code>## Analysis of Variance Table
@@ -422,6 +438,19 @@ anova(long_model_final)</code></pre>
 ## Residuals 3017 0.177841 0.00005895                      
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Based on the results, the p-values of all five predictors (shift,
+age, activity, reaction and sounds) are smaller than 0.05 so we reject
+the null hypothesis and conclude that every predictors in our final
+model is significant.</p>
+</div>
+<div id="latitudinal-model" class="section level3">
+<h3>Latitudinal Model</h3>
+<p>We use the same way (anova test) to make sure the predictors of our
+final Latitudinal regression fit are significant.</p>
+<p><span class="math inline">\(H_0:\)</span> Every parameter of
+predictors in our regression model is equal to zero.</p>
+<p><span class="math inline">\(H_1:\)</span> Not every parameters of
+predictors in our regression model is equal to zero.</p>
 <pre class="r"><code>lat_model_final = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
 anova(lat_model_final)</code></pre>
 <pre><code>## Analysis of Variance Table
@@ -434,6 +463,11 @@ anova(lat_model_final)</code></pre>
 ## Residuals         3019 0.315195 0.0001044                      
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Based on the results, the p-values of all three predictors (primary
+fur color, reaction and sounds) are smaller than 0.05 so we reject the
+null hypothesis and conclude that every predictors in our final model is
+significant.</p>
+</div>
 </div>
 
 
