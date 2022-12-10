@@ -115,7 +115,7 @@ The interactive map show the distribution of each squirrel by different primary 
 ### Main model:
 Predictions of longitudinal and latitudinal use two separate functions since they have different predictors.
 
-The function of longitudinal has 5 predictors (shift + age + activity + reaction + sounds). The formula of the longitudinal function is: longitudinal = -73.397 + 0.0005639 * shift - 0.0009412 * age - 0.0002267 * activity + 0.0004809 * reaction + 0.002142 * sounds
+The function of longitudinal has 5 predictors (shift + age + activity + reaction + sounds). The formula of the longitudinal function is: longitudinal = -73.97 + 0.0005639 * shift - 0.0009412 * age - 0.0002267 * activity + 0.0004809 * reaction + 0.002142 * sounds
 
 The function of has 3 predictors (sounds + primary_fur_color + reaction). The formula of the latitudinal function is: latitudinal = 40.781005 - 0.0013140 * primary_fur_color + 0.0007784 * reaction + 0.0029074 * sounds
     

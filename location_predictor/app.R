@@ -120,23 +120,21 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   output$Power <- renderPrint({
-    long <- 0.0005639*input$shift-73.397-0.0009412*input$age-0.0002267*input$activity+0.0004809*input$reaction+0.002142*input$sounds
-    lat <- 40.781005-0.0013140*input$primary_fur_color+0.0007784*input$reaction+0.0029074*input$sounds
-    results <- paste(long,lat)
+    long1 <- 0.0005639*input$shift-73.97-0.0009412*input$age-0.0002267*input$activity+0.0004809*input$reaction+0.002142*input$sounds
+    lat1 <- 40.781005-0.0013140*input$primary_fur_color+0.0007784*input$reaction+0.0029074*input$sounds
+    results <- paste(long1,lat1)
     results 
   })
   output$map <- renderLeaflet({
-    long1 <- 0.0005639*input$shift-73.397-0.0009412*input$age-0.0002267*input$activity+0.0004809*input$reaction+0.002142*input$sounds
-    lat1 <- 40.781005-0.0013140*input$primary_fur_color+0.0007784*input$reaction+0.0029074*input$sounds
+    long2 <- 0.0005639*input$shift-73.97-0.0009412*input$age-0.0002267*input$activity+0.0004809*input$reaction+0.002142*input$sounds
+    lat2 <- 40.781005-0.0013140*input$primary_fur_color+0.0007784*input$reaction+0.0029074*input$sounds
     leaflet(data = census2) %>%
-      setView(lng = -73.9561344937861, lat = 40.7840823884086,zoom = 23) %>%
+      #setView(lng = -73.961344937861, lat = 40.7840823884086,zoom = 23) %>%
       addTiles()  %>%
-      addCircles(
-        ~long1, ~lat1,
-        color = "red",
-        radius = 150,
-        fillColor = "transparent"
-        
+      addCircleMarkers(
+        ~long2,~lat2,
+        color = '#ff0000',
+        stroke = FALSE, fillOpacity = 0.5
       )%>%
       fitBounds(lng1 = min(census2$long), 
                 lat1 = min(census2$lat), 
