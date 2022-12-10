@@ -12,6 +12,9 @@ library(olsrr)
 library(MASS)
 library(caret)
 library(modelr)
+library(performance)
+library(see)
+library(patchwork)
 
 options(digits = 7)
 ```
@@ -24,7 +27,8 @@ sq_df = read_csv('squirrel_tidy.csv') %>%
   janitor::clean_names()
 ```
 
-The first step is to throw all the numerical variables into the model and check the p-value, the variables are shift + age + primary_fur_color + location + activity + reaction + sounds. Although hectare is also a numerical variable, it’s not included because the users of the model would not have the information of how many squirrels are there within a specific hectare, but they only have the information about the characteristics of specific squirrels that they want to look for. 
+## P-value
+The first step is to throw all the numerical variables into the model and check the p-value, the variables are shift + age + primary_fur_color + location + activity + reaction + sounds. Although hectare is also a numerical variable, it’s not included because the users of the model would not have the information of how many squirrels are there within a specific hectare, but they only have the information about the characteristics of specific squirrels that they want to look for. The variables with p-value less than 0.05 were removed from the model, and the model built with remaining variables was checked again to make sure that all of them had p-value less than 0.05. So, the first model candidate was produced with predictors being ‘shift’, ’ age’, ‘activity’, ‘reaction’, ‘sounds’.
 
 ```{r}
 # longitudinal/latitudinal function
@@ -39,8 +43,7 @@ lat_model =
 summary(lat_model)
 print(lat_model)
 ```
-## P-value
-The variables with p-value less than 0.05 were removed from the model, and the model built with remaining variables was checked again to make sure that all of them had p-value less than 0.05. So, the first model candidate was produced with predictors being ‘shift’, ’ age’, ‘activity’, ‘reaction’, ‘sounds’.
+
 
 ```{r}
 # model selection using p-value
@@ -121,20 +124,18 @@ We have four different models as the final ‘best’ model candidate for now, a
 
 
 ## Prediction models
-The four different longitute-prediction model are as follows:
+The four different longitude-prediction model are as follows:
 
 pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
 
-auto_fit_long = lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-ols_step_best_subset(model_criterion)
+auto_fit_long = lm(long ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 
 crit_fit_long <- lm(long ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-ols_step_both_p(model_stepwise)
 
 lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 
 ```{r}
-# all longitude models
+# all longitudinal models
 pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
 pvalue_adjrsquared_long <- summary(pvalue_fit_long)$adj.r.squared
 
@@ -150,18 +151,15 @@ lasso_adjrsquared_long <- summary(lasso_fit_long)$adj.r.squared
 The four different latitude-prediction model are as follows:
 
 pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
-pvalue_adjrsquared_lat <- summary(pvalue_fit_lat)$adj.r.squared
 
 auto_fit_lat = lm(lat ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
-auto_adjrsquared_lat <- summary(auto_fit_lat)$adj.r.squared
 
 crit_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity +  reaction + sounds, data = sq_df)
-crit_adjrsquared_lat <- summary(crit_fit_lat)$adj.r.squared
 
 lasso_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
 
 ```{r}
-# all latitude models
+# all latitudinal models
 pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
 pvalue_adjrsquared_lat <- summary(pvalue_fit_lat)$adj.r.squared
 
@@ -180,7 +178,7 @@ lasso_adjrsquared_lat <- summary(lasso_fit_lat)$adj.r.squared
 The cross-validation divides model into the training set and the testing set. Models' comparison could be further done by comparing the cross-validation output: RMSE.
 
 ```{r}
-# cross- validation
+# training and testing sets
 cv_df <- crossv_mc(sq_df, 100)
 cv_df <- cv_df %>% 
   mutate(
@@ -190,6 +188,39 @@ cv_df <- cv_df %>%
 ```
 
 ```{r}
+# longitudinal model selection
+cv_df_long = 
+  cv_df %>% 
+  mutate(
+    pvalue_fit = map(train, ~lm(long ~ shift + age + activity + reaction + sounds, data = .x)),
+    auto_fit = map(train, ~lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = .x)),
+    crit_fit = map(train, ~lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = .x)),
+    lasso_fit = map(train, ~lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = .x))
+  ) %>% 
+  mutate(
+    rmse_pvalue = map2_dbl(pvalue_fit, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_auto = map2_dbl(auto_fit, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_crit = map2_dbl(crit_fit, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_lasso = map2_dbl(lasso_fit, test, ~modelr::rmse(model = .x, data = .y))
+  )
+
+# Comparing the RMSE plot
+
+rplot_long <- cv_df_long %>% 
+  dplyr::select(starts_with("rmse")) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = fct_inorder(model)) %>% 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(
+    title = 'RMSE for Cross Validation of Longitudinal Models',
+       x = 'models', y = 'RMSE'
+  )+
+  theme_bw()
+
 # latitudinal model selection
 cv_df_lat = 
   cv_df %>% 
@@ -200,18 +231,15 @@ cv_df_lat =
     lasso_fit = map(train, ~lm(lat ~ shift + age + primary_fur_color + activity + reaction + sounds, data = .x))
   ) %>%
   mutate(
-    rmse_pvalue = map2_dbl(pvalue_fit, test, ~rmse(model = .x, data = .y)),
-    rmse_auto = map2_dbl(auto_fit, test, ~rmse(model = .x, data = .y)),
-    rmse_crit = map2_dbl(crit_fit, test, ~rmse(model = .x, data = .y)),
-    rmse_lasso = map2_dbl(lasso_fit, test, ~rmse(model = .x, data = .y))
+    rmse_pvalue = map2_dbl(pvalue_fit, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_auto = map2_dbl(auto_fit, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_crit = map2_dbl(crit_fit, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_lasso = map2_dbl(lasso_fit, test, ~modelr::rmse(model = .x, data = .y))
   )
 
-# Comparing the RMSE
-cv_df_lat %>% 
-  dplyr::select(starts_with('rmse_')) %>% 
-  map(median)
+# Comparing the RMSE plot
 
-cv_df_lat %>% 
+rplot_lat <- cv_df_lat %>% 
   dplyr::select(starts_with("rmse")) %>% 
   pivot_longer(
     everything(),
@@ -221,70 +249,19 @@ cv_df_lat %>%
   mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = model, y = rmse)) + geom_violin() +
   labs(
-    title = 'RMSE for Cross Validation of Latitude Models',
+    title = 'RMSE for Cross Validation of Latitudinal Models',
        x = 'models', y = 'RMSE'
-  )
-```
+  )+
+  theme_bw()
 
-```{r}
-cv_df_long = 
-  cv_df %>% 
-  mutate(
-    pvalue_fit = map(train, ~lm(long ~ shift + age + activity + reaction + sounds, data = .x)),
-    auto_fit = map(train, ~lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = .x)),
-    crit_fit = map(train, ~lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = .x)),
-    lasso_fit = map(train, ~lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = .x))
-  ) %>% 
-  mutate(
-    rmse_pvalue = map2_dbl(pvalue_fit, test, ~rmse(model = .x, data = .y)),
-    rmse_auto = map2_dbl(auto_fit, test, ~rmse(model = .x, data = .y)),
-    rmse_crit = map2_dbl(crit_fit, test, ~rmse(model = .x, data = .y)),
-    rmse_lasso = map2_dbl(lasso_fit, test, ~rmse(model = .x, data = .y))
-  )
-
-# Comparing the RMSE
-cv_df_long %>% 
-  dplyr::select(starts_with('rmse_')) %>% 
-  map(median)
-
-cv_df_long %>% 
-  dplyr::select(starts_with("rmse")) %>% 
-  pivot_longer(
-    everything(),
-    names_to = "model", 
-    values_to = "rmse",
-    names_prefix = "rmse_") %>% 
-  mutate(model = fct_inorder(model)) %>% 
-  ggplot(aes(x = model, y = rmse)) + geom_violin() +
-  labs(
-    title = 'RMSE for Cross Validation of Longitude Models',
-       x = 'models', y = 'RMSE'
-  )
-
+rplot_long + rplot_lat
 ```
 
 ## Visualization Tables
 Visualization Tables are made for better comparison.
 ```{r}
 # RMSE and adj Rsquared comparison table
-# latitude: parsimony since the RMSE and Rsquared are similar
-
 methods <- c('pvalue','automatic','criterion-based','LASSO')
-RMSE_lat <- 
-  cv_df_lat %>% 
-  dplyr::select(starts_with('rmse_')) %>% 
-  map(median) %>% 
-  unlist()
-
-adjrsquared_lat <- c(pvalue_adjrsquared_lat,auto_adjrsquared_lat,
-                       crit_adjrsquared_lat, lasso_adjrsquared_lat)
-lat_comparison <- tibble(
-  methods,
-  RMSE_lat, 
-  adjrsquared_lat
-)
-lat_comparison %>% knitr::kable()
-
 #longitude: parsimony since the RMSE and Rsquared are similar
 RMSE_long <- 
   cv_df_long %>% 
@@ -301,15 +278,31 @@ long_comparison <- tibble(
 )
 long_comparison %>% knitr::kable()
 
+# latitude: parsimony since the RMSE and Rsquared are similar
+RMSE_lat <- 
+  cv_df_lat %>% 
+  dplyr::select(starts_with('rmse_')) %>% 
+  map(median) %>% 
+  unlist()
+
+adjrsquared_lat <- c(pvalue_adjrsquared_lat,auto_adjrsquared_lat,
+                       crit_adjrsquared_lat, lasso_adjrsquared_lat)
+lat_comparison <- tibble(
+  methods,
+  RMSE_lat, 
+  adjrsquared_lat
+)
+lat_comparison %>% knitr::kable()
+
 ```
 # Final Models
 ## Final Longitudinal Model
 The function of longitudinal has 5 predictors (shift + age + activity + reaction + sounds). Since the RMSE values and adjusted R-squared are approximately same among all functions, the principal of parsimony tells us to choose the the most succinct model. 
-The formula of the latitudinal function is: longitudinal = -73.97 + 0.0005588shift - 0.0009412age - 0.0002267activity + 0.0004809reaction + 0.002142sounds.
+The formula of the latitudinal function is: longitudinal = -73.97 + 0.0005588 shift - 0.0009412 age - 0.0002267 activity + 0.0004809 reaction + 0.002142 sounds.
 
 ```{r}
 # final model
-long_model_final=
+long_model_final <- 
   lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
 print(long_model_final)
 long_model_final %>% broom::tidy()
@@ -317,17 +310,15 @@ long_model_final %>% broom::tidy()
 
 The diagnosis plots of the final longitudinal prediction model:
 ```{r}
-# final model diagnostic
-par(mfrow = c(2,2))
-plot(long_model_final)
+check_model(long_model_final, check = c("linearity", "outliers", "qq", "normality"))
 ```
 
 ## Final Latitudinal Model
 The function of latitudinal has 3 predictors (primary_fur_color + reaction + sounds). Since the RMSE values and adjusted R-squared are approximately same among all functions, the principal of parsimony tells us to choose the the most succinct model. 
-The formula of the latitudinal function is: longitudinal = 40.7814005- 0.0013140primary_fur_color + 0.0007784reaction + 0.0029072sounds.
+The formula of the latitudinal function is: longitudinal = 40.7814005- 0.0013140 primary_fur_color + 0.0007784 reaction + 0.0029072 sounds.
 
 ```{r}
-lat_model_final=
+lat_model_final <- 
   lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
 print(lat_model_final)
 lat_model_final %>% broom::tidy()
@@ -335,6 +326,5 @@ lat_model_final %>% broom::tidy()
 
 The diagnosis plots of the final latitudinal prediction model:
 ```{r}
-par(mfrow =c(2,2))
-plot(lat_model_final)
+check_model(lat_model_final, check = c("linearity", "outliers", "qq", "normality"))
 ```
