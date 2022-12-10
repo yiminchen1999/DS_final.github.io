@@ -61,6 +61,8 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 <iframe width="720" height="480" src="https://www.youtube.com/embed/pKmIfOU12SI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+
+
 ```{r,include=FALSE}
 census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版在下面
   read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")%>% 
@@ -136,7 +138,7 @@ census = #这是未数据处理过后的，即原始版
                                moans == "TRUE" ~ "moans"))%>%
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 ```
-
+### **Map**
 ```{r}
 nyc_squirrels1=
   census%>%
