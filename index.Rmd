@@ -6,6 +6,11 @@ output:
     toc: true
     toc_float: true
 ---
+```{css, echo=FALSE}
+h1{
+  text-align: center;
+}
+```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -38,6 +43,17 @@ scale_fill_discrete = scale_fill_viridis_d
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
+
+<script>
+   $(document).ready(function() {
+     $head = $('#header');
+     $head.prepend('<img src="Squirrel_PICs/squirrel_census.png" style=\"float: right;width: 150px;\"/>')
+   });
+</script>
+
+<center>
+![](Squirrel_PICs/squirrel_gif3.gif){width=65%, length=65%}
+</center>
 
 ```{r,include=FALSE}
 census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版在下面
@@ -130,6 +146,10 @@ nyc_squirrelmap
 ### Motivation
 
 Squirrels are everywhere, but is there a trend of where they prefer to stay with respect to their color, age, activities and all other features? Doing an analysis using squirrel census data may answer the question. Based on the results of the investigation we can compile relevant charts and make reasonable exploits, prevention or prediction based on information about squirrel habitat and activity patterns in Central Park.
+
+<center>
+![](Squirrel_PICs/cute_squirrel.jpg){width=75%}
+</center>
 
 ### Screencast
 

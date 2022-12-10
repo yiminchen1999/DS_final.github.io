@@ -4,9 +4,12 @@ navbar:
   title: "Home"
   
   right:
-    - text: "Interactive App"
+    - text: "Squirrel Tracker APP"
       href: https://yc4195.shinyapps.io/DS_final_squirrel_tracker/
-    
+      
+    - text: "Location Predictor APP"
+      href: https://yc4195.shinyapps.io/location_predictor/
+      
     - text: "Proposal"
       href: P8105_final_proposal.html
 
@@ -22,9 +25,7 @@ navbar:
       - text: "Predictive Model Building"
         href: function.html
       - text: "Statistics Testing"
-
-    - text: "Location Predictor Shinyapp"
-      href: https://yc4195.shinyapps.io/location_predictor/
+        href: stat-test.html
       
     - text: "Report"
       href: report-writing.html

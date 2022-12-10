@@ -15,11 +15,16 @@ library(modelr)
 
 options(digits = 7)
 ```
+
+# Model Building
 This will be model building procedure...
+
 ```{r, message = FALSE}
 sq_df = read_csv('squirrel_tidy.csv') %>% 
   janitor::clean_names()
 ```
+
+The first step is to throw all the numerical variables into the model and check the p-value, the variables are shift + age + primary_fur_color + location + activity + reaction + sounds. Although hectare is also a numerical variable, it’s not included because the users of the model would not have the information of how many squirrels are there within a specific hectare, but they only have the information about the characteristics of specific squirrels that they want to look for. 
 
 ```{r}
 # longitudinal/latitudinal function
@@ -34,6 +39,8 @@ lat_model =
 summary(lat_model)
 print(lat_model)
 ```
+## P-value
+The variables with p-value less than 0.05 were removed from the model, and the model built with remaining variables was checked again to make sure that all of them had p-value less than 0.05. So, the first model candidate was produced with predictors being ‘shift’, ’ age’, ‘activity’, ‘reaction’, ‘sounds’.
 
 ```{r}
 # model selection using p-value
@@ -48,6 +55,9 @@ summary(lat_model1)
 print(lat_model1)
 ```
 
+## Automatic(Stepwise)
+Then, we selected model using automatic procedure, specifically step-wise regression procedure. Backward, Forward or step-wise methods might produce different results, but we chose to use step-wise since it gives a single ‘best’ model. As the result, except for the location, all other 6 variables are included in this model, which is the second model candidate.
+
 ```{r}
 # model selection using automatic procedure (forward/backward)
 model_stepwise_long <- lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
@@ -57,6 +67,9 @@ model_stepwise_lat <- lm(lat ~ shift + age + primary_fur_color + location + acti
 ols_step_both_p(model_stepwise_lat)
 ```
 
+## Criterion-based
+Next, we used criterion-based procedure. The model with the largest adjusted R-square valued along with smallest AIC and BIC values are chosen to be the model candidate. It turned out that it also had all those 6 variables as the one in automatic procedure.
+
 ```{r}
 # model selection using criterion-based procedure
 model_criterion_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
@@ -65,11 +78,13 @@ ols_step_best_subset(model_criterion_long)
 model_criterion_lat <- lm(lat ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 ols_step_best_subset(model_criterion_lat)
 ```
+## LASSO
+LASSO model selection method was then used. After looking for the best lamda value, the third model candidate has all seven predictors, which means no variable was deleted from the selection procedure.
 
 ```{r}
 # model selection using LASSO procedure: longitude
 y_long <- sq_df$long
-hist(y_long)
+# hist(y_long)
 x <- sq_df %>% 
   dplyr::select(
     shift, age, primary_fur_color,location, activity, reaction, sounds
@@ -78,7 +93,7 @@ x <- sq_df %>%
 
 set.seed(2022)
 cv_model_long <- cv.glmnet(x,y_long, alpha = 1)
-(best_lambda_long <- cv_model_long$lambda.min)
+best_lambda_long <- cv_model_long$lambda.min
 long_lasso <- glmnet(x, y_long, alpha = 1, lambda = best_lambda_long)
 coef(long_lasso)
 ```
@@ -86,7 +101,7 @@ coef(long_lasso)
 ```{r}
 # model selection using LASSO procedure: latitude
 y_lat <- sq_df$lat
-hist(y_lat)
+# hist(y_lat)
 x <- sq_df %>% 
   dplyr::select(
     shift, age, primary_fur_color,location, activity, reaction, sounds
@@ -95,63 +110,44 @@ x <- sq_df %>%
 
 set.seed(2023)
 cv_model_lat <- cv.glmnet(x,y_lat, alpha = 1)
-(best_lambda_lat <- cv_model_lat$lambda.min)
+best_lambda_lat <- cv_model_lat$lambda.min
 lat_lasso <- glmnet(x, y_lat, alpha = 1, lambda = best_lambda_lat)
 coef(lat_lasso)
 
 ```
 
-```{r}
-# model comparisons for long
-long_model2 = 
-  lm(long ~ sounds + reaction + age + activity + shift + primary_fur_color, data = sq_df)
-summary(long_model1)
-summary(long_model2)
+# Model Selection
+We have four different models as the final ‘best’ model candidate for now, and they are all nested within each other. We choose the ‘best’ model according to 3 criteria, the adjusted R-squared value, the cross-validation outcome(i.e. RMSE) and the rule of parsimony.
 
-```
 
-```{r}
-# model comparisons for lat
-lat_model2 = 
-  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
-lat_model3 = 
-  lm(lat ~ sounds + reaction + age + activity + shift + primary_fur_color, data = sq_df)
-summary(lat_model1)
-summary(lat_model2)
-summary(lat_model3)
-```
+## Prediction models
+The four different longitute-prediction model are as follows:
+
+pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
+
+auto_fit_long = lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_best_subset(model_criterion)
+
+crit_fit_long <- lm(long ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+ols_step_both_p(model_stepwise)
+
+lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
 
 ```{r}
-set.seed(1)
-# Use 10-fold validation 
-train = trainControl(method = "cv", number = 10)
-y1 <- data.frame(cbind(sq_df$long, sq_df$lat))
-model_caret1 = train(long ~ primary_fur_color + reaction + sounds, data = sq_df,
-trControl = train,
-method = 'lm',
-na.action = na.pass)
+# all longitude models
+pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
+pvalue_adjrsquared_long <- summary(pvalue_fit_long)$adj.r.squared
 
-# fitting a regression line
-model_caret1$finalModel
-model_caret1
-model_caret2 = train(lat ~ primary_fur_color + reaction + sounds, data = sq_df,
-trControl = train,
-method = 'lm',
-na.action = na.pass)
+auto_fit_long = lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
+auto_adjrsquared_long <- summary(auto_fit_long)$adj.r.squared
 
-# fitting a regression line
-model_caret2$finalModel
-model_caret2
+crit_fit_long = lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+crit_adjrsquared_long <- summary(crit_fit_long)$adj.r.squared
+
+lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
+lasso_adjrsquared_long <- summary(lasso_fit_long)$adj.r.squared
 ```
-
-# latitudinal model selection
-```{r}
-# latitudinal data function
-lat_model =
-  lm(lat ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-summary(lat_model)
-```
-
+The four different latitude-prediction model are as follows:
 
 pvalue_fit_lat = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
 pvalue_adjrsquared_lat <- summary(pvalue_fit_lat)$adj.r.squared
@@ -179,33 +175,9 @@ lasso_fit_lat = lm(lat ~ shift + age + primary_fur_color + activity + reaction +
 lasso_adjrsquared_lat <- summary(lasso_fit_lat)$adj.r.squared
 
 ```
+## Cross Validation
 
-# longitudinal model selection
-model_pvalue = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
-
-model_criterion = lm(cbind(long, lat) ~ shift + hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-ols_step_best_subset(model_criterion)
-
-model_stepwise <- lm(long ~ hectare_squirrel_number + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-ols_step_both_p(model_stepwise)
-
-model_lasso = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-
-```{r}
-# all longitude models
-pvalue_fit_long = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
-pvalue_adjrsquared_long <- summary(pvalue_fit_long)$adj.r.squared
-
-auto_fit_long = lm(long ~ sounds + primary_fur_color + reaction + activity + shift ,data = sq_df)
-auto_adjrsquared_long <- summary(auto_fit_long)$adj.r.squared
-
-crit_fit_long = lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
-crit_adjrsquared_long <- summary(crit_fit_long)$adj.r.squared
-
-lasso_fit_long = lm(long ~ shift + age + primary_fur_color + location + activity + reaction + sounds, data = sq_df)
-lasso_adjrsquared_long <- summary(lasso_fit_long)$adj.r.squared
-```
-
+The cross-validation divides model into the training set and the testing set. Models' comparison could be further done by comparing the cross-validation output: RMSE.
 
 ```{r}
 # cross- validation
@@ -291,12 +263,11 @@ cv_df_long %>%
 
 ```
 
-latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods have 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
-
-longitude: criterion based method is chosen: lowest median RMSE(since every method's RMSE distribution is pretty similar) and highest adjusted R squared
+## Visualization Tables
+Visualization Tables are made for better comparison.
 ```{r}
-# RMSE and adj Rsqured comparison table
-# latitude: automatic method is chosen due to the rule of parsimony.(only 5 predictors while LASSO and criterion-based methods hava 6 predictors). When the RMSE distributions are basically same among the methods, the automatic method has slightly lower median both RMSE and Rsquared.
+# RMSE and adj Rsquared comparison table
+# latitude: parsimony since the RMSE and Rsquared are similar
 
 methods <- c('pvalue','automatic','criterion-based','LASSO')
 RMSE_lat <- 
@@ -314,7 +285,7 @@ lat_comparison <- tibble(
 )
 lat_comparison %>% knitr::kable()
 
-#longitude: criterion based method is chosen: lowest median RMSE(since evry method's RMSE distribution is pretty similar) and highest adjusted R squared
+#longitude: parsimony since the RMSE and Rsquared are similar
 RMSE_long <- 
   cv_df_long %>% 
   dplyr::select(starts_with('rmse_')) %>% 
@@ -331,20 +302,39 @@ long_comparison <- tibble(
 long_comparison %>% knitr::kable()
 
 ```
+# Final Models
+## Final Longitudinal Model
+The function of longitudinal has 5 predictors (shift + age + activity + reaction + sounds). Since the RMSE values and adjusted R-squared are approximately same among all functions, the principal of parsimony tells us to choose the the most succinct model. 
+The formula of the latitudinal function is: longitudinal = -73.97 + 0.0005588shift - 0.0009412age - 0.0002267activity + 0.0004809reaction + 0.002142sounds.
 
 ```{r}
 # final model
 long_model_final=
-  lm(long ~ shift + age + primary_fur_color + activity + reaction + sounds, data = sq_df)
+  lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
 print(long_model_final)
-
-lat_model_final=
-  lm(lat ~ sounds + primary_fur_color + reaction + activity + shift, data = sq_df)
-print(lat_model_final)
+long_model_final %>% broom::tidy()
 ```
 
+The diagnosis plots of the final longitudinal prediction model:
 ```{r}
 # final model diagnostic
+par(mfrow = c(2,2))
 plot(long_model_final)
+```
+
+## Final Latitudinal Model
+The function of latitudinal has 3 predictors (primary_fur_color + reaction + sounds). Since the RMSE values and adjusted R-squared are approximately same among all functions, the principal of parsimony tells us to choose the the most succinct model. 
+The formula of the latitudinal function is: longitudinal = 40.7814005- 0.0013140primary_fur_color + 0.0007784reaction + 0.0029072sounds.
+
+```{r}
+lat_model_final=
+  lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
+print(lat_model_final)
+lat_model_final %>% broom::tidy()
+```
+
+The diagnosis plots of the final latitudinal prediction model:
+```{r}
+par(mfrow =c(2,2))
 plot(lat_model_final)
 ```
