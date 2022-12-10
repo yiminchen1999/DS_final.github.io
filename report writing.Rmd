@@ -1,5 +1,5 @@
 ---
-title: "Location Predictions of Squirrels Based on Several Characteristics"
+title: "Report: Location Predictions of Squirrels Based on Several Characteristics"
 output:
   html_document:
     theme: cosmo
@@ -23,9 +23,8 @@ Wenjing Yang (wy2369)
 
 Yang Yi (yy3307)
 
-### 
 # Abstract
-
+In this project, we aimed to develop a predictor for users to predict the locations of squirrels in central park if several characteristics were provided. We first cleaned the data and built two linear functions, one for longitudinal and one for latitudinal, to predict the locations and found that shift, age, primary fur color, activity, reaction and sounds are important when making predictions of longitudinal value. Shift, primary fur color, activity, interaction and sounds are important for latitudinal predictions. Also, another dataset containing squirrels in whole NYC was also included to compare with the central park. Besides, some summary plots in both central park and NYC were made to generally look at and compare different distributions and frequencies. We used interactive shiny app to make the locations predictor, but it could only apply in central park because the data in central park is not representative of the whole city.
 
 # Introduction
    
@@ -36,7 +35,7 @@ Some data of squirrels in New York central park were collected starting from Oct
 Squirrels are found everywhere, and it’s observed that some places have more squirrels than others, but is there any trend of where they stay with respect to their colors, ages, activities or all other features? Doing an analysis using squirrel census data may answer the question. 
 
 ### Main final goal:
-The main final goals of the project are to make maps according to the census and build functions to predict locations of particular squirrels if their characteristics are provided so that people can use the website to look for the kinds of squirrels they like. 
+The main final goals of the project are to make maps according to the census and build functions, models and interactive shiny app to predict locations of particular squirrels if their characteristics are provided so that people can use the website to look for the kinds of squirrels they like. 
 
 ### Inspirations:    
 The maps-making process shown in class caught our eyes since it is a clear and direct way to convey the information. A website called The Squirrel Census (https://www.thesquirrelcensus.com/about ) did research on the squirrels too, but it doesn’t provide any predictions, so we aim to develop a prediction system. Also, in order to attract more people to the website, some interactive plots will be made to fully introduce the raw dataset. The census provides only the data of central park in 2018, so other datasets like data of central park in other years or data in 2018 of other places will also be collected to make comparisons of any location changes. 
@@ -69,7 +68,7 @@ At last, we kept "unique_squirrel_id", "hectare", "shift", "date", "heactare_squ
 ### Model building process:
 Since the outputs are both longitudinal and latitudinal, we expected to make two linear functions, with longitudinal and latitudinal being the outputs separately against predictors, and combine the two outputs in the end. We built several models for both longitudinal and latitudinal outcomes using different methods (p-value, step-wise (both backward and forward at the same time), criterion-based, and LASSO). The following explanations are for longitudinal only and the latitudinal one follows the exactly same procedures. 
 
-The first step is to throw all the numerical variables into the model and check the p-value, the variables are shift + age + primary_fur_color + location + activity + reaction + sounds. Although hectare is also a numerical variable, it's not included because the users of the model would not have the information of how many squirrels are there within a specific hectare, but they only have the information about the characteristics of specific squirrels that they want to look for. The variables with p-value less than 0.05 were removed from the model, and the model built with remaining variables was checked again to make sure that all of them had p-value less than 0.05. So, the first model candidate was produced with predictors being 'shift', ' age', 'activity', 'reaction', 'sounds'.
+The first step is to throw all the numerical variables into the model and check the p-value, the variables are shift + age + primary_fur_color + location + activity + reaction + sounds. Although hectare is also a numerical variable, it's not included because the users of the model would not have the information of how many squirrels are there within a specific hectare, but they only have the information about the characteristics of specific squirrels that they want to look for. The variables with p-value less than 0.05 were removed from the model, and the model built with remaining variables was checked again to make sure that all of them had p-value less than 0.05. So, the first model candidate was produced with predictors being 'shift', 'age', 'activity', 'reaction', 'sounds'.
 
 Then, we selected model using automatic procedure, specifically step-wise regression procedure. Backward, Forward or step-wise methods might produce different results, but we chose to use step-wise since it gives a single 'best' model. As the result, except for the location, all other 6 variables are included in this model, which is the second model candidate.
 
@@ -77,12 +76,15 @@ Next, we used criterion-based procedure. The model with the largest adjusted R-s
 
 LASSO model selection method was then used. After looking for the best lamda value, the third model candidate has all seven predictors, which means no variable was deleted from the selection procedure.
 
-We have three different models as the final 'best' model candidate for now, and they are all nested within each other. We choose the 'best' model according two criteria, adjusted R-squared value and RMSE. For longitudinal model, the final predictors have 6 predictors (shift + age + primary_fur_color + activity + reaction + sounds) since it has the highest adjust R-squared value and pretty much similar RMSE distribution as all other models.
-
-As for the latitudinal model, it has 5 predictors (sounds + primary_fur_color + reaction + activity + shift), but all other models candidates have 6 predictors. Since the RMSE values and adjusted R-squared are approximately same among all models, the principal of parsimony tells us to choose the the most succinct model.
+We have four different models as the final ‘best’ model candidate for now, and they are all nested within each other. We choose the ‘best’ model according to 3 criteria, the adjusted R-squared value, the cross-validation outcome(i.e. RMSE) and the rule of parsimony. For longitudinal model, the final predictors have 5 predictors (shift + age + activity + reaction + sounds) since all four models have pretty much the same adjusted R-squared and RMSE values. So, according to principal of parsimony, we chose the most succinct one. As for the latitudinal model, it has 3 predictors (sounds + primary_fur_color + reaction), and it was also chosen because of parsimony.
 
 ### Statistical tests:
 
+
+### Shiny
+Our first Shiny app, interactive squirrel tracker map, allows users to target squirrels using certain characteristics. Users may also explore summarized information about these filtered squirrels in the data table below and look for a particular one via the search box.
+
+Our second Shiny app, squirrel locations predictor map, assists users in determining the most likely location of a squirrel based on specified features. The function we used to acquire the answer depends on the model we chose and built. To learn more about our methodology, refer "Model building process".
 
 # Results
 
@@ -112,9 +114,9 @@ The interactive map show the distribution of each squirrel by different primary 
 ### Main model:
 Predictions of longitudinal and latitudinal use two separate functions since they have different predictors.
 
-The function of longitudinal has 6 predictors (shift + age + primary_fur_color + activity + reaction + sounds) since it has the highest adjust R-squared value and pretty much similar RMSE distribution as all other functions. The formula of the longitudinal function is: longitudinal = -0.7397 + 0.0005588*shift - 0.0008995*age - 0.0005278*primary_fur_color - 0.0002236*activity + 0.0005043*reaction + 0.002109*sounds
+The function of longitudinal has 5 predictors (shift + age + activity + reaction + sounds). The formula of the longitudinal function is: longitudinal = -73.397 + 0.0005639 * shift - 0.0009412 * age - 0.0002267 * activity + 0.0004809 * reaction + 0.002142 * sounds
 
-The function of has 5 predictors (sounds + primary_fur_color + reaction + activity + shift). Since the RMSE values and adjusted R-squared are approximately same among all functions, the principal of parsimony tells us to choose the the most succinct model. The formula of the latitudinal function is: latitudinal = 40.7810047 + 0.0006262*shift - 0.0012940*primary_fur_color - 0.0002411*activity + 0.0007625*interaction + 0.0029603*sounds
+The function of has 3 predictors (sounds + primary_fur_color + reaction). The formula of the latitudinal function is: latitudinal = 40.781005 - 0.0013140 * primary_fur_color + 0.0007784 * reaction + 0.0029074 * sounds
     
 ### Comparisons:
 We made comparisons between squirrels data in only central park and whole NYC. 
@@ -127,7 +129,11 @@ As for the activities in different locations, both central park and whole NYC fo
 # Discussion
 
 ### Findings:
-In this project, we
+In this project, we found that the behaviors of squirrels in central park were not exactly the same as squirrels in other parts of New York, so the prediction model may not be representative enough to apply to all squirrels in whole NYC. The prediction shiny app we made was tentatively useful to users who want to look for specific squirrels they like in central park.
+
+We also found that the predictors used to predict longitudinal and latitudinal of the positions are different, which was not out of our initial expectation because for example, some specific squirrels only like colder places which indicated higher latitudinal places but had nothing to do with longitudinal value.
+
 
 # Conclusion
+We used tidied central park data to make the prediction models and app for both longitudinal and latitudinal of squirrels' locations. Data outside of central park was also analyzed and it didn't follow the same trend. So, the accurate predictions could only apply in central park. Squirrel tracker and map allow people to locate the squirrels. For future direction, we may collect more data which was not only constrained in 2018 but other years to compare the prediction models.
 
