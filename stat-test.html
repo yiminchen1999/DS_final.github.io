@@ -11,9 +11,9 @@
 
 
 
-<title>Statistics Testing</title>
+<title>Statistics Test</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -368,18 +361,10 @@ div.tocify {
     <li>
       <a href="function.html">Predictive Model Building</a>
     </li>
-<<<<<<< HEAD
-    <li class="dropdown-header">Statistics Testing</li>
-  </ul>
-</li>
-<li>
-  <a href="https://yc4195.shinyapps.io/location_predictor/">Location Predictor Shinyapp</a>
-=======
     <li>
       <a href="stat-test.html">Statistics Testing</a>
     </li>
   </ul>
->>>>>>> 688eece5a6c72c4ab2622fba4ae4f98a9f6c8ed5
 </li>
 <li>
   <a href="report-writing.html">Report</a>
@@ -407,7 +392,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Statistics Testing</h1>
+<h1 class="title toc-ignore">Statistics Test</h1>
 
 </div>
 
@@ -418,54 +403,142 @@ div.tocify {
   janitor::clean_names()</code></pre>
 <div id="longitudinal-model" class="section level3">
 <h3>Longitudinal Model</h3>
-<p>We use anova test to make sure the predictors of our final
-Longitudinal regression fit are significant.</p>
 <p><span class="math inline">\(H_0:\)</span> Every parameter of
 predictors in our regression model is equal to zero.</p>
-<p><span class="math inline">\(H_1:\)</span> Not every parameters of
+<p><span class="math inline">\(H_1:\)</span> Not every parameter of
 predictors in our regression model is equal to zero.</p>
 <pre class="r"><code>long_model_final = lm(long ~ shift + age + activity + reaction + sounds, data = sq_df)
-anova(long_model_final)</code></pre>
-<pre><code>## Analysis of Variance Table
-## 
-## Response: long
-##             Df   Sum Sq    Mean Sq F value    Pr(&gt;F)    
-## shift        1 0.000250 0.00025024  4.2452  0.039446 *  
-## age          1 0.000446 0.00044617  7.5690  0.005973 ** 
-## activity     1 0.000301 0.00030085  5.1038  0.023944 *  
-## reaction     1 0.000423 0.00042295  7.1751  0.007432 ** 
-## sounds       1 0.001139 0.00113910 19.3243 1.141e-05 ***
-## Residuals 3017 0.177841 0.00005895                      
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>Based on the results, the p-values of all five predictors (shift,
-age, activity, reaction and sounds) are smaller than 0.05 so we reject
-the null hypothesis and conclude that every predictors in our final
-model is significant.</p>
+anova(long_model_final) %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Df</th>
+<th align="right">Sum Sq</th>
+<th align="right">Mean Sq</th>
+<th align="right">F value</th>
+<th align="right">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">shift</td>
+<td align="right">1</td>
+<td align="right">0.0002502</td>
+<td align="right">0.0002502</td>
+<td align="right">4.245234</td>
+<td align="right">0.0394462</td>
+</tr>
+<tr class="even">
+<td align="left">age</td>
+<td align="right">1</td>
+<td align="right">0.0004462</td>
+<td align="right">0.0004462</td>
+<td align="right">7.569035</td>
+<td align="right">0.0059734</td>
+</tr>
+<tr class="odd">
+<td align="left">activity</td>
+<td align="right">1</td>
+<td align="right">0.0003009</td>
+<td align="right">0.0003009</td>
+<td align="right">5.103838</td>
+<td align="right">0.0239441</td>
+</tr>
+<tr class="even">
+<td align="left">reaction</td>
+<td align="right">1</td>
+<td align="right">0.0004229</td>
+<td align="right">0.0004229</td>
+<td align="right">7.175147</td>
+<td align="right">0.0074321</td>
+</tr>
+<tr class="odd">
+<td align="left">sounds</td>
+<td align="right">1</td>
+<td align="right">0.0011391</td>
+<td align="right">0.0011391</td>
+<td align="right">19.324337</td>
+<td align="right">0.0000114</td>
+</tr>
+<tr class="even">
+<td align="left">Residuals</td>
+<td align="right">3017</td>
+<td align="right">0.1778414</td>
+<td align="right">0.0000589</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<p>We use anova test to make sure the predictors of our final
+Longitudinal regression fit are significant. Based on the results, the
+p-values of all five predictors (shift, age, activity, reaction and
+sounds) are smaller than 0.05 so we reject the null hypothesis and
+conclude that every predictor in our final longitudinal model is
+significant.</p>
 </div>
 <div id="latitudinal-model" class="section level3">
 <h3>Latitudinal Model</h3>
-<p>We use the same way (anova test) to make sure the predictors of our
-final Latitudinal regression fit are significant.</p>
 <p><span class="math inline">\(H_0:\)</span> Every parameter of
 predictors in our regression model is equal to zero.</p>
-<p><span class="math inline">\(H_1:\)</span> Not every parameters of
+<p><span class="math inline">\(H_1:\)</span> Not every parameter of
 predictors in our regression model is equal to zero.</p>
 <pre class="r"><code>lat_model_final = lm(lat ~ primary_fur_color + reaction + sounds, data = sq_df)
-anova(lat_model_final)</code></pre>
-<pre><code>## Analysis of Variance Table
-## 
-## Response: lat
-##                     Df   Sum Sq   Mean Sq F value    Pr(&gt;F)    
-## primary_fur_color    1 0.001256 0.0012564  12.034 0.0005297 ***
-## reaction             1 0.001134 0.0011339  10.861 0.0009936 ***
-## sounds               1 0.002101 0.0021015  20.128 7.512e-06 ***
-## Residuals         3019 0.315195 0.0001044                      
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>Based on the results, the p-values of all three predictors (primary
-fur color, reaction and sounds) are smaller than 0.05 so we reject the
-null hypothesis and conclude that every predictors in our final model is
+anova(lat_model_final) %&gt;% 
+    knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Df</th>
+<th align="right">Sum Sq</th>
+<th align="right">Mean Sq</th>
+<th align="right">F value</th>
+<th align="right">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">primary_fur_color</td>
+<td align="right">1</td>
+<td align="right">0.0012564</td>
+<td align="right">0.0012564</td>
+<td align="right">12.03392</td>
+<td align="right">0.0005297</td>
+</tr>
+<tr class="even">
+<td align="left">reaction</td>
+<td align="right">1</td>
+<td align="right">0.0011339</td>
+<td align="right">0.0011339</td>
+<td align="right">10.86081</td>
+<td align="right">0.0009936</td>
+</tr>
+<tr class="odd">
+<td align="left">sounds</td>
+<td align="right">1</td>
+<td align="right">0.0021015</td>
+<td align="right">0.0021015</td>
+<td align="right">20.12823</td>
+<td align="right">0.0000075</td>
+</tr>
+<tr class="even">
+<td align="left">Residuals</td>
+<td align="right">3019</td>
+<td align="right">0.3151947</td>
+<td align="right">0.0001044</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<p>We use the same way (anova test) to make sure the predictors of our
+final Latitudinal regression fit are significant. Based on the results,
+the p-values of all three predictors (primary fur color, reaction and
+sounds) are smaller than 0.05 so we reject the null hypothesis and
+conclude that every predictor in our final latitudinal model is
 significant.</p>
 </div>
 </div>
