@@ -93,8 +93,8 @@ sqr_nyc %>% skimr::skim_without_charts()
 
 ## Squirrel Activity by Primary Fur Color
 
-In our dataset, there are 5 main different kinds of activities reported which are foraging, running, eating, climbing and chasing. We make this plot to analyze central park squirrel activity by their primary fur color. 
-The first graph we drew about NYC data was to show the activities in squirrels by their different primary fur colors. Constrained on the activities indicated in the central park dataset, gray squirrels like to climb the most frequently and chase the least frequently. Black and gray squirrels like to forage the most and chase the least.
+In our dataset, there are 5 main different kinds of activities reported which are foraging, running, eating, climbing and chasing. 
+The first graph we drew about NYC data was to show the activities in squirrels by their different primary fur colors. 
 
 ```{r}
 (plot_1 = 
@@ -113,11 +113,11 @@ The first graph we drew about NYC data was to show the activities in squirrels b
 
 ```
 
+Constrained on the activities indicated in the central park dataset, gray squirrels like to climb the most frequently and chase the least frequently. Black and gray squirrels like to forage the most and chase the least.
 
 ## Squirrel Activity by Location of Squirrel
 
-We make this plot to analyze central park squirrel activity by their location (above ground, ground plane). 
-The second graph about NYC data was to show how distributions of different activities differ by the locations. Activities like eating, foraging and running most happened on the ground plane, but other activities like chasing and climbing happened above ground for the most of time.
+We make this plot to analyze central park squirrel activity by their location (above ground, ground plane). It was to show how distributions of different activities differ by the locations in the NYC.
 
 ```{r}
 sqr_nyc %>%
@@ -133,6 +133,7 @@ sqr_nyc %>%
   labs(fill = 'Location') 
 ```
 
+Activities like eating, foraging and running most happened on the ground plane, but other activities like chasing and climbing happened above ground for the most of time.
 
 ## Primary Fur Color Map
 
