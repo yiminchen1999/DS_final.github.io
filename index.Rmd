@@ -8,12 +8,6 @@ output:
     toc: true
     toc_float: true
 ---
-```{css, echo=FALSE}
-h1{
-  text-align: center;
-}
-```
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(leaflet)
@@ -48,6 +42,7 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 ### **Screencast**
 
+<iframe width="720" height="480" src="https://www.youtube.com/embed/pKmIfOU12SI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ```{r,include=FALSE}
 census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版在下面
