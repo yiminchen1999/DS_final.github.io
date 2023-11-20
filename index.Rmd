@@ -2,29 +2,17 @@
 title: ""
 output: 
   html_document:
-    css: style.css
     includes:
       in_header: [header.html,hero-image.html]
     code_folding: hide
     toc: true
     toc_float: true
 ---
-<style type="text/css">
-
-.main-container {
-  max-width: 20%;
-  margin: auto;
+```{css, echo=FALSE}
+h1{
+  text-align: center;
 }
-
-body{ 
-  font-size: 16px;
-}
-a{
-  color: black;
-  font-weight: bold;
-}
-  
-</style>
+```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -58,20 +46,8 @@ scale_fill_discrete = scale_fill_viridis_d
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
-<center>
-
-![](Squirrel_PICs/cute_squirrel.jpg){width=80%}
-
-<font size = "5">*Squirrels are everywhere in our daily life, they may be watching you secretly in the trees, may be teaming up to fight a predator, or even jump on you and snatch your peanuts! Have you ever wondered how many squirrels are in NYC, where they are located, and what they are up to?*</font>
-
-</center>
-
 ### **Screencast**
 
-<iframe width="720" height="480" src="https://www.youtube.com/embed/rTel6kk6zDs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-### **Motivation**
-Squirrels are everywhere, but is there a trend of where they prefer to stay with respect to their color, age, activities and all other features? Doing an analysis using squirrel data census may answer the question. Based on the results of the investigation we can compile relevant charts and make reasonable exploits, prevention or prediction based on information about squirrel habitat and activity patterns in Central Park and New York City.
 
 ```{r,include=FALSE}
 census1 = #这是数据处理过后的，即编号0，1，2，3的，原始版在下面
@@ -149,8 +125,6 @@ census = #这是未数据处理过后的，即原始版
   select(-x,-y,-running,-chasing,-climbing,-eating,-foraging,-above_ground_sighter_measurement,-color_notes,-other_activities,-specific_location ,-tail_flags ,-tail_twitches,-other_interactions,-kuks,-quaas,-moans,-approaches,-indifferent,-runs_from)
 ```
 
-### **Central Park Squirrel Map**
-
 ```{r}
 nyc_squirrels1=
   census%>%
@@ -162,6 +136,15 @@ nyc_squirrelmap <- leaflet(data=census1) %>%
   addMarkers(lng=~long, lat=~lat, popup= ~hectare,clusterOptions = markerClusterOptions())
 nyc_squirrelmap
 ```
+
+
+
+<center>
+![](Squirrel_PICs/cute_squirrel.jpg){width=100%}
+</center>
+
+
+
 
 ### **Collaborators**
 
